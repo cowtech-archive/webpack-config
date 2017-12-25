@@ -1,4 +1,4 @@
-# webpack-config-lite
+# @cowtech/webpack-config-lite
 
 [![Package Version](https://badge.fury.io/js/%40cowtech%2Fwebpack-config-lite.svg)](https://badge.fury.io/js/%40cowtech%2Fwebpack-config-lite)
 [![Dependency Status](https://gemnasium.com/badges/github.com/cowtech/webpack-config-lite.svg)](https://gemnasium.com/github.com/cowtech/webpack-config-lite)
