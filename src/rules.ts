@@ -34,6 +34,10 @@ export function setupRules(configuration: Configuration, version: string){
       test: /manifest\.json$/,
       use: [{loader: 'file-loader', options: {name: 'manifest.json'}}, {loader: 'string-replace-loader', query: {search: '@version@', replace: version}}]
     },
+    {
+      test: /sitemap\.xml$/,
+      use: [{loader: 'file-loader', options: {name: 'sitemap.xml'}}, {loader: 'string-replace-loader', query: {search: '@version@', replace: version}}]
+    },
     {test: /robots\.txt$/, use: [{loader: 'file-loader', options: {name: 'robots\.txt'}}]}
   ];
 
