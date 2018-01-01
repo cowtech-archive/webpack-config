@@ -1,3 +1,7 @@
+### 2018-01-01 / 0.1.3
+
+* Removed useless method.
+
 ### 2017-12-30 / 0.1.2
 
 * Added sitemap.xml to loading rules.

@@ -1,6 +1,3 @@
-import * as cheerio from 'cheerio';
-import {readFileSync} from 'fs';
-
 import {Configuration, loadConfigurationEntry} from './configuration';
 
 export interface Icons{
@@ -11,16 +8,6 @@ export interface Icons{
 export interface IconsLoader{
   loader?(toLoad: Array<string>, loaderConfiguration?: IconsLoader): Icons;
   afterHook?(icons: Icons): Icons;
-}
-
-export function loadSVGFile(path: string, tag: string): Cheerio{
-  const icon: Cheerio = cheerio.load(readFileSync(path, 'utf-8'))('svg');
-
-  icon.attr('id', tag);
-  for(const attr of ['width', 'height'])
-    icon.removeAttr(attr);
-
-  return icon;
 }
 
 export function iconToString(icon: Cheerio): string{

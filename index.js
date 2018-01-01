@@ -6,7 +6,6 @@ var fs = require('fs');
 var path = require('path');
 var moment = require('moment');
 var webpack = require('webpack');
-var cheerio = require('cheerio');
 
 const defaultConfiguration = {
     entries: [],
@@ -61,13 +60,6 @@ function loadEnvironment(configuration) {
     return Object.assign({ environment, serviceWorkerEnabled: sw !== false, version: version || moment.utc().format('YYYYMMDD-HHmmss') }, (packageInfo.site.common || {}), (packageInfo.site[environment] || {}));
 }
 
-function loadSVGFile(path$$1, tag) {
-    const icon = cheerio.load(fs.readFileSync(path$$1, 'utf-8'))('svg');
-    icon.attr('id', tag);
-    for (const attr of ['width', 'height'])
-        icon.removeAttr(attr);
-    return icon;
-}
 function iconToString(icon) {
     // Save the definition - as any is needed since .wrap is not in the type definitions yet
     return icon.wrap('<div/>').parent().html().replace(/\n/mg, '').replace(/^\s+/mg, '');
@@ -270,7 +262,6 @@ exports.setup = setup;
 exports.defaultConfiguration = defaultConfiguration;
 exports.loadConfigurationEntry = loadConfigurationEntry;
 exports.loadEnvironment = loadEnvironment;
-exports.loadSVGFile = loadSVGFile;
 exports.iconToString = iconToString;
 exports.loadIcons = loadIcons;
 exports.setupPlugins = setupPlugins;
