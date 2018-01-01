@@ -1,3 +1,7 @@
+### 2018-01-01 / 0.1.4
+
+* Removed useless method.
+
 ### 2018-01-01 / 0.1.3
 
 * Removed useless method.

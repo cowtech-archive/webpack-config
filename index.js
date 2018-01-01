@@ -60,10 +60,6 @@ function loadEnvironment(configuration) {
     return Object.assign({ environment, serviceWorkerEnabled: sw !== false, version: version || moment.utc().format('YYYYMMDD-HHmmss') }, (packageInfo.site.common || {}), (packageInfo.site[environment] || {}));
 }
 
-function iconToString(icon) {
-    // Save the definition - as any is needed since .wrap is not in the type definitions yet
-    return icon.wrap('<div/>').parent().html().replace(/\n/mg, '').replace(/^\s+/mg, '');
-}
 function loadIcons(configuration) {
     const toLoad = loadConfigurationEntry('icons', configuration);
     const iconsLoader = loadConfigurationEntry('iconsLoader', configuration);
@@ -262,7 +258,6 @@ exports.setup = setup;
 exports.defaultConfiguration = defaultConfiguration;
 exports.loadConfigurationEntry = loadConfigurationEntry;
 exports.loadEnvironment = loadEnvironment;
-exports.iconToString = iconToString;
 exports.loadIcons = loadIcons;
 exports.setupPlugins = setupPlugins;
 exports.normalizeIncludePath = normalizeIncludePath;
