@@ -36,6 +36,7 @@ export const defaultConfiguration: Configuration = {
   pluginsOptions: {
     concatenate: true,
     minify: true,
+    minifyOptions: {mangle: false}, // PI: Remove mangle when Safari 10 is dropped: https://github.com/mishoo/UglifyJS2/issues/1753
     hotModuleReload: true,
     commonChunks: true,
     sizeAnalyzerServer: true

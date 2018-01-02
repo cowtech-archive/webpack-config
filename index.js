@@ -18,6 +18,7 @@ const defaultConfiguration = {
     pluginsOptions: {
         concatenate: true,
         minify: true,
+        minifyOptions: { mangle: false },
         hotModuleReload: true,
         commonChunks: true,
         sizeAnalyzerServer: true
@@ -96,7 +97,7 @@ function setupPlugins(configuration, environment) {
         plugins.push(new webpack.optimize.ModuleConcatenationPlugin());
     if (env === 'production') {
         if (minify)
-            plugins.push(new BabiliPlugin({ mangle: false })); // PI: Remove mangle when Safari 10 is dropped: https://github.com/mishoo/UglifyJS2/issues/1753
+            plugins.push(new BabiliPlugin(options.minifyOptions));
     }
     else {
         if (hotModuleReload)

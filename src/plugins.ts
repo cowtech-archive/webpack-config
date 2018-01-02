@@ -7,6 +7,7 @@ import {loadIcons} from './icons';
 export interface PluginOptions{
   concatenate?: boolean;
   minify?: boolean;
+  minifyOptions?: any;
   hotModuleReload?: boolean;
   commonChunks?: boolean;
   sizeAnalyzerServer?: boolean;
@@ -46,7 +47,7 @@ export function setupPlugins(configuration: Configuration, environment: any): Ar
 
   if(env === 'production'){
     if(minify)
-      plugins.push(new BabiliPlugin({mangle: false})); // PI: Remove mangle when Safari 10 is dropped: https://github.com/mishoo/UglifyJS2/issues/1753
+      plugins.push(new BabiliPlugin(options.minifyOptions));
   }else{
     if(hotModuleReload)
       plugins.push(new webpack.HotModuleReplacementPlugin());

@@ -1,3 +1,7 @@
+### 2018-01-02 / 0.1.5
+
+* Add minification customization.
+
 ### 2018-01-01 / 0.1.4
 
 * Removed useless method.

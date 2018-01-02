@@ -2,6 +2,7 @@ import { Configuration } from './configuration';
 export interface PluginOptions {
     concatenate?: boolean;
     minify?: boolean;
+    minifyOptions?: any;
     hotModuleReload?: boolean;
     commonChunks?: boolean;
     sizeAnalyzerServer?: boolean;
