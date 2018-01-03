@@ -43,7 +43,8 @@ export const defaultConfiguration: Configuration = {
   },
   babel: {
     browsersWhiteList: ['last 2 versions'],
-    exclude: ['transform-async-to-generator', 'transform-regenerator']
+    exclude: ['transform-async-to-generator', 'transform-regenerator'],
+    modules: false
   },
   externals: [],
   sourceMapsType: 'source-map',

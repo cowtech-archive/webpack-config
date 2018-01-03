@@ -25,7 +25,8 @@ const defaultConfiguration = {
     },
     babel: {
         browsersWhiteList: ['last 2 versions'],
-        exclude: ['transform-async-to-generator', 'transform-regenerator']
+        exclude: ['transform-async-to-generator', 'transform-regenerator'],
+        modules: false
     },
     externals: [],
     sourceMapsType: 'source-map',
@@ -126,7 +127,7 @@ function normalizeIncludePath(path$$1) {
 function setupRules(configuration, version) {
     const babel = loadConfigurationEntry('babel', configuration);
     const transpilers = loadConfigurationEntry('transpilers', configuration);
-    const babelEnv = ['env', { targets: { browsers: babel.browsersWhiteList }, exclude: babel.exclude }];
+    const babelEnv = ['env', { targets: { browsers: babel.browsersWhiteList }, exclude: babel.exclude, modules: babel.modules }];
     let rules = [
         {
             test: /\.(?:bmp|png|jpg|jpeg|svg|webp)$/,
@@ -163,9 +164,22 @@ function setupRules(configuration, version) {
                 ]
             });
         }
-        else if (transpilers.includes('react'))
-            rules.unshift({ test: /\.tsx$/, loader: 'awesome-typescript-loader' });
-        rules.unshift({ test: /\.ts$/, loader: 'awesome-typescript-loader' });
+        else if (transpilers.includes('react')) {
+            rules.unshift({
+                test: /\.tsx$/,
+                use: [
+                    { loader: 'babel-loader', options: { presets: [babelEnv] } },
+                    { loader: 'awesome-typescript-loader' }
+                ]
+            });
+        }
+        rules.unshift({
+            test: /\.ts$/,
+            use: [
+                { loader: 'babel-loader', options: { presets: [babelEnv] } },
+                { loader: 'awesome-typescript-loader' }
+            ]
+        });
     }
     if (typeof configuration.afterRulesHook === 'function')
         rules = configuration.afterRulesHook(rules);

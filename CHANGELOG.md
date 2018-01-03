@@ -1,3 +1,7 @@
+### 2018-01-03 / 0.1.6
+
+* Fixed TypeScript tree-shaking.
+
 ### 2018-01-02 / 0.1.5
 
 * Add minification customization.

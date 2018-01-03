@@ -3,8 +3,9 @@ import {sep as pathSep} from 'path';
 import {Configuration, loadConfigurationEntry} from './configuration';
 
 export interface Babel{
-  browsersWhiteList: Array<string>;
+  browsersWhiteList?: Array<string>;
   exclude?: Array<string>;
+  modules?: boolean;
 }
 
 export function normalizeIncludePath(path: string): string{
@@ -23,7 +24,7 @@ export function setupRules(configuration: Configuration, version: string){
   const babel: Babel = loadConfigurationEntry('babel', configuration);
   const transpilers: Array<string> = loadConfigurationEntry('transpilers', configuration);
 
-  const babelEnv: Array<any> = ['env', {targets: {browsers: babel.browsersWhiteList}, exclude: babel.exclude}];
+  const babelEnv: Array<any> = ['env', {targets: {browsers: babel.browsersWhiteList}, exclude: babel.exclude, modules: babel.modules}];
 
   let rules: Array<any> = [
     {
@@ -62,10 +63,23 @@ export function setupRules(configuration: Configuration, version: string){
           {loader: 'awesome-typescript-loader'}
         ]
       });
-    }else if(transpilers.includes('react'))
-      rules.unshift({test: /\.tsx$/, loader: 'awesome-typescript-loader'});
+    }else if(transpilers.includes('react')){
+      rules.unshift({
+        test: /\.tsx$/,
+        use: [
+          {loader: 'babel-loader', options: {presets: [babelEnv]}},
+          {loader: 'awesome-typescript-loader'}
+        ]
+      });
+    }
 
-    rules.unshift({test: /\.ts$/, loader: 'awesome-typescript-loader'});
+    rules.unshift({
+      test: /\.ts$/,
+      use: [
+        {loader: 'babel-loader', options: {presets: [babelEnv]}},
+        {loader: 'awesome-typescript-loader'}
+      ]
+    });
   }
 
   if(typeof configuration.afterRulesHook === 'function')
