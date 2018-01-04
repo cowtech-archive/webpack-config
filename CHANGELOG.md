@@ -1,3 +1,7 @@
+### 2018-01-04 / 0.1.7
+
+* Updated dependencies.
+
 ### 2018-01-03 / 0.1.6
 
 * Fixed TypeScript tree-shaking.
