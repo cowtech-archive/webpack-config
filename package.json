@@ -1,6 +1,6 @@
 {
   "name": "@cowtech/webpack-config-lite",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "description": "CowTech WebPack configuration without any CSS handling.",
   "main": "index.js",
   "files": [
@@ -62,6 +62,6 @@
     "rollup-plugin-typescript2": "~0.10"
   },
   "engines": {
-    "node" : ">=9.0"
+    "node": ">=9.0"
   }
 }
