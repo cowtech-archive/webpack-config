@@ -4,7 +4,6 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var fs = require('fs');
 var path = require('path');
-var moment = require('moment');
 var webpack = require('webpack');
 
 const defaultConfiguration = {
@@ -59,7 +58,7 @@ function loadEnvironment(configuration) {
     const sw = loadConfigurationEntry('serviceWorker', configuration);
     if (!packageInfo.site)
         packageInfo.site = {};
-    return Object.assign({ environment, serviceWorkerEnabled: sw !== false, version: version || moment.utc().format('YYYYMMDD-HHmmss') }, (packageInfo.site.common || {}), (packageInfo.site[environment] || {}));
+    return Object.assign({ environment, serviceWorkerEnabled: sw !== false, version: version || new Date().toISOString().replace(/([-:])|(\.\d+Z$)/g, '').replace('T', '.') }, (packageInfo.site.common || {}), (packageInfo.site[environment] || {}));
 }
 
 function loadIcons(configuration) {

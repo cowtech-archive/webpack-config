@@ -1,4 +1,3 @@
-import * as moment from 'moment';
 import {resolve} from 'path';
 
 import {Configuration, loadConfigurationEntry} from './configuration';
@@ -15,7 +14,7 @@ export function loadEnvironment(configuration: Configuration): any{
   return {
     environment,
     serviceWorkerEnabled: sw !== false,
-    version: version || moment.utc().format('YYYYMMDD-HHmmss'),
+    version: version || new Date().toISOString().replace(/([-:])|(\.\d+Z$)/g, '').replace('T', '.'),
     ...(packageInfo.site.common || {}),
     ...(packageInfo.site[environment] || {})
   };

@@ -46,8 +46,8 @@ export function setupServer(configuration: Configuration): any{
 
   if(https){
     config.https = {
-      key: (https as Https).key || readFileSync(resolve(process.cwd(), (defaultServer.https as Https).key)),
-      cert: (https as Https).cert || readFileSync(resolve(process.cwd(), (defaultServer.https as Https).cert))
+      key: (https as Https).key || readFileSync(resolve(process.cwd(), (defaultServer.https as Https).key as string)),
+      cert: (https as Https).cert || readFileSync(resolve(process.cwd(), (defaultServer.https as Https).cert as string))
     };
   }
 

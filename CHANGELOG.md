@@ -1,3 +1,7 @@
+### 2018-01-18 / 0.2.0
+
+* Updated dependencies. Removed moment. Require Node.js 9.
+
 ### 2018-01-04 / 0.1.7
 
 * Updated dependencies.
