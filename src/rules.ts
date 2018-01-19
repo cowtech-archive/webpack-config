@@ -45,19 +45,19 @@ export function setupRules(configuration: Configuration, version: string){
   if(transpilers.includes('babel')){
     if(transpilers.includes('inferno')){
       rules.unshift({
-        test: /\.jsx$/, exclude: /node_modules/,
+        test: /(\.js(x?))$/, exclude: /node_modules/,
         use: {loader: 'babel-loader', options: {presets: ['react', babelEnv], plugins: ['syntax-jsx', ['inferno', {imports: true}]]}}
       });
     }else if(transpilers.includes('react'))
-      rules.unshift({test: /\.jsx$/, exclude: /node_modules/, use: {loader: 'babel-loader', options: {presets: ['react', babelEnv]}}});
-
-    rules.unshift({test: /\.js$/, exclude: /node_modules/, use: {loader: 'babel-loader', options: {presets: [babelEnv]}}});
+      rules.unshift({test: /(\.js(x?))$/, exclude: /node_modules/, use: {loader: 'babel-loader', options: {presets: ['react', babelEnv]}}});
+    else
+      rules.unshift({test: /\.js$/, exclude: /node_modules/, use: {loader: 'babel-loader', options: {presets: [babelEnv]}}});
   }
 
   if(transpilers.includes('typescript')){
     if(transpilers.includes('inferno')){
       rules.unshift({
-        test: /\.tsx$/,
+        test: /(\.ts(x?))$/,
         use: [
           {loader: 'babel-loader', options: {presets: [babelEnv], plugins: ['syntax-jsx', ['inferno', {imports: true}]]}},
           {loader: 'awesome-typescript-loader'}
@@ -65,21 +65,21 @@ export function setupRules(configuration: Configuration, version: string){
       });
     }else if(transpilers.includes('react')){
       rules.unshift({
-        test: /\.tsx$/,
+        test: /(\.ts(x?))$/,
+        use: [
+          {loader: 'babel-loader', options: {presets: [babelEnv]}},
+          {loader: 'awesome-typescript-loader'}
+        ]
+      });
+    }else{
+      rules.unshift({
+        test: /\.ts$/,
         use: [
           {loader: 'babel-loader', options: {presets: [babelEnv]}},
           {loader: 'awesome-typescript-loader'}
         ]
       });
     }
-
-    rules.unshift({
-      test: /\.ts$/,
-      use: [
-        {loader: 'babel-loader', options: {presets: [babelEnv]}},
-        {loader: 'awesome-typescript-loader'}
-      ]
-    });
   }
 
   if(typeof configuration.afterRulesHook === 'function')

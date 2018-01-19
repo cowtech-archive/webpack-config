@@ -1,3 +1,7 @@
+### 2018-01-19 / 0.2.1
+
+* Improve loaders.
+
 ### 2018-01-18 / 0.2.0
 
 * Updated dependencies. Removed moment. Require Node.js 9.
