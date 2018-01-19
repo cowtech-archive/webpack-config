@@ -46,40 +46,33 @@ export function setupRules(configuration: Configuration, version: string){
     if(transpilers.includes('inferno')){
       rules.unshift({
         test: /(\.js(x?))$/, exclude: /node_modules/,
-        use: {loader: 'babel-loader', options: {presets: ['react', babelEnv], plugins: ['syntax-jsx', ['inferno', {imports: true}]]}}
+        use: {loader: 'babel-loader', options: {presets: [babelEnv, '@babel/stage-3', '@babel/react'], plugins: ['syntax-jsx', ['inferno', {imports: true}]]}}
       });
-    }else if(transpilers.includes('react'))
-      rules.unshift({test: /(\.js(x?))$/, exclude: /node_modules/, use: {loader: 'babel-loader', options: {presets: ['react', babelEnv]}}});
-    else
-      rules.unshift({test: /\.js$/, exclude: /node_modules/, use: {loader: 'babel-loader', options: {presets: [babelEnv]}}});
+    }else if(transpilers.includes('react')){
+      rules.unshift({
+        test: /(\.js(x?))$/, exclude: /node_modules/,
+        use: {loader: 'babel-loader', options: {presets: [babelEnv, '@babel/stage-3', '@babel/react']}}
+      });
+    }else
+      rules.unshift({test: /\.js$/, exclude: /node_modules/, use: {loader: 'babel-loader', options: {presets: [babelEnv, '@babel/stage-3']}}});
   }
 
   if(transpilers.includes('typescript')){
     if(transpilers.includes('inferno')){
       rules.unshift({
         test: /(\.ts(x?))$/,
-        use: [
-          {loader: 'babel-loader', options: {presets: [babelEnv], plugins: ['syntax-jsx', ['inferno', {imports: true}]]}},
-          {loader: 'awesome-typescript-loader'}
-        ]
+        use: {
+          loader: 'babel-loader', options: {presets: [babelEnv, '@babel/stage-3', '@babel/react', '@babel/typescript'],
+          plugins: ['syntax-jsx', ['inferno', {imports: true}]]}
+        }
       });
     }else if(transpilers.includes('react')){
       rules.unshift({
         test: /(\.ts(x?))$/,
-        use: [
-          {loader: 'babel-loader', options: {presets: [babelEnv]}},
-          {loader: 'awesome-typescript-loader'}
-        ]
+        use: {loader: 'babel-loader', options: {presets: [babelEnv, '@babel/stage-3', '@babel/react', '@babel/typescript']}}
       });
-    }else{
-      rules.unshift({
-        test: /\.ts$/,
-        use: [
-          {loader: 'babel-loader', options: {presets: [babelEnv]}},
-          {loader: 'awesome-typescript-loader'}
-        ]
-      });
-    }
+    }else
+      rules.unshift({test: /\.ts$/, use: {loader: 'babel-loader', options: {presets: [babelEnv, '@babel/stage-3', '@babel/typescript']}}});
   }
 
   if(typeof configuration.afterRulesHook === 'function')

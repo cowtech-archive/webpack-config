@@ -1,3 +1,7 @@
+### 2018-01-19 / 0.3.0
+
+* Switch to Babel 7.
+
 ### 2018-01-19 / 0.2.1
 
 * Improve loaders.
