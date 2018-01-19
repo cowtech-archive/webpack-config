@@ -212,12 +212,17 @@ function setupServiceWorker(config, configuration) {
     const globIgnores = loadConfigurationEntry('ignores', options, defaultConfiguration.serviceWorker);
     const templatedUrls = loadConfigurationEntry('templatedUrls', options, defaultConfiguration.serviceWorker);
     const transpilers = loadConfigurationEntry('transpilers', configuration);
+    const babel = loadConfigurationEntry('babel', configuration);
+    const babelPresets = [
+        ['@babel/env', { targets: { browsers: babel.browsersWhiteList }, exclude: babel.exclude, modules: babel.modules }],
+        '@babel/stage-3'
+    ];
     if (options === false)
         return config;
     config.entry[dest] = options.template || `./src/js/service-worker.${transpilers.includes('typescript') ? 'ts' : 'js'}`;
     config.module.rules.unshift({
         test: /workbox-sw\.[a-z]+\..+\.js$/,
-        use: [{ loader: 'file-loader', options: { name: 'js/workbox.js' } }, { loader: 'babel-loader', options: { presets: ['minify', { comments: false }] } }]
+        use: [{ loader: 'file-loader', options: { name: 'js/workbox.js' } }, { loader: 'babel-loader', options: { presets: babelPresets } }]
     });
     let plugin = new WorkboxPlugin({ swSrc: `${distFolder}/${source}`, swDest: `${distFolder}/${dest}`, globPatterns, globIgnores, templatedUrls });
     if (typeof options.afterHook === 'function')

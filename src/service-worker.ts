@@ -1,6 +1,7 @@
 import * as webpack from 'webpack';
 
 import {Configuration, defaultConfiguration, loadConfigurationEntry} from './configuration';
+import {Babel} from './rules';
 
 export interface ServiceWorker{
   template?: string;
@@ -24,6 +25,12 @@ export function setupServiceWorker(config: webpack.Configuration, configuration:
   const globIgnores: Array<string> = loadConfigurationEntry('ignores', options as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
   const templatedUrls: Array<string> = loadConfigurationEntry('templatedUrls', options as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
   const transpilers: Array<string> = loadConfigurationEntry('transpilers', configuration);
+  const babel: Babel = loadConfigurationEntry('babel', configuration);
+
+  const babelPresets: Array<any> = [
+    ['@babel/env', {targets: {browsers: babel.browsersWhiteList}, exclude: babel.exclude, modules: babel.modules}],
+    '@babel/stage-3'
+  ];
 
   if(options === false)
     return config;
@@ -32,7 +39,7 @@ export function setupServiceWorker(config: webpack.Configuration, configuration:
   (config.module as webpack.NewModule).rules.unshift(
     {
       test: /workbox-sw\.[a-z]+\..+\.js$/,
-      use: [{loader: 'file-loader', options: {name: 'js/workbox.js'}}, {loader: 'babel-loader', options: {presets: ['minify', {comments: false}]}}]
+      use: [{loader: 'file-loader', options: {name: 'js/workbox.js'}}, {loader: 'babel-loader', options: {presets: babelPresets}}]
     }
   );
 
