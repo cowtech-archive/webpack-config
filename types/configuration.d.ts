@@ -3,7 +3,7 @@ import * as webpack from 'webpack';
 import { IconsLoader } from './icons';
 import { Server } from './index';
 import { PluginOptions } from './plugins';
-import { Babel } from './rules';
+import { Babel, TypescriptOptions } from './rules';
 import { ServiceWorker } from './service-worker';
 export interface Configuration {
     environment?: string;
@@ -19,6 +19,7 @@ export interface Configuration {
     plugins?: Array<any>;
     pluginsOptions?: PluginOptions;
     babel?: Babel;
+    typescript: TypescriptOptions;
     externals?: Array<string>;
     sourceMapsType?: webpack.Options.Devtool;
     server?: Server;

@@ -8,6 +8,10 @@ export interface Babel{
   modules?: boolean;
 }
 
+export interface TypescriptOptions{
+  strict?: boolean;
+}
+
 export function normalizeIncludePath(path: string): string{
   const components: Array<string> = path.split(pathSep);
 
@@ -24,7 +28,10 @@ export function setupRules(configuration: Configuration, version: string){
   const babel: Babel = loadConfigurationEntry('babel', configuration);
   const transpilers: Array<string> = loadConfigurationEntry('transpilers', configuration);
 
-  const babelEnv: Array<any> = ['@babel/env', {targets: {browsers: babel.browsersWhiteList}, exclude: babel.exclude, modules: babel.modules}];
+  const babelPresets: Array<any> = [
+    ['@babel/env', {targets: {browsers: babel.browsersWhiteList}, exclude: babel.exclude, modules: babel.modules}],
+    '@babel/stage-3'
+  ];
 
   let rules: Array<any> = [
     {
@@ -46,15 +53,15 @@ export function setupRules(configuration: Configuration, version: string){
     if(transpilers.includes('inferno')){
       rules.unshift({
         test: /(\.js(x?))$/, exclude: /node_modules/,
-        use: {loader: 'babel-loader', options: {presets: [babelEnv, '@babel/stage-3', '@babel/react'], plugins: ['syntax-jsx', ['inferno', {imports: true}]]}}
+        use: {loader: 'babel-loader', options: {presets: babelPresets.concat('@babel/react'), plugins: ['syntax-jsx', ['inferno', {imports: true}]]}}
       });
     }else if(transpilers.includes('react')){
       rules.unshift({
         test: /(\.js(x?))$/, exclude: /node_modules/,
-        use: {loader: 'babel-loader', options: {presets: [babelEnv, '@babel/stage-3', '@babel/react']}}
+        use: {loader: 'babel-loader', options: {presets: babelPresets.concat('@babel/react')}}
       });
     }else
-      rules.unshift({test: /\.js$/, exclude: /node_modules/, use: {loader: 'babel-loader', options: {presets: [babelEnv, '@babel/stage-3']}}});
+      rules.unshift({test: /\.js$/, exclude: /node_modules/, use: {loader: 'babel-loader', options: {presets: babelPresets}}});
   }
 
   if(transpilers.includes('typescript')){
@@ -62,17 +69,17 @@ export function setupRules(configuration: Configuration, version: string){
       rules.unshift({
         test: /(\.ts(x?))$/,
         use: {
-          loader: 'babel-loader', options: {presets: [babelEnv, '@babel/stage-3', '@babel/react', '@babel/typescript'],
-          plugins: ['syntax-jsx', ['inferno', {imports: true}]]}
+          loader: 'babel-loader',
+          options: {presets: babelPresets.concat('@babel/react', '@babel/typescript'), plugins: ['syntax-jsx', ['inferno', {imports: true}]]}
         }
       });
     }else if(transpilers.includes('react')){
       rules.unshift({
         test: /(\.ts(x?))$/,
-        use: {loader: 'babel-loader', options: {presets: [babelEnv, '@babel/stage-3', '@babel/react', '@babel/typescript']}}
+        use: {loader: 'babel-loader', options: {presets: babelPresets.concat('@babel/react', '@babel/typescript')}}
       });
     }else
-      rules.unshift({test: /\.ts$/, use: {loader: 'babel-loader', options: {presets: [babelEnv, '@babel/stage-3', '@babel/typescript']}}});
+      rules.unshift({test: /\.ts$/, use: {loader: 'babel-loader', options: {presets: babelPresets.concat('@babel/typescript')}}});
   }
 
   if(typeof configuration.afterRulesHook === 'function')

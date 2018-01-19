@@ -3,7 +3,7 @@ import * as webpack from 'webpack';
 import {IconsLoader} from './icons';
 import {Server} from './index';
 import {PluginOptions} from './plugins';
-import {Babel} from './rules';
+import {Babel, TypescriptOptions} from './rules';
 import {ServiceWorker} from './service-worker';
 
 export interface Configuration{
@@ -18,6 +18,7 @@ export interface Configuration{
   plugins?: Array<any>;
   pluginsOptions?: PluginOptions;
   babel?: Babel;
+  typescript: TypescriptOptions;
   externals?: Array<string>;
   sourceMapsType?: webpack.Options.Devtool;
   server?: Server;
@@ -45,6 +46,9 @@ export const defaultConfiguration: Configuration = {
     browsersWhiteList: ['last 2 versions'],
     exclude: ['transform-async-to-generator', 'transform-regenerator'],
     modules: false
+  },
+  typescript: {
+    strict: true
   },
   externals: [],
   sourceMapsType: 'source-map',

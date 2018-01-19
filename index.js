@@ -27,6 +27,9 @@ const defaultConfiguration = {
         exclude: ['transform-async-to-generator', 'transform-regenerator'],
         modules: false
     },
+    typescript: {
+        strict: true
+    },
     externals: [],
     sourceMapsType: 'source-map',
     server: {
@@ -72,7 +75,7 @@ function loadIcons(configuration) {
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const GraphBundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const BabiliPlugin = require('babili-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 function setupPlugins(configuration, environment) {
     const env = configuration.environment;
@@ -85,6 +88,7 @@ function setupPlugins(configuration, environment) {
     const commonChunks = loadConfigurationEntry('commonChunks', options, defaultOptions);
     const sizeAnalyzerServer = loadConfigurationEntry('sizeAnalyzerServer', options, defaultOptions);
     const transpilers = loadConfigurationEntry('transpilers', configuration);
+    const typescript = loadConfigurationEntry('typescript', configuration);
     let plugins = [
         new webpack.DefinePlugin({
             env: JSON.stringify(environment),
@@ -94,14 +98,14 @@ function setupPlugins(configuration, environment) {
         })
     ];
     if (transpilers.includes('typescript'))
-        plugins.push(new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true, async: false, workers: ForkTsCheckerWebpackPlugin.TWO_CPUS_FREE }));
+        plugins.push(new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true, async: !typescript.strict, workers: ForkTsCheckerWebpackPlugin.TWO_CPUS_FREE }));
     if (indexFile)
         plugins.push(new HtmlWebpackPlugin({ template: indexFile, minify: { collapseWhitespace: true }, inject: false, excludeAssets: [/\.js$/] }));
     if (concatenate)
         plugins.push(new webpack.optimize.ModuleConcatenationPlugin());
     if (env === 'production') {
         if (minify)
-            plugins.push(new BabiliPlugin(options.minifyOptions));
+            plugins.push(new UglifyJsPlugin({ uglifyOptions: options.minifyOptions }));
     }
     else {
         if (hotModuleReload)
@@ -130,7 +134,10 @@ function normalizeIncludePath(path$$1) {
 function setupRules(configuration, version) {
     const babel = loadConfigurationEntry('babel', configuration);
     const transpilers = loadConfigurationEntry('transpilers', configuration);
-    const babelEnv = ['@babel/env', { targets: { browsers: babel.browsersWhiteList }, exclude: babel.exclude, modules: babel.modules }];
+    const babelPresets = [
+        ['@babel/env', { targets: { browsers: babel.browsersWhiteList }, exclude: babel.exclude, modules: babel.modules }],
+        '@babel/stage-3'
+    ];
     let rules = [
         {
             test: /\.(?:bmp|png|jpg|jpeg|svg|webp)$/,
@@ -150,36 +157,36 @@ function setupRules(configuration, version) {
         if (transpilers.includes('inferno')) {
             rules.unshift({
                 test: /(\.js(x?))$/, exclude: /node_modules/,
-                use: { loader: 'babel-loader', options: { presets: [babelEnv, '@babel/stage-3', '@babel/react'], plugins: ['syntax-jsx', ['inferno', { imports: true }]] } }
+                use: { loader: 'babel-loader', options: { presets: babelPresets.concat('@babel/react'), plugins: ['syntax-jsx', ['inferno', { imports: true }]] } }
             });
         }
         else if (transpilers.includes('react')) {
             rules.unshift({
                 test: /(\.js(x?))$/, exclude: /node_modules/,
-                use: { loader: 'babel-loader', options: { presets: [babelEnv, '@babel/stage-3', '@babel/react'] } }
+                use: { loader: 'babel-loader', options: { presets: babelPresets.concat('@babel/react') } }
             });
         }
         else
-            rules.unshift({ test: /\.js$/, exclude: /node_modules/, use: { loader: 'babel-loader', options: { presets: [babelEnv, '@babel/stage-3'] } } });
+            rules.unshift({ test: /\.js$/, exclude: /node_modules/, use: { loader: 'babel-loader', options: { presets: babelPresets } } });
     }
     if (transpilers.includes('typescript')) {
         if (transpilers.includes('inferno')) {
             rules.unshift({
                 test: /(\.ts(x?))$/,
                 use: {
-                    loader: 'babel-loader', options: { presets: [babelEnv, '@babel/stage-3', '@babel/react', '@babel/typescript'],
-                        plugins: ['syntax-jsx', ['inferno', { imports: true }]] }
+                    loader: 'babel-loader',
+                    options: { presets: babelPresets.concat('@babel/react', '@babel/typescript'), plugins: ['syntax-jsx', ['inferno', { imports: true }]] }
                 }
             });
         }
         else if (transpilers.includes('react')) {
             rules.unshift({
                 test: /(\.ts(x?))$/,
-                use: { loader: 'babel-loader', options: { presets: [babelEnv, '@babel/stage-3', '@babel/react', '@babel/typescript'] } }
+                use: { loader: 'babel-loader', options: { presets: babelPresets.concat('@babel/react', '@babel/typescript') } }
             });
         }
         else
-            rules.unshift({ test: /\.ts$/, use: { loader: 'babel-loader', options: { presets: [babelEnv, '@babel/stage-3', '@babel/typescript'] } } });
+            rules.unshift({ test: /\.ts$/, use: { loader: 'babel-loader', options: { presets: babelPresets.concat('@babel/typescript') } } });
     }
     if (typeof configuration.afterRulesHook === 'function')
         rules = configuration.afterRulesHook(rules);

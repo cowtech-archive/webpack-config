@@ -1,3 +1,7 @@
+### 2018-01-19 / 0.3.3
+
+* Switched to Uglify-ES.
+
 ### 2018-01-19 / 0.3.2
 
 * Minor bugfix.

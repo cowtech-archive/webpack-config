@@ -1,7 +1,9 @@
 import {basename} from 'path';
 import * as webpack from 'webpack';
+
 import {Configuration, defaultConfiguration, loadConfigurationEntry} from './configuration';
 import {loadIcons} from './icons';
+import {TypescriptOptions} from './rules';
 
 export interface PluginOptions{
   concatenate?: boolean;
@@ -15,7 +17,7 @@ export interface PluginOptions{
 
 const HtmlWebpackPlugin: any = require('html-webpack-plugin');
 const GraphBundleAnalyzerPlugin: any = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const BabiliPlugin: any = require('babili-webpack-plugin');
+const UglifyJsPlugin: any = require('uglifyjs-webpack-plugin');
 const ForkTsCheckerWebpackPlugin: any = require('fork-ts-checker-webpack-plugin');
 
 export function setupPlugins(configuration: Configuration, environment: any): Array<any>{
@@ -30,6 +32,7 @@ export function setupPlugins(configuration: Configuration, environment: any): Ar
   const commonChunks: boolean = loadConfigurationEntry('commonChunks', options, defaultOptions);
   const sizeAnalyzerServer: boolean = loadConfigurationEntry('sizeAnalyzerServer', options, defaultOptions);
   const transpilers: Array<string> = loadConfigurationEntry('transpilers', configuration);
+  const typescript: TypescriptOptions = loadConfigurationEntry('typescript', configuration);
 
   let plugins: Array<any> = [
     new webpack.DefinePlugin({
@@ -41,7 +44,7 @@ export function setupPlugins(configuration: Configuration, environment: any): Ar
   ];
 
   if(transpilers.includes('typescript'))
-    plugins.push(new ForkTsCheckerWebpackPlugin({checkSyntacticErrors: true, async: false, workers: ForkTsCheckerWebpackPlugin.TWO_CPUS_FREE}));
+    plugins.push(new ForkTsCheckerWebpackPlugin({checkSyntacticErrors: true, async: !typescript.strict, workers: ForkTsCheckerWebpackPlugin.TWO_CPUS_FREE}));
 
   if(indexFile)
     plugins.push(new HtmlWebpackPlugin({template: indexFile, minify: {collapseWhitespace: true}, inject: false, excludeAssets: [/\.js$/]}));
@@ -51,7 +54,7 @@ export function setupPlugins(configuration: Configuration, environment: any): Ar
 
   if(env === 'production'){
     if(minify)
-      plugins.push(new BabiliPlugin(options.minifyOptions));
+      plugins.push(new UglifyJsPlugin({uglifyOptions: options.minifyOptions}));
   }else{
     if(hotModuleReload)
       plugins.push(new webpack.HotModuleReplacementPlugin());
