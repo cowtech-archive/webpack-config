@@ -1,6 +1,5 @@
 import {basename} from 'path';
 import * as webpack from 'webpack';
-
 import {Configuration, defaultConfiguration, loadConfigurationEntry} from './configuration';
 import {loadIcons} from './icons';
 
@@ -17,6 +16,7 @@ export interface PluginOptions{
 const HtmlWebpackPlugin: any = require('html-webpack-plugin');
 const GraphBundleAnalyzerPlugin: any = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const BabiliPlugin: any = require('babili-webpack-plugin');
+const ForkTsCheckerWebpackPlugin: any = require('fork-ts-checker-webpack-plugin');
 
 export function setupPlugins(configuration: Configuration, environment: any): Array<any>{
   const env: string = configuration.environment;
@@ -29,6 +29,7 @@ export function setupPlugins(configuration: Configuration, environment: any): Ar
   const hotModuleReload: boolean = loadConfigurationEntry('hotModuleReload', options, defaultOptions);
   const commonChunks: boolean = loadConfigurationEntry('commonChunks', options, defaultOptions);
   const sizeAnalyzerServer: boolean = loadConfigurationEntry('sizeAnalyzerServer', options, defaultOptions);
+  const transpilers: Array<string> = loadConfigurationEntry('transpilers', configuration);
 
   let plugins: Array<any> = [
     new webpack.DefinePlugin({
@@ -38,6 +39,9 @@ export function setupPlugins(configuration: Configuration, environment: any): Ar
       'process.env': {NODE_ENV: JSON.stringify(env)} // This is needed by React for production mode
     })
   ];
+
+  if(transpilers.includes('typescript'))
+    plugins.push(new ForkTsCheckerWebpackPlugin({checkSyntacticErrors: true, async: false, workers: ForkTsCheckerWebpackPlugin.TWO_CPUS_FREE}));
 
   if(indexFile)
     plugins.push(new HtmlWebpackPlugin({template: indexFile, minify: {collapseWhitespace: true}, inject: false, excludeAssets: [/\.js$/]}));
