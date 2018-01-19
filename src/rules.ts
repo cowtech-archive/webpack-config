@@ -24,7 +24,7 @@ export function setupRules(configuration: Configuration, version: string){
   const babel: Babel = loadConfigurationEntry('babel', configuration);
   const transpilers: Array<string> = loadConfigurationEntry('transpilers', configuration);
 
-  const babelEnv: Array<any> = ['env', {targets: {browsers: babel.browsersWhiteList}, exclude: babel.exclude, modules: babel.modules}];
+  const babelEnv: Array<any> = ['@babel/env', {targets: {browsers: babel.browsersWhiteList}, exclude: babel.exclude, modules: babel.modules}];
 
   let rules: Array<any> = [
     {

@@ -1,3 +1,7 @@
+### 2018-01-19 / 0.3.2
+
+* Minor bugfix.
+
 ### 2018-01-19 / 0.3.1
 
 * Include type checking.

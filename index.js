@@ -73,6 +73,7 @@ function loadIcons(configuration) {
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const GraphBundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const BabiliPlugin = require('babili-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 function setupPlugins(configuration, environment) {
     const env = configuration.environment;
     const options = configuration.pluginsOptions || {};
@@ -83,6 +84,7 @@ function setupPlugins(configuration, environment) {
     const hotModuleReload = loadConfigurationEntry('hotModuleReload', options, defaultOptions);
     const commonChunks = loadConfigurationEntry('commonChunks', options, defaultOptions);
     const sizeAnalyzerServer = loadConfigurationEntry('sizeAnalyzerServer', options, defaultOptions);
+    const transpilers = loadConfigurationEntry('transpilers', configuration);
     let plugins = [
         new webpack.DefinePlugin({
             env: JSON.stringify(environment),
@@ -91,6 +93,8 @@ function setupPlugins(configuration, environment) {
             'process.env': { NODE_ENV: JSON.stringify(env) } // This is needed by React for production mode
         })
     ];
+    if (transpilers.includes('typescript'))
+        plugins.push(new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true, async: false, workers: ForkTsCheckerWebpackPlugin.TWO_CPUS_FREE }));
     if (indexFile)
         plugins.push(new HtmlWebpackPlugin({ template: indexFile, minify: { collapseWhitespace: true }, inject: false, excludeAssets: [/\.js$/] }));
     if (concatenate)
@@ -126,7 +130,7 @@ function normalizeIncludePath(path$$1) {
 function setupRules(configuration, version) {
     const babel = loadConfigurationEntry('babel', configuration);
     const transpilers = loadConfigurationEntry('transpilers', configuration);
-    const babelEnv = ['env', { targets: { browsers: babel.browsersWhiteList }, exclude: babel.exclude, modules: babel.modules }];
+    const babelEnv = ['@babel/env', { targets: { browsers: babel.browsersWhiteList }, exclude: babel.exclude, modules: babel.modules }];
     let rules = [
         {
             test: /\.(?:bmp|png|jpg|jpeg|svg|webp)$/,
