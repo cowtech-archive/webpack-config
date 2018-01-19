@@ -1,3 +1,7 @@
+### 2018-01-19 / 0.3.4
+
+* Relax engine requirement.
+
 ### 2018-01-19 / 0.3.3
 
 * Switched to Uglify-ES.
