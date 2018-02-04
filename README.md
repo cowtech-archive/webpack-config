@@ -1,11 +1,11 @@
 # @cowtech/webpack-config-lite
 
-[![Package Version](https://badge.fury.io/js/%40cowtech%2Fwebpack-config-lite.svg)](https://badge.fury.io/js/%40cowtech%2Fwebpack-config-lite)
-[![Dependency Status](https://gemnasium.com/badges/github.com/cowtech/webpack-config-lite.svg)](https://gemnasium.com/github.com/cowtech/webpack-config-lite)
+[![Package Version](https://img.shields.io/npm/v/@cowtech/webpack-config-lite.svg)](https://npmjs.com/package/@cowtech/webpack-config-lite)
+[![Dependency Status](https://img.shields.io/gemnasium/github.com/cowtech/webpack-config-lite.svg)](https://gemnasium.com/github.com/cowtech/webpack-config-lite)
 
 CowTech WebPack configuration without any CSS handling.
 
-https://github.com/ShogunPanda/webpack-config-lite
+https://github.com/cowtech/webpack-config-lite
 
 ## Contributing to webpack-config-lite
 
@@ -20,4 +20,4 @@ https://github.com/ShogunPanda/webpack-config-lite
 
 Copyright (C) 2017 and above Shogun <shogun@cowtech.it>.
 
-Licensed under the MIT license, which can be found at http://opensource.org/licenses/MIT.
+Licensed under the MIT license, which can be found at https://choosealicense.com/licenses/mit.
