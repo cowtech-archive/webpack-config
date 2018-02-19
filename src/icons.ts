@@ -11,9 +11,9 @@ export interface IconsLoader{
 }
 
 export function loadIcons(configuration: Configuration): Icons{
-  const toLoad: Array<string> = loadConfigurationEntry('icons', configuration);
-  const iconsLoader: IconsLoader = loadConfigurationEntry('iconsLoader', configuration);
-  let icons: Icons = typeof iconsLoader.loader === 'function' ? iconsLoader.loader(toLoad, iconsLoader) : {tags: {}, definitions: ''};
+  const toLoad = loadConfigurationEntry<Array<string>>('icons', configuration);
+  const iconsLoader = loadConfigurationEntry<IconsLoader>('iconsLoader', configuration);
+  let icons = typeof iconsLoader.loader === 'function' ? iconsLoader.loader(toLoad, iconsLoader) : {tags: {}, definitions: ''};
 
   if(typeof iconsLoader.afterHook === 'function')
     icons = iconsLoader.afterHook(icons);

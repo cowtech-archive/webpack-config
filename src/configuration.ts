@@ -71,6 +71,6 @@ export const defaultConfiguration: Configuration = {
   }
 };
 
-export function loadConfigurationEntry(key: string, configuration: {[key: string]: any}, defaults: {[key: string]: any} = defaultConfiguration): any{
+export function loadConfigurationEntry<T = string>(key: string, configuration: {[key: string]: any}, defaults: {[key: string]: any} = defaultConfiguration): T{
   return configuration.hasOwnProperty(key) ? configuration[key] : defaults[key];
 }

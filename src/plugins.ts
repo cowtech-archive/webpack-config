@@ -15,24 +15,24 @@ export interface PluginOptions{
   afterHook?(plugins: Array<any>): Array<any>;
 }
 
-const HtmlWebpackPlugin: any = require('html-webpack-plugin');
-const GraphBundleAnalyzerPlugin: any = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const UglifyJsPlugin: any = require('uglifyjs-webpack-plugin');
-const ForkTsCheckerWebpackPlugin: any = require('fork-ts-checker-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const GraphBundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 export function setupPlugins(configuration: Configuration, environment: any): Array<any>{
-  const env: string = configuration.environment;
-  const options: PluginOptions = configuration.pluginsOptions || {};
-  const defaultOptions: PluginOptions = defaultConfiguration.pluginsOptions;
+  const env = configuration.environment;
+  const options = configuration.pluginsOptions || {};
+  const defaultOptions = defaultConfiguration.pluginsOptions;
 
-  const indexFile: string | boolean = loadConfigurationEntry('indexFile', configuration);
-  const concatenate: boolean = loadConfigurationEntry('concatenate', options, defaultOptions);
-  const minify: boolean = loadConfigurationEntry('minify', options, defaultOptions);
-  const hotModuleReload: boolean = loadConfigurationEntry('hotModuleReload', options, defaultOptions);
-  const commonChunks: boolean = loadConfigurationEntry('commonChunks', options, defaultOptions);
-  const sizeAnalyzerServer: boolean = loadConfigurationEntry('sizeAnalyzerServer', options, defaultOptions);
-  const transpilers: Array<string> = loadConfigurationEntry('transpilers', configuration);
-  const typescript: TypescriptOptions = loadConfigurationEntry('typescript', configuration);
+  const indexFile = loadConfigurationEntry<string | boolean>('indexFile', configuration);
+  const concatenate = loadConfigurationEntry<boolean>('concatenate', options, defaultOptions);
+  const minify = loadConfigurationEntry<boolean>('minify', options, defaultOptions);
+  const hotModuleReload = loadConfigurationEntry<boolean>('hotModuleReload', options, defaultOptions);
+  const commonChunks = loadConfigurationEntry<boolean>('commonChunks', options, defaultOptions);
+  const sizeAnalyzerServer = loadConfigurationEntry<boolean>('sizeAnalyzerServer', options, defaultOptions);
+  const transpilers = loadConfigurationEntry<Array<string>>('transpilers', configuration);
+  const typescript = loadConfigurationEntry<TypescriptOptions>('typescript', configuration);
 
   let plugins: Array<any> = [
     new webpack.DefinePlugin({

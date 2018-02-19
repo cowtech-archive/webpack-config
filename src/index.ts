@@ -32,9 +32,9 @@ export * from './plugins';
 export * from './rules';
 
 export function setupServer(configuration: Configuration): any{
-  const server: Server = configuration.server || {};
-  const defaultServer: Server = defaultConfiguration.server;
-  const https: Https | boolean = loadConfigurationEntry('https', server, defaultServer);
+  const server = configuration.server || {};
+  const defaultServer = defaultConfiguration.server;
+  const https = loadConfigurationEntry<Https | boolean>('https', server, defaultServer);
 
   let config: any = {
     host: loadConfigurationEntry('host', server, defaultServer),
@@ -64,11 +64,11 @@ export function setup(env: string, configuration: Configuration, afterHook?: Hoo
   if(!configuration.environment)
     configuration.environment = env;
 
-  const environment: any = loadEnvironment(configuration);
-  const destination: string = resolve(process.cwd(), configuration.distFolder || defaultConfiguration.distFolder);
-  const version: string = JSON.stringify(environment.version);
+  const environment = loadEnvironment(configuration);
+  const destination = resolve(process.cwd(), configuration.distFolder || defaultConfiguration.distFolder);
+  const version = JSON.stringify(environment.version);
 
-  const plugins: any = setupPlugins(configuration, environment);
+  const plugins = setupPlugins(configuration, environment);
 
   let config: webpack.Configuration = {
     entry: configuration.entries || defaultConfiguration.entries,

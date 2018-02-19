@@ -27,8 +27,8 @@ export interface Configuration {
     afterRulesHook?(rules: Array<any>): Array<any>;
 }
 export declare const defaultConfiguration: Configuration;
-export declare function loadConfigurationEntry(key: string, configuration: {
+export declare function loadConfigurationEntry<T = string>(key: string, configuration: {
     [key: string]: any;
 }, defaults?: {
     [key: string]: any;
-}): any;
+}): T;

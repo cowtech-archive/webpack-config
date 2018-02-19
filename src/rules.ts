@@ -13,7 +13,7 @@ export interface TypescriptOptions{
 }
 
 export function normalizeIncludePath(path: string): string{
-  const components: Array<string> = path.split(pathSep);
+  const components = path.split(pathSep);
 
   if(components[0] === 'src')
       components.shift();
@@ -25,10 +25,10 @@ export function normalizeIncludePath(path: string): string{
 }
 
 export function setupRules(configuration: Configuration, version: string){
-  const babel: Babel = loadConfigurationEntry('babel', configuration);
-  const transpilers: Array<string> = loadConfigurationEntry('transpilers', configuration);
+  const babel = loadConfigurationEntry<Babel>('babel', configuration);
+  const transpilers = loadConfigurationEntry<Array<string>>('transpilers', configuration);
 
-  const babelPresets: Array<any> = [
+  const babelPresets = [
     ['@babel/env', {targets: {browsers: babel.browsersWhiteList}, exclude: babel.exclude, modules: babel.modules}],
     '@babel/stage-3'
   ];
@@ -89,8 +89,8 @@ export function setupRules(configuration: Configuration, version: string){
 }
 
 export function setupResolvers(configuration: Configuration): Array<string>{
-  const transpilers: Array<string> = loadConfigurationEntry('transpilers', configuration);
-  const extensions: Array<string> = ['.json', '.js'];
+  const transpilers = loadConfigurationEntry<Array<string>>('transpilers', configuration);
+  const extensions = ['.json', '.js'];
 
   if(transpilers.includes('babel'))
     extensions.push('.jsx');

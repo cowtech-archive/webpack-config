@@ -16,18 +16,18 @@ export interface ServiceWorker{
 const WorkboxPlugin = require('workbox-webpack-plugin');
 
 export function setupServiceWorker(config: webpack.Configuration, configuration: Configuration): webpack.Configuration{
-  const options: ServiceWorker | boolean = loadConfigurationEntry('serviceWorker', configuration);
-  const distFolder: string = loadConfigurationEntry('distFolder', configuration);
+  const options = loadConfigurationEntry<ServiceWorker | boolean>('serviceWorker', configuration);
+  const distFolder = loadConfigurationEntry('distFolder', configuration);
 
-  const source: string = loadConfigurationEntry('source', options as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
-  const dest: string = loadConfigurationEntry('dest', options as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
-  const globPatterns: Array<string> = loadConfigurationEntry('patterns', options as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
-  const globIgnores: Array<string> = loadConfigurationEntry('ignores', options as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
-  const templatedUrls: Array<string> = loadConfigurationEntry('templatedUrls', options as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
-  const transpilers: Array<string> = loadConfigurationEntry('transpilers', configuration);
-  const babel: Babel = loadConfigurationEntry('babel', configuration);
+  const source = loadConfigurationEntry('source', options as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
+  const dest = loadConfigurationEntry('dest', options as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
+  const globPatterns = loadConfigurationEntry<Array<string>>('patterns', options as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
+  const globIgnores = loadConfigurationEntry<Array<string>>('ignores', options as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
+  const templatedUrls = loadConfigurationEntry<Array<string>>('templatedUrls', options as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
+  const transpilers = loadConfigurationEntry<Array<string>>('transpilers', configuration);
+  const babel = loadConfigurationEntry<Babel>('babel', configuration);
 
-  const babelPresets: Array<any> = [
+  const babelPresets = [
     ['@babel/env', {targets: {browsers: babel.browsersWhiteList}, exclude: babel.exclude, modules: babel.modules}],
     '@babel/stage-3'
   ];
@@ -43,7 +43,7 @@ export function setupServiceWorker(config: webpack.Configuration, configuration:
     }
   );
 
-  let plugin: any = new WorkboxPlugin({swSrc: `${distFolder}/${source}`, swDest: `${distFolder}/${dest}`, globPatterns, globIgnores, templatedUrls});
+  let plugin = new WorkboxPlugin({swSrc: `${distFolder}/${source}`, swDest: `${distFolder}/${dest}`, globPatterns, globIgnores, templatedUrls});
 
   if(typeof (options as ServiceWorker).afterHook === 'function')
     plugin = (options as ServiceWorker).afterHook(plugin);
