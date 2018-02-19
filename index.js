@@ -224,7 +224,7 @@ function setupServiceWorker(config, configuration) {
         test: /workbox-sw\.[a-z]+\..+\.js$/,
         use: [{ loader: 'file-loader', options: { name: 'js/workbox.js' } }, { loader: 'babel-loader', options: { presets: babelPresets } }]
     });
-    let plugin = new WorkboxPlugin({ swSrc: `${distFolder}/${source}`, swDest: `${distFolder}/${dest}`, globPatterns, globIgnores, templatedUrls });
+    let plugin = new WorkboxPlugin.InjectManifest({ swSrc: `${distFolder}/${source}`, swDest: `${distFolder}/${dest}`, globPatterns, globIgnores, templatedUrls });
     if (typeof options.afterHook === 'function')
         plugin = options.afterHook(plugin);
     config.plugins.push(plugin);

@@ -43,7 +43,7 @@ export function setupServiceWorker(config: webpack.Configuration, configuration:
     }
   );
 
-  let plugin = new WorkboxPlugin({swSrc: `${distFolder}/${source}`, swDest: `${distFolder}/${dest}`, globPatterns, globIgnores, templatedUrls});
+  let plugin = new WorkboxPlugin.InjectManifest({swSrc: `${distFolder}/${source}`, swDest: `${distFolder}/${dest}`, globPatterns, globIgnores, templatedUrls});
 
   if(typeof (options as ServiceWorker).afterHook === 'function')
     plugin = (options as ServiceWorker).afterHook(plugin);

@@ -1,3 +1,7 @@
+### 2018-02-19 / 0.3.7
+
+* Updated to Workbox 3.0.
+
 ### 2018-02-19 / 0.3.6
 
 * Simplified code.
