@@ -27,7 +27,7 @@ export function setupServiceWorker(config: webpack.Configuration, configuration:
   if(options === false)
     return config;
 
-  let pluginConfig: any = {swSrc: `${srcFolder}/${source}`, swdest: `${destFolder}/${dest}`, include, exclude, templatedUrls};
+  let pluginConfig: any = {swSrc: `${srcFolder}/${source}`, swDest: `${destFolder}/${dest}`, include, exclude, templatedUrls};
 
   if(typeof (options as ServiceWorker).afterHook === 'function')
     pluginConfig = (options as ServiceWorker).afterHook(pluginConfig);
