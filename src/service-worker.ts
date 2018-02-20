@@ -27,10 +27,13 @@ export function setupServiceWorker(config: webpack.Configuration, configuration:
   if(options === false)
     return config;
 
-  let pluginConfig = {swSrc: `${srcFolder}/${source}`, swdest: `${destFolder}/${dest}`, include, exclude, templatedUrls};
+  let pluginConfig: any = {swSrc: `${srcFolder}/${source}`, swdest: `${destFolder}/${dest}`, include, exclude, templatedUrls};
 
   if(typeof (options as ServiceWorker).afterHook === 'function')
     pluginConfig = (options as ServiceWorker).afterHook(pluginConfig);
+
+  if(pluginConfig.templatedUrls && !pluginConfig.globDirectory)
+    pluginConfig.globDirectory = srcFolder;
 
   config.plugins.push(new InjectManifest(pluginConfig));
 

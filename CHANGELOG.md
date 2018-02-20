@@ -1,3 +1,7 @@
+### 2018-02-20 / 0.4.1
+
+* Bugfix.
+
 ### 2018-02-20 / 0.4.0
 
 * Updated ServiceWorker generation.
