@@ -11,7 +11,8 @@ export interface Configuration {
     entries: string | Array<string> | {
         [key: string]: string;
     };
-    distFolder: string;
+    srcFolder: string;
+    destFolder: string;
     transpilers?: Array<string>;
     indexFile?: string | boolean;
     icons?: Array<string>;

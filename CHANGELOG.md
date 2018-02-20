@@ -1,3 +1,7 @@
+### 2018-02-20 / 0.4.0
+
+* Updated ServiceWorker generation.
+
 ### 2018-02-19 / 0.3.7
 
 * Updated to Workbox 3.0.

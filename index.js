@@ -2,13 +2,14 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var fs = require('fs');
 var path = require('path');
 var webpack = require('webpack');
+var fs = require('fs');
 
 const defaultConfiguration = {
     entries: [],
-    distFolder: 'dist',
+    srcFolder: 'src',
+    destFolder: 'dist',
     transpilers: [],
     indexFile: 'index.html.ejs',
     icons: [],
@@ -44,10 +45,10 @@ const defaultConfiguration = {
         hot: true
     },
     serviceWorker: {
-        source: 'sw.js',
+        source: 'service-worker.js',
         dest: 'sw.js',
-        patterns: ['**/*.{html,js,json,css}', 'images/**/*.{bmp,jpg,jpeg,png,svg,webp}'],
-        ignores: ['manifest.json', 'sw.js', 'js/workbox.js']
+        include: [/\.(html|js|json|css)$/, /\/images.+\.(bmp|jpg|jpeg|png|svg|webp)$/],
+        exclude: [/404\.html/]
     }
 };
 function loadConfigurationEntry(key, configuration, defaults = defaultConfiguration) {
@@ -202,32 +203,22 @@ function setupResolvers(configuration) {
     return extensions;
 }
 
-const WorkboxPlugin = require('workbox-webpack-plugin');
+const { InjectManifest } = require('workbox-webpack-plugin');
 function setupServiceWorker(config, configuration) {
     const options = loadConfigurationEntry('serviceWorker', configuration);
-    const distFolder = loadConfigurationEntry('distFolder', configuration);
+    const srcFolder = loadConfigurationEntry('srcFolder', configuration);
+    const destFolder = loadConfigurationEntry('destFolder', configuration);
     const source = loadConfigurationEntry('source', options, defaultConfiguration.serviceWorker);
     const dest = loadConfigurationEntry('dest', options, defaultConfiguration.serviceWorker);
-    const globPatterns = loadConfigurationEntry('patterns', options, defaultConfiguration.serviceWorker);
-    const globIgnores = loadConfigurationEntry('ignores', options, defaultConfiguration.serviceWorker);
+    const include = loadConfigurationEntry('include', options, defaultConfiguration.serviceWorker);
+    const exclude = loadConfigurationEntry('exclude', options, defaultConfiguration.serviceWorker);
     const templatedUrls = loadConfigurationEntry('templatedUrls', options, defaultConfiguration.serviceWorker);
-    const transpilers = loadConfigurationEntry('transpilers', configuration);
-    const babel = loadConfigurationEntry('babel', configuration);
-    const babelPresets = [
-        ['@babel/env', { targets: { browsers: babel.browsersWhiteList }, exclude: babel.exclude, modules: babel.modules }],
-        '@babel/stage-3'
-    ];
     if (options === false)
         return config;
-    config.entry[dest] = options.template || `./src/js/service-worker.${transpilers.includes('typescript') ? 'ts' : 'js'}`;
-    config.module.rules.unshift({
-        test: /workbox-sw\.[a-z]+\..+\.js$/,
-        use: [{ loader: 'file-loader', options: { name: 'js/workbox.js' } }, { loader: 'babel-loader', options: { presets: babelPresets } }]
-    });
-    let plugin = new WorkboxPlugin.InjectManifest({ swSrc: `${distFolder}/${source}`, swDest: `${distFolder}/${dest}`, globPatterns, globIgnores, templatedUrls });
+    let pluginConfig = { swSrc: `${srcFolder}/${source}`, swdest: `${destFolder}/${dest}`, include, exclude, templatedUrls };
     if (typeof options.afterHook === 'function')
-        plugin = options.afterHook(plugin);
-    config.plugins.push(plugin);
+        pluginConfig = options.afterHook(pluginConfig);
+    config.plugins.push(new InjectManifest(pluginConfig));
     return config;
 }
 
@@ -258,7 +249,7 @@ function setup(env, configuration, afterHook) {
     if (!configuration.environment)
         configuration.environment = env;
     const environment = loadEnvironment(configuration);
-    const destination = path.resolve(process.cwd(), configuration.distFolder || defaultConfiguration.distFolder);
+    const destination = path.resolve(process.cwd(), configuration.destFolder || defaultConfiguration.destFolder);
     const version = JSON.stringify(environment.version);
     const plugins = setupPlugins(configuration, environment);
     let config = {

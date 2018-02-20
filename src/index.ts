@@ -65,7 +65,7 @@ export function setup(env: string, configuration: Configuration, afterHook?: Hoo
     configuration.environment = env;
 
   const environment = loadEnvironment(configuration);
-  const destination = resolve(process.cwd(), configuration.distFolder || defaultConfiguration.distFolder);
+  const destination = resolve(process.cwd(), configuration.destFolder || defaultConfiguration.destFolder);
   const version = JSON.stringify(environment.version);
 
   const plugins = setupPlugins(configuration, environment);

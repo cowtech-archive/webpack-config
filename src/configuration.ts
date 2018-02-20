@@ -10,7 +10,8 @@ export interface Configuration{
   environment?: string;
   version?: string;
   entries: string | Array<string> | {[key: string]: string};
-  distFolder: string;
+  srcFolder: string;
+  destFolder: string;
   transpilers?: Array<string>;
   indexFile?: string | boolean;
   icons?: Array<string>;
@@ -28,7 +29,8 @@ export interface Configuration{
 
 export const defaultConfiguration: Configuration = {
   entries: [],
-  distFolder: 'dist',
+  srcFolder: 'src',
+  destFolder: 'dist',
   transpilers: [],
   indexFile: 'index.html.ejs',
   icons: [],
@@ -64,10 +66,10 @@ export const defaultConfiguration: Configuration = {
     hot: true
   },
   serviceWorker: {
-    source: 'sw.js',
+    source: 'service-worker.js',
     dest: 'sw.js',
-    patterns: ['**/*.{html,js,json,css}', 'images/**/*.{bmp,jpg,jpeg,png,svg,webp}'],
-    ignores: ['manifest.json', 'sw.js', 'js/workbox.js']
+    include: [/\.(html|js|json|css)$/, /\/images.+\.(bmp|jpg|jpeg|png|svg|webp)$/],
+    exclude: [/404\.html/]
   }
 };
 
