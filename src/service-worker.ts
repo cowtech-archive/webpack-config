@@ -31,7 +31,7 @@ export function setupServiceWorker(config: webpack.Configuration, configuration:
   if(typeof (options as ServiceWorker).afterHook === 'function')
     pluginConfig = (options as ServiceWorker).afterHook(pluginConfig);
 
-  if(pluginConfig.templatedUrls && !pluginConfig.globDirectory)
+  if(!pluginConfig.globDirectory)
     pluginConfig.globDirectory = srcFolder;
 
   config.plugins.push(new InjectManifest(pluginConfig));

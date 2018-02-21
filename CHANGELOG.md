@@ -1,3 +1,7 @@
+### 2018-02-21 / 0.4.6
+
+* Minor fix.
+
 ### 2018-02-21 / 0.4.5
 
 * ServiceWorker bugfix.

@@ -217,7 +217,7 @@ function setupServiceWorker(config, configuration) {
     let pluginConfig = { swSrc: `${srcFolder}/${source}`, swDest: `${dest}`, include, exclude, templatedUrls };
     if (typeof options.afterHook === 'function')
         pluginConfig = options.afterHook(pluginConfig);
-    if (pluginConfig.templatedUrls && !pluginConfig.globDirectory)
+    if (!pluginConfig.globDirectory)
         pluginConfig.globDirectory = srcFolder;
     config.plugins.push(new InjectManifest(pluginConfig));
     return config;
