@@ -1,3 +1,7 @@
+### 2018-02-21 / 0.4.5
+
+* ServiceWorker bugfix.
+
 ### 2018-02-21 / 0.4.4
 
 * Updated dependencies.

@@ -207,7 +207,6 @@ const { InjectManifest } = require('workbox-webpack-plugin');
 function setupServiceWorker(config, configuration) {
     const options = loadConfigurationEntry('serviceWorker', configuration);
     const srcFolder = loadConfigurationEntry('srcFolder', configuration);
-    const destFolder = loadConfigurationEntry('destFolder', configuration);
     const source = loadConfigurationEntry('source', options, defaultConfiguration.serviceWorker);
     const dest = loadConfigurationEntry('dest', options, defaultConfiguration.serviceWorker);
     const include = loadConfigurationEntry('include', options, defaultConfiguration.serviceWorker);
@@ -215,7 +214,7 @@ function setupServiceWorker(config, configuration) {
     const templatedUrls = loadConfigurationEntry('templatedUrls', options, defaultConfiguration.serviceWorker);
     if (options === false)
         return config;
-    let pluginConfig = { swSrc: `${srcFolder}/${source}`, swDest: `${destFolder}/${dest}`, include, exclude, templatedUrls };
+    let pluginConfig = { swSrc: `${srcFolder}/${source}`, swDest: `${dest}`, include, exclude, templatedUrls };
     if (typeof options.afterHook === 'function')
         pluginConfig = options.afterHook(pluginConfig);
     if (pluginConfig.templatedUrls && !pluginConfig.globDirectory)
