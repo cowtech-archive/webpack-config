@@ -1,93 +1,48 @@
-import {readFileSync} from 'fs';
-import {resolve} from 'path';
-import * as webpack from 'webpack';
+import { get } from 'lodash'
+import { resolve } from 'path'
+import { Configuration } from 'webpack'
+import { autoDetectEntries } from './modules/entries'
+import { setupEnvironment } from './modules/environment'
+import { loadIcons } from './modules/icons'
+import { setupPlugins } from './modules/plugins'
+import { setupRules } from './modules/rules'
+import { setupServer } from './modules/server'
+import { Options } from './modules/types'
 
-import {Configuration, defaultConfiguration, loadConfigurationEntry} from './configuration';
-import {loadEnvironment} from './environment';
-import {setupPlugins} from './plugins';
-import {setupRules, setupResolvers} from './rules';
-import {setupServiceWorker} from './service-worker';
-
-export type Hook = (configuration: webpack.Configuration) => webpack.Configuration;
-
-export interface Https{
-  key: Buffer | string;
-  cert: Buffer | string;
-}
-
-export interface Server{
-  host?: string;
-  port?: number;
-  https?: Https | boolean;
-  historyApiFallback?: boolean;
-  compress?: boolean;
-  hot?: boolean;
-  afterHook?(config: any): any;
-}
-
-export * from './configuration';
-export * from './environment';
-export * from './icons';
-export * from './plugins';
-export * from './rules';
-
-export function setupServer(configuration: Configuration): any{
-  const server = configuration.server || {};
-  const defaultServer = defaultConfiguration.server;
-  const https = loadConfigurationEntry<Https | boolean>('https', server, defaultServer);
-
-  let config: any = {
-    host: loadConfigurationEntry('host', server, defaultServer),
-    port: loadConfigurationEntry('port', server, defaultServer),
-    historyApiFallback: loadConfigurationEntry('historyApiFallback', server, defaultServer),
-    compress: loadConfigurationEntry('compress', server, defaultServer),
-    hot: loadConfigurationEntry('hot', server, defaultServer)
-  };
-
-  if(https){
-    config.https = {
-      key: (https as Https).key || readFileSync(resolve(process.cwd(), (defaultServer.https as Https).key as string)),
-      cert: (https as Https).cert || readFileSync(resolve(process.cwd(), (defaultServer.https as Https).cert as string))
-    };
+export async function setup(options: Options = {}): Promise<Configuration> {
+  if (!options.environment) options.environment = 'development'
+  if (!options.version) {
+    options.version = new Date()
+      .toISOString()
+      .replace(/([-:])|(\.\d+Z$)/g, '')
+      .replace('T', '.')
   }
 
-  if(typeof server.afterHook === 'function')
-    config = server.afterHook(config);
+  options.srcFolder = resolve(process.cwd(), get(options, 'srcFolder', 'src')!)
+  options.destFolder = resolve(process.cwd(), get(options, 'destFolder', 'dist')!)
+  options.env = setupEnvironment(options)
+  options.icons = await loadIcons(options)
 
-  return config;
-}
-
-export function setup(env: string, configuration: Configuration, afterHook?: Hook): webpack.Configuration{
-  if(!env)
-    env = 'development';
-
-  if(!configuration.environment)
-    configuration.environment = env;
-
-  const environment = loadEnvironment(configuration);
-  const destination = resolve(process.cwd(), configuration.destFolder || defaultConfiguration.destFolder);
-  const version = JSON.stringify(environment.version);
-
-  const plugins = setupPlugins(configuration, environment);
-
-  let config: webpack.Configuration = {
-    entry: configuration.entries || defaultConfiguration.entries,
-    output: {filename: '[name]', path: destination, publicPath: '/'},
-    module: {
-      rules: setupRules(configuration, version)
+  let config: Configuration = {
+    entry: options.entries || (await autoDetectEntries(options)),
+    output: {
+      filename: get(options, 'filename', '[name]'),
+      path: options.destFolder,
+      publicPath: get(options, 'publicPath', '/'),
+      libraryTarget: options.libraryTarget
     },
-    resolve: {extensions: setupResolvers(configuration)},
-    plugins,
-    externals: configuration.externals,
-    devtool: env === 'development' ? (configuration.sourceMapsType || defaultConfiguration.sourceMapsType) : false,
-    devServer: {contentBase: destination, ...setupServer(configuration)}
-  };
+    target: options.target,
+    module: {
+      rules: await setupRules(options)
+    },
+    resolve: { extensions: ['.json', '.js', '.jsx', '.ts', '.tsx'] },
+    plugins: await setupPlugins(options),
+    externals: options.externals,
+    devtool: options.environment === 'development' ? get(options, 'sourceMaps', 'source-map') : false,
+    devServer: await setupServer(options)
+  }
 
-  if(env === 'production')
-    config = setupServiceWorker(config, configuration);
+  if (typeof options.afterHook === 'function') config = await options.afterHook(config)
 
-  if(typeof afterHook === 'function')
-    config = afterHook(config);
-
-  return config;
+  return config
 }

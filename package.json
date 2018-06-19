@@ -1,65 +1,63 @@
 {
-  "name": "@cowtech/webpack-config-lite",
+  "name": "@cowtech/webpack-config",
   "version": "0.4.6",
   "description": "CowTech WebPack configuration without any CSS handling.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "files": [
-    "index.js",
-    "types",
+    "dist",
     "README.md",
     "CHANGELOG.md"
   ],
-  "types": "types",
+  "types": "dist/types",
   "scripts": {
-    "prebuild": "rm -rf index.js *.d.ts types",
+    "prebuild": "rm -rf dist",
     "build": "rollup --environment production -c rollup.config.js",
     "postbuild": "./node_modules/.bin/tslint --project tsconfig.json -t stylish",
     "postpublish": "git push origin && git push origin -f --tags"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/cowtech/webpack-config-lite"
+    "url": "https://github.com/cowtech/webpack-config"
   },
   "keywords": [],
   "author": "Shogun <shogun@cowtech.it>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/cowtech/webpack-config-lite/issues"
+    "url": "https://github.com/cowtech/webpack-config/issues"
   },
-  "homepage": "https://github.com/cowtech/webpack-config-lite",
+  "homepage": "https://github.com/cowtech/webpack-config",
   "dependencies": {
     "@babel/core": "^7.0.0-beta.40",
     "@babel/preset-env": "^7.0.0-beta.40",
     "@babel/preset-react": "^7.0.0-beta.40",
     "@babel/preset-stage-3": "^7.0.0-beta.40",
     "@babel/preset-typescript": "^7.0.0-beta.40",
-    "@cowtech/eslint-config": "~4.18",
-    "@cowtech/package-utils": "~0.2",
-    "@cowtech/tslint-config": "~5.9",
-    "@types/node": "~9.4",
-    "@types/webpack": "~3.8",
+    "@types/fs-extra": "^5.0.3",
+    "@types/globby": "^6.1.0",
+    "@types/lodash": "^4.14.109",
+    "@types/node": "^10.3.3",
+    "@types/webpack": "^4.4.0",
     "babel-loader": "^8.0.0-beta.0",
-    "eslint": "~4.18",
-    "eslint-plugin-react": "~7.7",
-    "file-loader": "~1.1",
-    "fork-ts-checker-webpack-plugin": "~0.3",
-    "html-webpack-exclude-assets-plugin": "~0.0",
-    "html-webpack-plugin": "~2.30",
-    "string-replace-loader": "~1.3",
-    "ts-node": "~5.0",
-    "tslint": "~5.9",
-    "tslint-react": "~3.5",
-    "typescript": "~2.7",
-    "webpack": "~3.11",
-    "webpack-bundle-analyzer": "~2.10",
-    "webpack-dev-server": "~2.11",
-    "workbox-webpack-plugin": "~3.0.0-beta.0",
-    "uglifyjs-webpack-plugin": "~1.2"
+    "file-loader": "^1.1.11",
+    "fork-ts-checker-webpack-plugin": "^0.4.2",
+    "fs-extra": "^6.0.1",
+    "globby": "^8.0.1",
+    "html-webpack-plugin": "^3.2.0",
+    "lodash": "^4.17.10",
+    "string-replace-loader": "^2.1.1",
+    "typescript": "^2.9.2",
+    "uglifyjs-webpack-plugin": "^1.2.5",
+    "webpack": "^4.12.0",
+    "webpack-bundle-analyzer": "^2.13.1",
+    "webpack-cli": "^3.0.8",
+    "webpack-dev-server": "^3.1.4",
+    "workbox-webpack-plugin": "^3.3.0"
   },
   "devDependencies": {
-    "@cowtech/package-utils": "~0.2",
-    "rollup": "~0.56",
-    "rollup-plugin-typescript2": "~0.11"
+    "@cowtech/tslint-config": "^5.10.3",
+    "prettier": "^1.13.5",
+    "rollup": "^0.60.7",
+    "rollup-plugin-typescript2": "^0.15.0"
   },
   "engines": {
     "node": ">=8.0"

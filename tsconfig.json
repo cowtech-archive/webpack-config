@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2017",
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
     "jsx": "react",
     "outDir": ".",
@@ -12,9 +12,10 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "experimentalDecorators": true,
+    "strictNullChecks": true,
     "lib": ["dom", "es2017"],
     "declaration": true,
-    "declarationDir": "types/"
+    "declarationDir": "dist/types/"
   },
   "include": ["src/*.ts"],
   "exclude": []
