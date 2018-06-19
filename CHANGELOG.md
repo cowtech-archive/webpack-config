@@ -1,3 +1,8 @@
+### 2018-06-19 / 1.0.0
+
+* chore: Rebuild dist.
+* feat: Full rewrite as @cowtech/webpack-config
+
 ### 2018-02-21 / 0.4.6
 
 * Minor fix.
