@@ -103,15 +103,18 @@ async function setupPlugins(options) {
             excludeAssets: [/\.js$/]
         }));
     }
-    // const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
-    // if (transpilers.includes('typescript'))
-    //   plugins.push(
-    //     new ForkTsCheckerWebpackPlugin({
-    //       checkSyntacticErrors: true,
-    //       async: !typescript.strict,
-    //       workers: ForkTsCheckerWebpackPlugin.TWO_CPUS_FREE
-    //     })
-    //   )
+    /*
+    const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+  
+    if (transpilers.includes('typescript'))
+      plugins.push(
+        new ForkTsCheckerWebpackPlugin({
+          checkSyntacticErrors: true,
+          async: !typescript.strict,
+          workers: ForkTsCheckerWebpackPlugin.TWO_CPUS_FREE
+        })
+      )
+    */
     if (lodash.get(pluginsOptions, 'concatenate', true))
         plugins.push(new webpack.optimize.ModuleConcatenationPlugin());
     if (options.environment === 'production') {

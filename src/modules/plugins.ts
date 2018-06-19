@@ -1,14 +1,14 @@
 import globby from 'globby'
-//@ts-ignore
+// @ts-ignore
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { get } from 'lodash'
 import { basename, resolve } from 'path'
-//@ts-ignore
+// @ts-ignore
 import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
 import { DefinePlugin, EnvironmentPlugin, HotModuleReplacementPlugin, optimize, Plugin } from 'webpack'
-//@ts-ignore
+// @ts-ignore
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
-//@ts-ignore
+// @ts-ignore
 import { InjectManifest } from 'workbox-webpack-plugin'
 import { Options, Plugins, ServiceWorker } from './types'
 
@@ -60,16 +60,18 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
     )
   }
 
-  // const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+  /*
+  const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 
-  // if (transpilers.includes('typescript'))
-  //   plugins.push(
-  //     new ForkTsCheckerWebpackPlugin({
-  //       checkSyntacticErrors: true,
-  //       async: !typescript.strict,
-  //       workers: ForkTsCheckerWebpackPlugin.TWO_CPUS_FREE
-  //     })
-  //   )
+  if (transpilers.includes('typescript'))
+    plugins.push(
+      new ForkTsCheckerWebpackPlugin({
+        checkSyntacticErrors: true,
+        async: !typescript.strict,
+        workers: ForkTsCheckerWebpackPlugin.TWO_CPUS_FREE
+      })
+    )
+  */
 
   if (get(pluginsOptions, 'concatenate', true)) plugins.push(new optimize.ModuleConcatenationPlugin())
 
