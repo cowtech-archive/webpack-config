@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_extra_1 = require("fs-extra");
-const globby_1 = require("globby");
+const globby = require("globby");
 const lodash_1 = require("lodash");
 const path_1 = require("path");
 async function setupServer(options) {
@@ -9,7 +9,7 @@ async function setupServer(options) {
     let https;
     if (!serverOptions.hasOwnProperty('https')) {
         // Autodetect HTTPS
-        https = (await globby_1.default(path_1.resolve(process.cwd(), './config/ssl/(private-key|certificate).pem'))).length === 2;
+        https = (await globby(path_1.resolve(process.cwd(), './config/ssl/(private-key|certificate).pem'))).length === 2;
     }
     else {
         https = lodash_1.get(serverOptions, 'https', false);

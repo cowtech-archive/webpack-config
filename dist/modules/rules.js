@@ -1,18 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const globby_1 = require("globby");
+const globby = require("globby");
 const lodash_1 = require("lodash");
 const path_1 = require("path");
 async function checkTypescript(rulesOptions, srcFolder) {
     if (typeof rulesOptions.typescript === 'boolean')
         return rulesOptions.typescript;
-    return (await globby_1.default(path_1.resolve(srcFolder, './**/*.ts'))).length > 0;
+    return (await globby(path_1.resolve(srcFolder, './**/*.ts'))).length > 0;
 }
 exports.checkTypescript = checkTypescript;
 async function checkReact(rulesOptions, srcFolder) {
     if (typeof rulesOptions.react === 'boolean')
         return rulesOptions.react;
-    return (await globby_1.default(path_1.resolve(srcFolder, './**/*.(jsx|tsx)'))).length > 0;
+    return (await globby(path_1.resolve(srcFolder, './**/*.(jsx|tsx)'))).length > 0;
 }
 exports.checkReact = checkReact;
 function normalizeIncludePath(path) {

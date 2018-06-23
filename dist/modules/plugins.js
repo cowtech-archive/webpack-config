@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const globby_1 = require("globby");
+const globby = require("globby");
 // @ts-ignore
 const html_webpack_plugin_1 = require("html-webpack-plugin");
 const lodash_1 = require("lodash");
@@ -15,7 +15,7 @@ const workbox_webpack_plugin_1 = require("workbox-webpack-plugin");
 async function getIndexFile(options) {
     let index = lodash_1.get(options, 'index', true);
     if (index === true) {
-        index = (await globby_1.default(path_1.resolve(options.srcFolder, './index.html.(js|ts|jsx|tsx)')))[0];
+        index = (await globby(path_1.resolve(options.srcFolder, './index.html.(js|ts|jsx|tsx)')))[0];
     }
     return typeof index === 'string' ? index : null;
 }
@@ -23,7 +23,7 @@ exports.getIndexFile = getIndexFile;
 async function getServiceWorkerFile(options) {
     let file = lodash_1.get(options, 'serviceWorker.src', null);
     if (!file) {
-        file = (await globby_1.default(path_1.resolve(options.srcFolder, './(service-worker|sw).(js|ts)')))[0];
+        file = (await globby(path_1.resolve(options.srcFolder, './(service-worker|sw).(js|ts)')))[0];
     }
     return file;
 }

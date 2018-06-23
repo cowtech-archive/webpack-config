@@ -7,7 +7,6 @@ import {
   Plugin,
   RuleSetRule
 } from 'webpack'
-import { Babel, Externals, LibraryTarget, Plugins, Rules, Target } from './types'
 
 export type Entries = string | Array<string> | Entry | EntryFunc
 

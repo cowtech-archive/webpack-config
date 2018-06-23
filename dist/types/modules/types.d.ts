@@ -1,6 +1,5 @@
 /// <reference types="node" />
 import { Configuration, Entry, EntryFunc, ExternalsElement, Options as WebpackOptions, Plugin, RuleSetRule } from 'webpack';
-import { Babel, Externals, LibraryTarget, Plugins, Rules, Target } from './types';
 export declare type Entries = string | Array<string> | Entry | EntryFunc;
 export declare type Externals = ExternalsElement | Array<ExternalsElement>;
 export declare type Target = 'web' | 'webworker' | 'node' | 'async-node' | 'node-webkit' | 'atom' | 'electron' | 'electron-renderer' | 'electron-main' | ((compiler?: any) => void);

@@ -1,4 +1,4 @@
-import globby from 'globby'
+import * as globby from 'globby'
 // @ts-ignore
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { get } from 'lodash'

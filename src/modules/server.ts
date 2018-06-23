@@ -1,5 +1,5 @@
 import { readFile } from 'fs-extra'
-import globby from 'globby'
+import * as globby from 'globby'
 import { get } from 'lodash'
 import { resolve } from 'path'
 import { Options, Server } from './types'

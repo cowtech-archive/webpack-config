@@ -1,4 +1,4 @@
-import globby from 'globby'
+import * as globby from 'globby'
 import { get } from 'lodash'
 import { resolve, sep } from 'path'
 import { RuleSetRule } from 'webpack'
