@@ -9,6 +9,14 @@ import { setupRules } from './modules/rules'
 import { setupServer } from './modules/server'
 import { Options } from './modules/types'
 
+export * from './modules/entries'
+export * from './modules/environment'
+export * from './modules/icons'
+export * from './modules/plugins'
+export * from './modules/rules'
+export * from './modules/server'
+export * from './modules/types'
+
 export async function setup(options: Options = {}): Promise<Configuration> {
   if (!options.environment) options.environment = 'development'
   if (!options.version) {

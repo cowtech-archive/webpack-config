@@ -1,3 +1,10 @@
 import { Configuration } from 'webpack';
 import { Options } from './modules/types';
+export * from './modules/entries';
+export * from './modules/environment';
+export * from './modules/icons';
+export * from './modules/plugins';
+export * from './modules/rules';
+export * from './modules/server';
+export * from './modules/types';
 export declare function setup(options?: Options): Promise<Configuration>;

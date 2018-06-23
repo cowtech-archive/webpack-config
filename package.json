@@ -11,7 +11,7 @@
   "types": "dist/types",
   "scripts": {
     "prebuild": "rm -rf dist",
-    "build": "rollup --environment production -c rollup.config.js",
+    "build": "tsc -p tsconfig.json --outDir dist",
     "postbuild": "./node_modules/.bin/tslint --project tsconfig.json -t stylish",
     "postpublish": "git push origin && git push origin -f --tags"
   },
@@ -55,9 +55,7 @@
   },
   "devDependencies": {
     "@cowtech/tslint-config": "^5.10.3",
-    "prettier": "^1.13.5",
-    "rollup": "^0.60.7",
-    "rollup-plugin-typescript2": "^0.15.0"
+    "prettier": "^1.13.5"
   },
   "engines": {
     "node": ">=8.0"

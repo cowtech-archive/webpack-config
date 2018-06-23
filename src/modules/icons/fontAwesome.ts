@@ -5,17 +5,17 @@ import { Icons } from '../types'
 // Fields: viewBoxWidth, viewBoxHeight, unused, unicodeCode, SVG path
 type IconDefinition = [number, number, Array<any>, string, string]
 
-interface Icon {
+export interface Icon {
   prefix: string
   iconName: string
   icon: IconDefinition
 }
 
-interface Tags {
+export interface Tags {
   [key: string]: string
 }
 
-function generateSVG(icon: Icon, tag: string): string {
+export function generateSVG(icon: Icon, tag: string): string {
   const def = icon.icon
 
   return `<svg id="${tag}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${def[0]} ${
