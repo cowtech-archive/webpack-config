@@ -1,3 +1,7 @@
+### 2018-06-23 / 1.0.1
+
+* fix: Use right options for string-replace-loader.
+
 ### 2018-06-19 / 1.0.0
 
 * chore: Rebuild dist.
