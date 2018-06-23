@@ -106,9 +106,10 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
   if (get(rulesOptions, 'manifest', true)) {
     rules.push({
       test: /manifest\.json$/,
+      type: 'javascript/auto',
       use: [
         { loader: 'file-loader', options: { name: 'manifest.json' } },
-        { loader: 'string-replace-loader', query: { search: '@version@', replace: options.version } }
+        { loader: 'string-replace-loader', options: { search: '@version@', replace: options.version } }
       ]
     })
   }
@@ -118,7 +119,7 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
       test: /sitemap\.xml$/,
       use: [
         { loader: 'file-loader', options: { name: 'sitemap.xml' } },
-        { loader: 'string-replace-loader', query: { search: '@version@', replace: options.version } }
+        { loader: 'string-replace-loader', options: { search: '@version@', replace: options.version } }
       ]
     })
   }

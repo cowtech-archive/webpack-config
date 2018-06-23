@@ -24,6 +24,7 @@ export async function setup(options: Options = {}): Promise<Configuration> {
   options.icons = await loadIcons(options)
 
   let config: Configuration = {
+    mode: options.environment === 'development' ? 'development' : 'production',
     entry: options.entries || (await autoDetectEntries(options)),
     output: {
       filename: get(options, 'filename', '[name]'),
