@@ -1,3 +1,7 @@
+### 2018-06-23 / 1.2.0
+
+* feat: Export Service Worker default inclusion and exclusion lists.
+
 ### 2018-06-23 / 1.1.1
 
 * fix: Fix Service Worker generation.
