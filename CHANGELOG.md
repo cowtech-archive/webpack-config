@@ -1,3 +1,7 @@
+### 2018-06-23 / 1.1.1
+
+* fix: Fix Service Worker generation.
+
 ### 2018-06-23 / 1.1.0
 
 * feat: Support webpack-serve.
