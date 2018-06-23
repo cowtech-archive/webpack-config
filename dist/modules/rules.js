@@ -96,19 +96,7 @@ async function setupRules(options) {
         rules.push({
             test: /manifest\.json$/,
             type: 'javascript/auto',
-            use: [
-                { loader: 'file-loader', options: { name: 'manifest.json' } },
-                { loader: 'string-replace-loader', options: { search: '@version@', replace: options.version } }
-            ]
-        });
-    }
-    if (lodash_1.get(rulesOptions, 'sitemap', true)) {
-        rules.push({
-            test: /sitemap\.xml$/,
-            use: [
-                { loader: 'file-loader', options: { name: 'sitemap.xml' } },
-                { loader: 'string-replace-loader', options: { search: '@version@', replace: options.version } }
-            ]
+            use: [{ loader: 'file-loader', options: { name: 'manifest.json' } }]
         });
     }
     if (lodash_1.get(rulesOptions, 'robots', true)) {

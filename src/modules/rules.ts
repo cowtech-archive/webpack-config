@@ -107,20 +107,7 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
     rules.push({
       test: /manifest\.json$/,
       type: 'javascript/auto',
-      use: [
-        { loader: 'file-loader', options: { name: 'manifest.json' } },
-        { loader: 'string-replace-loader', options: { search: '@version@', replace: options.version } }
-      ]
-    })
-  }
-
-  if (get(rulesOptions, 'sitemap', true)) {
-    rules.push({
-      test: /sitemap\.xml$/,
-      use: [
-        { loader: 'file-loader', options: { name: 'sitemap.xml' } },
-        { loader: 'string-replace-loader', options: { search: '@version@', replace: options.version } }
-      ]
+      use: [{ loader: 'file-loader', options: { name: 'manifest.json' } }]
     })
   }
 

@@ -26,7 +26,6 @@ export interface Rules {
     react?: boolean;
     images?: boolean;
     manifest?: boolean;
-    sitemap?: boolean;
     robots?: boolean;
     afterHook?(configuration: Array<RuleSetRule>): Promise<Array<RuleSetRule>>;
 }
