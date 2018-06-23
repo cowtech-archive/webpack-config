@@ -1,3 +1,7 @@
+### 2018-06-23 / 1.0.4
+
+* fix: Import globby properly.
+
 ### 2018-06-23 / 1.0.3
 
 * fix: Export Font Awesome methods. Use tsc directly for building.
