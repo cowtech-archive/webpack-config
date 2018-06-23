@@ -1,3 +1,7 @@
+### 2018-06-23 / 1.0.2
+
+* fix: Export all files.
+
 ### 2018-06-23 / 1.0.1
 
 * fix: Use right options for string-replace-loader.
