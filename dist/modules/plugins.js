@@ -1,5 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+// @ts-ignore
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const globby = require("globby");
 // @ts-ignore
 const html_webpack_plugin_1 = require("html-webpack-plugin");
@@ -12,6 +14,7 @@ const webpack_1 = require("webpack");
 const webpack_bundle_analyzer_1 = require("webpack-bundle-analyzer");
 // @ts-ignore
 const workbox_webpack_plugin_1 = require("workbox-webpack-plugin");
+const rules_1 = require("./rules");
 async function getIndexFile(options) {
     let index = lodash_1.get(options, 'index', true);
     if (index === true) {
@@ -31,6 +34,7 @@ exports.getServiceWorkerFile = getServiceWorkerFile;
 async function setupPlugins(options) {
     const pluginsOptions = options.plugins || {};
     const swOptions = options.serviceWorker || {};
+    const useTypescript = await rules_1.checkTypescript(options.rules || {}, options.srcFolder);
     const indexFile = await getIndexFile(options);
     let plugins = [
         new webpack_1.EnvironmentPlugin({
@@ -50,18 +54,13 @@ async function setupPlugins(options) {
             excludeAssets: [/\.js$/]
         }));
     }
-    /*
-    const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
-  
-    if (transpilers.includes('typescript'))
-      plugins.push(
-        new ForkTsCheckerWebpackPlugin({
-          checkSyntacticErrors: true,
-          async: !typescript.strict,
-          workers: ForkTsCheckerWebpackPlugin.TWO_CPUS_FREE
-        })
-      )
-    */
+    if (useTypescript) {
+        plugins.push(new ForkTsCheckerWebpackPlugin({
+            checkSyntacticErrors: true,
+            async: false,
+            workers: ForkTsCheckerWebpackPlugin.TWO_CPUS_FREE
+        }));
+    }
     if (lodash_1.get(pluginsOptions, 'concatenate', true))
         plugins.push(new webpack_1.optimize.ModuleConcatenationPlugin());
     if (options.environment === 'production') {
@@ -75,11 +74,11 @@ async function setupPlugins(options) {
         }
         const analyze = lodash_1.get(pluginsOptions, 'analyze', true);
         if (analyze) {
-            if (path_1.basename(process.argv[1]) === 'webpack-dev-server') {
+            if (path_1.basename(process.argv[1]) !== 'webpack') {
                 plugins.push(new webpack_bundle_analyzer_1.BundleAnalyzerPlugin({
                     analyzerMode: typeof analyze === 'string' ? analyze : 'server',
                     analyzerHost: lodash_1.get(options, 'server.host', 'home.cowtech.it'),
-                    analyzerPort: lodash_1.get(options, 'server.port', 4200) + 1,
+                    analyzerPort: lodash_1.get(options, 'server.port', 4200) + 2,
                     generateStatsFile: analyze === 'static',
                     openAnalyzer: false
                 }));

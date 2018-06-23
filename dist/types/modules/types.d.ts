@@ -1,5 +1,8 @@
 /// <reference types="node" />
 import { Configuration, Entry, EntryFunc, ExternalsElement, Options as WebpackOptions, Plugin, RuleSetRule } from 'webpack';
+export declare type ExtendedConfiguration = Configuration & {
+    serve: any;
+};
 export declare type Entries = string | Array<string> | Entry | EntryFunc;
 export declare type Externals = ExternalsElement | Array<ExternalsElement>;
 export declare type Target = 'web' | 'webworker' | 'node' | 'async-node' | 'node-webkit' | 'atom' | 'electron' | 'electron-renderer' | 'electron-main' | ((compiler?: any) => void);
@@ -58,7 +61,7 @@ export interface Server {
         [key: string]: string | Buffer;
     };
     compress?: boolean;
-    hot?: boolean;
+    hot?: boolean | object;
     afterHook?(configuration: Server): Promise<Server>;
 }
 export interface Babel {
@@ -84,5 +87,5 @@ export interface Options extends Output {
     server?: Server;
     babel?: Babel;
     uglify?: object;
-    afterHook?(configuration: Configuration): Promise<Configuration>;
+    afterHook?(configuration: ExtendedConfiguration): Promise<ExtendedConfiguration>;
 }

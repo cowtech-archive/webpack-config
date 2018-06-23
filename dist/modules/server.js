@@ -21,6 +21,12 @@ async function setupServer(options) {
         compress: lodash_1.get(serverOptions, 'compress', true),
         hot: lodash_1.get(serverOptions, 'hot', true)
     };
+    if (config.hot === true) {
+        config.hot = {
+            https: !!config.https,
+            port: config.port + 1
+        };
+    }
     if (config.https) {
         config.https = {
             key: await fs_extra_1.readFile(path_1.resolve(process.cwd(), lodash_1.get(config.https, 'key', './config/ssl/private-key.pem'))),

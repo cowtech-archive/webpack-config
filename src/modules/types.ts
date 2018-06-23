@@ -8,6 +8,8 @@ import {
   RuleSetRule
 } from 'webpack'
 
+export type ExtendedConfiguration = Configuration & { serve: any }
+
 export type Entries = string | Array<string> | Entry | EntryFunc
 
 export type Externals = ExternalsElement | Array<ExternalsElement>
@@ -83,7 +85,7 @@ export interface Server {
   port?: number
   https?: boolean | { [key: string]: string | Buffer }
   compress?: boolean
-  hot?: boolean
+  hot?: boolean | object
   afterHook?(configuration: Server): Promise<Server>
 }
 
@@ -111,5 +113,5 @@ export interface Options extends Output {
   server?: Server
   babel?: Babel
   uglify?: object
-  afterHook?(configuration: Configuration): Promise<Configuration>
+  afterHook?(configuration: ExtendedConfiguration): Promise<ExtendedConfiguration>
 }

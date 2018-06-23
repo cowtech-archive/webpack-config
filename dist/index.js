@@ -17,19 +17,23 @@ __export(require("./modules/icons"));
 __export(require("./modules/plugins"));
 __export(require("./modules/rules"));
 __export(require("./modules/server"));
+function generateVersion() {
+    return new Date()
+        .toISOString()
+        .replace(/([-:])|(\.\d+Z$)/g, '')
+        .replace('T', '.');
+}
+exports.generateVersion = generateVersion;
 async function setup(options = {}) {
     if (!options.environment)
         options.environment = 'development';
-    if (!options.version) {
-        options.version = new Date()
-            .toISOString()
-            .replace(/([-:])|(\.\d+Z$)/g, '')
-            .replace('T', '.');
-    }
+    if (!options.version)
+        options.version = generateVersion();
     options.srcFolder = path_1.resolve(process.cwd(), lodash_1.get(options, 'srcFolder', 'src'));
     options.destFolder = path_1.resolve(process.cwd(), lodash_1.get(options, 'destFolder', 'dist'));
     options.env = environment_1.setupEnvironment(options);
     options.icons = await icons_1.loadIcons(options);
+    const server = await server_1.setupServer(options);
     let config = {
         mode: options.environment === 'development' ? 'development' : 'production',
         entry: options.entries || (await entries_1.autoDetectEntries(options)),
@@ -47,7 +51,8 @@ async function setup(options = {}) {
         plugins: await plugins_1.setupPlugins(options),
         externals: options.externals,
         devtool: options.environment === 'development' ? lodash_1.get(options, 'sourceMaps', 'source-map') : false,
-        devServer: await server_1.setupServer(options)
+        devServer: server,
+        serve: server
     };
     if (typeof options.afterHook === 'function')
         config = await options.afterHook(config);

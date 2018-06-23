@@ -1,3 +1,5 @@
+// @ts-ignore
+import * as ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import * as globby from 'globby'
 // @ts-ignore
 import HtmlWebpackPlugin from 'html-webpack-plugin'
@@ -10,6 +12,7 @@ import { DefinePlugin, EnvironmentPlugin, HotModuleReplacementPlugin, optimize, 
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 // @ts-ignore
 import { InjectManifest } from 'workbox-webpack-plugin'
+import { checkTypescript } from './rules'
 import { Options, Plugins, ServiceWorker } from './types'
 
 export async function getIndexFile(options: Options): Promise<string | null> {
@@ -35,6 +38,7 @@ export async function getServiceWorkerFile(options: Options): Promise<string> {
 export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
   const pluginsOptions: Plugins = options.plugins || {}
   const swOptions: ServiceWorker = options.serviceWorker || {}
+  const useTypescript = await checkTypescript(options.rules || {}, options.srcFolder!)
 
   const indexFile = await getIndexFile(options)
 
@@ -60,18 +64,15 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
     )
   }
 
-  /*
-  const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
-
-  if (transpilers.includes('typescript'))
+  if (useTypescript) {
     plugins.push(
       new ForkTsCheckerWebpackPlugin({
         checkSyntacticErrors: true,
-        async: !typescript.strict,
+        async: false,
         workers: ForkTsCheckerWebpackPlugin.TWO_CPUS_FREE
       })
     )
-  */
+  }
 
   if (get(pluginsOptions, 'concatenate', true)) plugins.push(new optimize.ModuleConcatenationPlugin())
 
@@ -87,12 +88,12 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
     const analyze: boolean | string = get(pluginsOptions, 'analyze', true)!
 
     if (analyze) {
-      if (basename(process.argv[1]) === 'webpack-dev-server') {
+      if (basename(process.argv[1]) !== 'webpack') {
         plugins.push(
           new BundleAnalyzerPlugin({
             analyzerMode: typeof analyze === 'string' ? analyze : 'server',
             analyzerHost: get(options, 'server.host', 'home.cowtech.it'),
-            analyzerPort: get(options, 'server.port', 4200) + 1,
+            analyzerPort: get(options, 'server.port', 4200) + 2,
             generateStatsFile: analyze === 'static',
             openAnalyzer: false
           })

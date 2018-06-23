@@ -24,6 +24,13 @@ export async function setupServer(options: Options): Promise<any> {
     hot: get(serverOptions, 'hot', true)
   }
 
+  if (config.hot === true) {
+    config.hot = {
+      https: !!config.https,
+      port: config.port + 1
+    }
+  }
+
   if (config.https) {
     config.https = {
       key: await readFile(resolve(process.cwd(), get(config.https, 'key', './config/ssl/private-key.pem'))),
