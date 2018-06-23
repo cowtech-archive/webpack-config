@@ -17,6 +17,8 @@ const webpack_bundle_analyzer_1 = require("webpack-bundle-analyzer");
 // @ts-ignore
 const workbox_webpack_plugin_1 = require("workbox-webpack-plugin");
 const rules_1 = require("./rules");
+exports.serviceWorkerDefaultInclude = [/\.(html|js|json|css)$/, /\/images.+\.(bmp|jpg|jpeg|png|svg|webp)$/];
+exports.serviceWorkerDefaultExclude = [/\.map$/, /manifest\.json/, /bundle\.js/, /404\.html/];
 async function resolveFile(options, key, pattern) {
     let file = lodash_1.get(options, key, true);
     if (file === true) {
@@ -71,9 +73,6 @@ async function setupPlugins(options) {
     }
     if (lodash_1.get(pluginsOptions, 'concatenate', true))
         plugins.push(new webpack_1.optimize.ModuleConcatenationPlugin());
-    if (lodash_1.get(pluginsOptions, 'minify', true)) {
-        plugins.push(new UglifyJsPlugin({ uglifyOptions: lodash_1.get(options, 'uglify', {}) }));
-    }
     if (options.environment === 'production') {
         if (lodash_1.get(pluginsOptions, 'minify', true)) {
             plugins.push(new UglifyJsPlugin({ uglifyOptions: lodash_1.get(options, 'uglify', {}) }));
@@ -108,7 +107,7 @@ async function setupPlugins(options) {
         if (swSrc) {
             const swDest = lodash_1.get(swOptions, 'dest', 'sw.js');
             plugins.push(new workbox_webpack_plugin_1.InjectManifest(Object.assign({ swSrc,
-                swDest, include: [/\.(html|js|json|css)$/, /\/images.+\.(bmp|jpg|jpeg|png|svg|webp)$/], exclude: [/\.map$/, /manifest\.json/, /bundle\.js/, /404\.html/] }, lodash_1.get(swOptions, 'options', {}))), new ReplaceInFileWebpackPlugin([
+                swDest, include: exports.serviceWorkerDefaultInclude, exclude: exports.serviceWorkerDefaultExclude }, lodash_1.get(swOptions, 'options', {}))), new ReplaceInFileWebpackPlugin([
                 {
                     dir: options.destFolder,
                     files: [swDest],

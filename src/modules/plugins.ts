@@ -17,6 +17,9 @@ import { InjectManifest } from 'workbox-webpack-plugin'
 import { checkTypescript } from './rules'
 import { Options, Plugins, ServiceWorker } from './types'
 
+export const serviceWorkerDefaultInclude = [/\.(html|js|json|css)$/, /\/images.+\.(bmp|jpg|jpeg|png|svg|webp)$/]
+export const serviceWorkerDefaultExclude = [/\.map$/, /manifest\.json/, /bundle\.js/, /404\.html/]
+
 async function resolveFile(options: Options, key: string, pattern: string): Promise<string | null> {
   let file: boolean | string = get(options, key, true)
 
@@ -130,8 +133,8 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
         new InjectManifest({
           swSrc,
           swDest,
-          include: [/\.(html|js|json|css)$/, /\/images.+\.(bmp|jpg|jpeg|png|svg|webp)$/],
-          exclude: [/\.map$/, /manifest\.json/, /bundle\.js/, /404\.html/],
+          include: serviceWorkerDefaultInclude,
+          exclude: serviceWorkerDefaultExclude,
           ...get(swOptions, 'options', {})
         }),
         new ReplaceInFileWebpackPlugin([
