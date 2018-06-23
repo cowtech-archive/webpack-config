@@ -1,3 +1,7 @@
+### 2018-06-23 / 1.0.3
+
+* fix: Export Font Awesome methods. Use tsc directly for building.
+
 ### 2018-06-23 / 1.0.2
 
 * fix: Export all files.
