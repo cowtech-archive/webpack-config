@@ -1,3 +1,7 @@
+### 2018-06-23 / 1.1.0
+
+* feat: Support webpack-serve.
+
 ### 2018-06-23 / 1.0.4
 
 * fix: Import globby properly.
