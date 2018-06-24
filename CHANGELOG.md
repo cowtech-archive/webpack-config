@@ -1,3 +1,8 @@
+### 2018-06-24 / 1.2.1
+
+* fix: Rebuilt JS version.
+* fix: Minor fix.
+
 ### 2018-06-23 / 1.2.0
 
 * feat: Export Service Worker default inclusion and exclusion lists.
