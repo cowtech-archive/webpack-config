@@ -2,7 +2,7 @@
 import * as ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import * as globby from 'globby'
 // @ts-ignore
-import HtmlWebpackPlugin from 'html-webpack-plugin'
+import * as HtmlWebpackPlugin from 'html-webpack-plugin'
 import { get } from 'lodash'
 import { basename, resolve } from 'path'
 // @ts-ignore
