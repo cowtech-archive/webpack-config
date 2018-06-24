@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const globby = require("globby");
 // @ts-ignore
-const html_webpack_plugin_1 = require("html-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const lodash_1 = require("lodash");
 const path_1 = require("path");
 // @ts-ignore
@@ -43,7 +43,7 @@ async function setupPlugins(options) {
         })
     ];
     if (indexFile) {
-        plugins.push(new html_webpack_plugin_1.default({
+        plugins.push(new HtmlWebpackPlugin({
             template: indexFile,
             minify: { collapseWhitespace: true },
             inject: false,
