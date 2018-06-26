@@ -1,3 +1,7 @@
+### 2018-06-26 / 1.3.0
+
+* feat: Improve ServiceWorker versioning.
+
 ### 2018-06-24 / 1.2.1
 
 * fix: Rebuilt JS version.
