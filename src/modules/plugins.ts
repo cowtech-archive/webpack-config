@@ -6,10 +6,8 @@ import * as HtmlWebpackPlugin from 'html-webpack-plugin'
 import { get } from 'lodash'
 import { basename, resolve } from 'path'
 // @ts-ignore
-import * as ReplaceInFileWebpackPlugin from 'replace-in-file-webpack-plugin'
-// @ts-ignore
 import * as UglifyJsPlugin from 'uglifyjs-webpack-plugin'
-import { DefinePlugin, EnvironmentPlugin, HotModuleReplacementPlugin, optimize, Plugin } from 'webpack'
+import { Compiler, DefinePlugin, EnvironmentPlugin, HotModuleReplacementPlugin, optimize, Plugin } from 'webpack'
 // @ts-ignore
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 // @ts-ignore
@@ -18,9 +16,43 @@ import { checkTypescript } from './rules'
 import { Options, Plugins, ServiceWorker } from './types'
 
 export const serviceWorkerDefaultInclude = [/\.(html|js|json|css)$/, /\/images.+\.(bmp|jpg|jpeg|png|svg|webp)$/]
-export const serviceWorkerDefaultExclude = [/\.map$/, /manifest\.json/, /bundle\.js/, /404\.html/]
+export const serviceWorkerDefaultExclude: Array<string | RegExp> = [
+  /\.map$/,
+  /manifest\.json/,
+  /bundle\.js/,
+  /404\.html/
+]
 
-async function resolveFile(options: Options, key: string, pattern: string): Promise<string | null> {
+class ServiceWorkerEnvironment {
+  public dest: string
+  public version: string
+  public debug: boolean
+
+  constructor({ dest, version, debug }: { dest: string; version: string; debug: boolean }) {
+    this.dest = dest
+    this.version = version
+    this.debug = debug
+  }
+
+  apply(compiler: Compiler) {
+    compiler.plugin('emit', (compilation, callback) => {
+      const content = `self.__version = '${this.version}'; self.__debug = ${this.debug};`
+
+      compilation.assets[this.dest] = {
+        source: function() {
+          return content
+        },
+        size: function() {
+          return content.length
+        }
+      }
+
+      callback()
+    })
+  }
+}
+
+export async function resolveFile(options: Options, key: string, pattern: string): Promise<string | null> {
   let file: boolean | string = get(options, key, true)
 
   if (file === true) {
@@ -34,7 +66,6 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
   const pluginsOptions: Plugins = options.plugins || {}
   const swOptions: ServiceWorker = options.serviceWorker || {}
   const useTypescript = await checkTypescript(options.rules || {}, options.srcFolder!)
-  const hasManifest = await resolveFile(options, 'rules.manifest', 'manifest.json')
 
   const indexFile = await resolveFile(options, 'index', './index.html.(js|ts|jsx|tsx)')
 
@@ -57,23 +88,6 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
         inject: false,
         excludeAssets: [/\.js$/]
       })
-    )
-  }
-
-  if (hasManifest) {
-    plugins.push(
-      new ReplaceInFileWebpackPlugin([
-        {
-          dir: options.destFolder,
-          files: ['manifest.json'],
-          rules: [
-            {
-              search: '$version',
-              replace: options.version
-            }
-          ]
-        }
-      ])
     )
   }
 
@@ -123,36 +137,29 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
     }
   }
 
-  if (get(swOptions, 'enabled', null) === true || options.environment === 'production') {
+  if (get(swOptions, 'enabled', options.environment === 'production')) {
     let swSrc = await resolveFile(options, 'serviceWorker.src', './(service-worker|sw).(js|ts)')
 
     if (swSrc) {
       const swDest = get(swOptions, 'dest', 'sw.js')!
+      const envFile = swDest.replace(/\.js$/, `-env-${options.version}.js`)
+
+      serviceWorkerDefaultExclude.push(envFile)
 
       plugins.push(
+        new ServiceWorkerEnvironment({
+          dest: envFile,
+          version: options.version!,
+          debug: options.environment !== 'production'
+        }),
         new InjectManifest({
           swSrc,
           swDest,
           include: serviceWorkerDefaultInclude,
           exclude: serviceWorkerDefaultExclude,
+          importScripts: [`/${envFile}`],
           ...get(swOptions, 'options', {})
-        }),
-        new ReplaceInFileWebpackPlugin([
-          {
-            dir: options.destFolder,
-            files: [swDest],
-            rules: [
-              {
-                search: '$version',
-                replace: options.version
-              },
-              {
-                search: '$debug',
-                replace: options.environment === 'production' ? 'false' : 'true'
-              }
-            ]
-          }
-        ])
+        })
       )
     }
   }

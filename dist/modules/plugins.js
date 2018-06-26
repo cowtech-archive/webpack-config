@@ -8,8 +8,6 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const lodash_1 = require("lodash");
 const path_1 = require("path");
 // @ts-ignore
-const ReplaceInFileWebpackPlugin = require("replace-in-file-webpack-plugin");
-// @ts-ignore
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const webpack_1 = require("webpack");
 // @ts-ignore
@@ -18,7 +16,33 @@ const webpack_bundle_analyzer_1 = require("webpack-bundle-analyzer");
 const workbox_webpack_plugin_1 = require("workbox-webpack-plugin");
 const rules_1 = require("./rules");
 exports.serviceWorkerDefaultInclude = [/\.(html|js|json|css)$/, /\/images.+\.(bmp|jpg|jpeg|png|svg|webp)$/];
-exports.serviceWorkerDefaultExclude = [/\.map$/, /manifest\.json/, /bundle\.js/, /404\.html/];
+exports.serviceWorkerDefaultExclude = [
+    /\.map$/,
+    /manifest\.json/,
+    /bundle\.js/,
+    /404\.html/
+];
+class ServiceWorkerEnvironment {
+    constructor({ dest, version, debug }) {
+        this.dest = dest;
+        this.version = version;
+        this.debug = debug;
+    }
+    apply(compiler) {
+        compiler.plugin('emit', (compilation, callback) => {
+            const content = `self.__version = '${this.version}'; self.__debug = ${this.debug};`;
+            compilation.assets[this.dest] = {
+                source: function () {
+                    return content;
+                },
+                size: function () {
+                    return content.length;
+                }
+            };
+            callback();
+        });
+    }
+}
 async function resolveFile(options, key, pattern) {
     let file = lodash_1.get(options, key, true);
     if (file === true) {
@@ -26,11 +50,11 @@ async function resolveFile(options, key, pattern) {
     }
     return typeof file === 'string' ? file : null;
 }
+exports.resolveFile = resolveFile;
 async function setupPlugins(options) {
     const pluginsOptions = options.plugins || {};
     const swOptions = options.serviceWorker || {};
     const useTypescript = await rules_1.checkTypescript(options.rules || {}, options.srcFolder);
-    const hasManifest = await resolveFile(options, 'rules.manifest', 'manifest.json');
     const indexFile = await resolveFile(options, 'index', './index.html.(js|ts|jsx|tsx)');
     let plugins = [
         new webpack_1.EnvironmentPlugin({
@@ -49,20 +73,6 @@ async function setupPlugins(options) {
             inject: false,
             excludeAssets: [/\.js$/]
         }));
-    }
-    if (hasManifest) {
-        plugins.push(new ReplaceInFileWebpackPlugin([
-            {
-                dir: options.destFolder,
-                files: ['manifest.json'],
-                rules: [
-                    {
-                        search: '$version',
-                        replace: options.version
-                    }
-                ]
-            }
-        ]));
     }
     if (useTypescript) {
         plugins.push(new ForkTsCheckerWebpackPlugin({
@@ -102,27 +112,18 @@ async function setupPlugins(options) {
             }));
         }
     }
-    if (lodash_1.get(swOptions, 'enabled', null) === true || options.environment === 'production') {
+    if (lodash_1.get(swOptions, 'enabled', options.environment === 'production')) {
         let swSrc = await resolveFile(options, 'serviceWorker.src', './(service-worker|sw).(js|ts)');
         if (swSrc) {
             const swDest = lodash_1.get(swOptions, 'dest', 'sw.js');
-            plugins.push(new workbox_webpack_plugin_1.InjectManifest(Object.assign({ swSrc,
-                swDest, include: exports.serviceWorkerDefaultInclude, exclude: exports.serviceWorkerDefaultExclude }, lodash_1.get(swOptions, 'options', {}))), new ReplaceInFileWebpackPlugin([
-                {
-                    dir: options.destFolder,
-                    files: [swDest],
-                    rules: [
-                        {
-                            search: '$version',
-                            replace: options.version
-                        },
-                        {
-                            search: '$debug',
-                            replace: options.environment === 'production' ? 'false' : 'true'
-                        }
-                    ]
-                }
-            ]));
+            const envFile = swDest.replace(/\.js$/, `-env-${options.version}.js`);
+            exports.serviceWorkerDefaultExclude.push(envFile);
+            plugins.push(new ServiceWorkerEnvironment({
+                dest: envFile,
+                version: options.version,
+                debug: options.environment !== 'production'
+            }), new workbox_webpack_plugin_1.InjectManifest(Object.assign({ swSrc,
+                swDest, include: exports.serviceWorkerDefaultInclude, exclude: exports.serviceWorkerDefaultExclude, importScripts: [`/${envFile}`] }, lodash_1.get(swOptions, 'options', {}))));
         }
     }
     if (pluginsOptions.additional)

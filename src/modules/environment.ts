@@ -9,7 +9,7 @@ export function setupEnvironment(options: Options): Environment {
   return {
     environment,
     version: options.version,
-    serviceWorkerEnabled: false,
+    serviceWorkerEnabled: get(options.serviceWorker, 'enabled', options.environment === 'production'),
     ...get(packageInfo, 'site.common', {}),
     ...get(packageInfo, `site.${environment}`, {})
   }

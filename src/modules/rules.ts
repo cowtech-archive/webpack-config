@@ -107,7 +107,18 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
     rules.push({
       test: /manifest\.json$/,
       type: 'javascript/auto',
-      use: [{ loader: 'file-loader', options: { name: 'manifest.json' } }]
+      use: [
+        { loader: 'file-loader', options: { name: 'manifest.json' } },
+        {
+          loader: 'string-replace-loader',
+          options: {
+            multiple: [
+              { search: '$version', replace: options.version },
+              { search: '$debug', replace: options.environment === 'production' ? 'false' : 'true' }
+            ]
+          }
+        }
+      ]
     })
   }
 
