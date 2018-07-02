@@ -1,3 +1,7 @@
+### 2018-07-02 / 1.3.2
+
+* fix: Normalize environment.
+
 ### 2018-07-02 / 1.3.1
 
 * fix: Assume development by default.
