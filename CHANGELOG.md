@@ -1,3 +1,7 @@
+### 2018-07-02 / 1.3.1
+
+* fix: Assume development by default.
+
 ### 2018-06-26 / 1.3.0
 
 * feat: Improve ServiceWorker versioning.
