@@ -25,7 +25,7 @@ function generateVersion() {
 }
 exports.generateVersion = generateVersion;
 async function setup(options = {}) {
-    if (!options.environment)
+    if (!options.environment || typeof options.environment !== 'string')
         options.environment = 'development';
     if (!options.version)
         options.version = generateVersion();

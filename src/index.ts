@@ -24,7 +24,7 @@ export function generateVersion(): string {
 }
 
 export async function setup(options: Options = {}): Promise<ExtendedConfiguration> {
-  if (!options.environment) options.environment = 'development'
+  if (!options.environment || typeof options.environment !== 'string') options.environment = 'development'
   if (!options.version) options.version = generateVersion()
 
   options.srcFolder = resolve(process.cwd(), get(options, 'srcFolder', 'src')!)

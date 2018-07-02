@@ -70,7 +70,7 @@ export interface Babel {
     configuration?: any;
 }
 export interface Options extends Output {
-    environment?: string;
+    environment?: string | object;
     version?: string;
     env?: Environment;
     entries?: Entries;
