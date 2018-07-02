@@ -35,7 +35,7 @@ async function setup(options = {}) {
     options.icons = await icons_1.loadIcons(options);
     const server = await server_1.setupServer(options);
     let config = {
-        mode: options.environment === 'development' ? 'development' : 'production',
+        mode: options.environment === 'production' ? 'production' : 'development',
         entry: options.entries || (await entries_1.autoDetectEntries(options)),
         output: {
             filename: lodash_1.get(options, 'filename', '[name]'),

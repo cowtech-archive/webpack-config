@@ -35,7 +35,7 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
   const server = await setupServer(options)
 
   let config: ExtendedConfiguration = {
-    mode: options.environment === 'development' ? 'development' : 'production',
+    mode: options.environment === 'production' ? 'production' : 'development',
     entry: options.entries || (await autoDetectEntries(options)),
     output: {
       filename: get(options, 'filename', '[name]'),
