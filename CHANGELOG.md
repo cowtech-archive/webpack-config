@@ -1,3 +1,7 @@
+### 2018-07-04 / 1.4.0
+
+* feat: Add support for webpack-serve middlewares.
+
 ### 2018-07-02 / 1.3.2
 
 * fix: Normalize environment.
