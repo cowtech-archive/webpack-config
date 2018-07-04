@@ -1,10 +1,12 @@
 /// <reference types="node" />
+import { default as Application, Middleware } from 'koa';
 import { Configuration, Entry, EntryFunc, ExternalsElement, Options as WebpackOptions, Plugin, RuleSetRule } from 'webpack';
 export declare type ExtendedConfiguration = Configuration & {
     serve: any;
 };
 export declare type Entries = string | Array<string> | Entry | EntryFunc;
 export declare type Externals = ExternalsElement | Array<ExternalsElement>;
+export declare type ServerAdd = (app: Application, middleware: Middleware, options: object) => void;
 export declare type Target = 'web' | 'webworker' | 'node' | 'async-node' | 'node-webkit' | 'atom' | 'electron' | 'electron-renderer' | 'electron-main' | ((compiler?: any) => void);
 export declare type LibraryTarget = 'var' | 'this' | 'commonjs' | 'commonjs2' | 'amd' | 'umd' | 'window' | 'assign' | 'jsonp';
 export interface Output {
@@ -61,6 +63,8 @@ export interface Server {
     };
     compress?: boolean;
     hot?: boolean | object;
+    history?: boolean | object;
+    add?: ServerAdd;
     afterHook?(configuration: Server): Promise<Server>;
 }
 export interface Babel {

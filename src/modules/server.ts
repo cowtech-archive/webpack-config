@@ -1,5 +1,10 @@
+// @ts-ignore
+import * as history from 'connect-history-api-fallback'
 import { readFile } from 'fs-extra'
 import * as globby from 'globby'
+import { default as Application, Middleware } from 'koa'
+// @ts-ignore
+import * as convert from 'koa-connect'
 import { get } from 'lodash'
 import { resolve } from 'path'
 import { Options, Server } from './types'
@@ -21,7 +26,21 @@ export async function setupServer(options: Options): Promise<any> {
     port: get(serverOptions, 'port', 4200),
     https,
     compress: get(serverOptions, 'compress', true),
-    hot: get(serverOptions, 'hot', true)
+    hot: get(serverOptions, 'hot', true),
+    add(app: Application, middleware: Middleware, options: object) {
+      const add = get(serverOptions, 'add', null)
+      let historyOptions = get(serverOptions, 'history', true)
+
+      if (historyOptions) {
+        if (typeof historyOptions === 'boolean') historyOptions = {}
+
+        app.use(convert(history(historyOptions)))
+      }
+
+      if (typeof add === 'function') {
+        add(app, middleware, options)
+      }
+    }
   }
 
   if (config.hot === true) {
