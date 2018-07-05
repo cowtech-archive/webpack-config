@@ -11,6 +11,7 @@ export function setupEnvironment(options: Options): Environment {
     version: options.version,
     serviceWorkerEnabled: get(options.serviceWorker, 'enabled', options.environment === 'production'),
     ...get(packageInfo, 'site.common', {}),
-    ...get(packageInfo, `site.${environment}`, {})
+    ...get(packageInfo, `site.${environment}`, {}),
+    ...get(options, 'additionalEnvironment', {})
   }
 }

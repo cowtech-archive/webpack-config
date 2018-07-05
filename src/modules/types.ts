@@ -102,6 +102,7 @@ export interface Babel {
 
 export interface Options extends Output {
   environment?: string | object
+  additionalEnvironment?: object
   version?: string
   env?: Environment
   entries?: Entries
