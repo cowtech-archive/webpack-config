@@ -1,3 +1,7 @@
+### 2018-07-05 / 1.5.0
+
+* feat: Allow additional environment.
+
 ### 2018-07-04 / 1.4.0
 
 * feat: Add support for webpack-serve middlewares.
