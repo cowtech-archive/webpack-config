@@ -221,14 +221,7 @@
     "@babel/helper-replace-supers" "7.0.0-rc.1"
     "@babel/plugin-syntax-class-properties" "7.0.0-rc.1"
 
-"@babel/plugin-proposal-json-strings@^7.0.0-rc.1":
-  version "7.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-json-strings/-/plugin-proposal-json-strings-7.0.0-rc.1.tgz#c76eae74a4ae6ccc51f74600e92b0e5158fb16eb"
-  dependencies:
-    "@babel/helper-plugin-utils" "7.0.0-rc.1"
-    "@babel/plugin-syntax-json-strings" "7.0.0-rc.1"
-
-"@babel/plugin-proposal-object-rest-spread@7.0.0-rc.1", "@babel/plugin-proposal-object-rest-spread@^7.0.0-rc.1":
+"@babel/plugin-proposal-object-rest-spread@7.0.0-rc.1":
   version "7.0.0-rc.1"
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-object-rest-spread/-/plugin-proposal-object-rest-spread-7.0.0-rc.1.tgz#bc7ce898a48831fd733b251fd5ae46f986c905d8"
   dependencies:
@@ -259,12 +252,6 @@
 "@babel/plugin-syntax-class-properties@7.0.0-rc.1":
   version "7.0.0-rc.1"
   resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-class-properties/-/plugin-syntax-class-properties-7.0.0-rc.1.tgz#155343e256c84d127496e46675a3049636d311ff"
-  dependencies:
-    "@babel/helper-plugin-utils" "7.0.0-rc.1"
-
-"@babel/plugin-syntax-json-strings@7.0.0-rc.1":
-  version "7.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-json-strings/-/plugin-syntax-json-strings-7.0.0-rc.1.tgz#695773425de0197327bccd917db1852d11563cf5"
   dependencies:
     "@babel/helper-plugin-utils" "7.0.0-rc.1"
 

@@ -39,7 +39,18 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
     [
       '@babel/preset-env',
       {
-        targets: { browsers: get(babelOptions, 'browsersWhiteList', ['last 2 versions', 'not ie <= 11']) },
+        targets: {
+          browsers: get(babelOptions, 'browsersWhiteList', [
+            'last 2 versions',
+            'not ie <= 11',
+            /*
+              Android is excluded due to https://github.com/babel/babel/issues/8351
+              We support Android > 5, which is in sync with Chrome, so support is guaranteed
+            */
+            'not android < 5',
+            'not android > 5'
+          ])
+        },
         exclude: get(babelOptions, 'exclude', []),
         modules: get(babelOptions, 'modules', false)
       }
@@ -48,8 +59,6 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
 
   const babelPlugins = [
     ['@babel/plugin-proposal-class-properties', { loose: false }],
-    '@babel/plugin-proposal-json-strings',
-    '@babel/plugin-proposal-object-rest-spread',
     '@babel/plugin-proposal-optional-catch-binding'
   ]
 

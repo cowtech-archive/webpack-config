@@ -35,7 +35,18 @@ async function setupRules(options) {
         [
             '@babel/preset-env',
             {
-                targets: { browsers: lodash_1.get(babelOptions, 'browsersWhiteList', ['last 2 versions', 'not ie <= 11']) },
+                targets: {
+                    browsers: lodash_1.get(babelOptions, 'browsersWhiteList', [
+                        'last 2 versions',
+                        'not ie <= 11',
+                        /*
+                          Android is excluded due to https://github.com/babel/babel/issues/8351
+                          We support Android > 5, which is in sync with Chrome, so support is guaranteed
+                        */
+                        'not android < 5',
+                        'not android > 5'
+                    ])
+                },
                 exclude: lodash_1.get(babelOptions, 'exclude', []),
                 modules: lodash_1.get(babelOptions, 'modules', false)
             }
@@ -43,8 +54,6 @@ async function setupRules(options) {
     ];
     const babelPlugins = [
         ['@babel/plugin-proposal-class-properties', { loose: false }],
-        '@babel/plugin-proposal-json-strings',
-        '@babel/plugin-proposal-object-rest-spread',
         '@babel/plugin-proposal-optional-catch-binding'
     ];
     const babelConfiguration = lodash_1.get(babelOptions, 'configuration', {});
