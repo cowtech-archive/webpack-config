@@ -1,3 +1,7 @@
+### 2018-08-11 / 1.7.1
+
+* fix: Added missing dependency.
+
 ### 2018-08-11 / 1.7.0
 
 * feat: Reintroduced last existing stage 3 plugins singularly.
