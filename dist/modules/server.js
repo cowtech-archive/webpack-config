@@ -38,7 +38,7 @@ async function setupServer(options) {
         }
     };
     if (config.hot === true) {
-        config.hot = {
+        config.hot = config.hotClient = {
             https: !!config.https,
             port: config.port + 1
         };

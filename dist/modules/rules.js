@@ -36,7 +36,7 @@ async function setupRules(options) {
             '@babel/preset-env',
             {
                 targets: { browsers: lodash_1.get(babelOptions, 'browsersWhiteList', ['last 2 versions', 'not ie <= 11']) },
-                exclude: lodash_1.get(babelOptions, 'exclude', ['transform-regenerator']),
+                exclude: lodash_1.get(babelOptions, 'exclude', []),
                 modules: lodash_1.get(babelOptions, 'modules', false)
             }
         ],

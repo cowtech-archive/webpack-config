@@ -9,7 +9,7 @@ import {
   RuleSetRule
 } from 'webpack'
 
-export type ExtendedConfiguration = Configuration & { serve: any }
+export type ExtendedConfiguration = Configuration & { serve: any; devServer: any }
 
 export type Entries = string | Array<string> | Entry | EntryFunc
 

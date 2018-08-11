@@ -54,6 +54,8 @@ async function setup(options = {}) {
         devServer: server,
         serve: server
     };
+    if (lodash_1.get(options, 'plugins.concatenate', true))
+        config.optimization = Object.assign({}, config.optimization, { concatenateModules: true });
     if (typeof options.afterHook === 'function')
         config = await options.afterHook(config);
     return config;

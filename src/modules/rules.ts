@@ -40,7 +40,7 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
       '@babel/preset-env',
       {
         targets: { browsers: get(babelOptions, 'browsersWhiteList', ['last 2 versions', 'not ie <= 11']) },
-        exclude: get(babelOptions, 'exclude', ['transform-regenerator']),
+        exclude: get(babelOptions, 'exclude', []),
         modules: get(babelOptions, 'modules', false)
       }
     ],

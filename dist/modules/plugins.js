@@ -29,7 +29,7 @@ class ServiceWorkerEnvironment {
         this.debug = debug;
     }
     apply(compiler) {
-        compiler.plugin('emit', (compilation, callback) => {
+        compiler.hooks.emit.tap('ServiceWorkerEnvironment', compilation => {
             const content = `self.__version = '${this.version}'; self.__debug = ${this.debug};`;
             compilation.assets[this.dest] = {
                 source: function () {
@@ -39,7 +39,6 @@ class ServiceWorkerEnvironment {
                     return content.length;
                 }
             };
-            callback();
         });
     }
 }
@@ -81,8 +80,6 @@ async function setupPlugins(options) {
             workers: ForkTsCheckerWebpackPlugin.TWO_CPUS_FREE
         }));
     }
-    if (lodash_1.get(pluginsOptions, 'concatenate', true))
-        plugins.push(new webpack_1.optimize.ModuleConcatenationPlugin());
     if (options.environment === 'production') {
         if (lodash_1.get(pluginsOptions, 'minify', true)) {
             plugins.push(new UglifyJsPlugin({ uglifyOptions: lodash_1.get(options, 'uglify', {}) }));

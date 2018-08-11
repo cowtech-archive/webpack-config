@@ -55,6 +55,9 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
     serve: server
   }
 
+  if (get(options, 'plugins.concatenate', true))
+    config.optimization = { ...config.optimization, concatenateModules: true }
+
   if (typeof options.afterHook === 'function') config = await options.afterHook(config)
 
   return config

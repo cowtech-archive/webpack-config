@@ -7,7 +7,7 @@ import { get } from 'lodash'
 import { basename, resolve } from 'path'
 // @ts-ignore
 import * as UglifyJsPlugin from 'uglifyjs-webpack-plugin'
-import { Compiler, DefinePlugin, EnvironmentPlugin, HotModuleReplacementPlugin, optimize, Plugin } from 'webpack'
+import { Compiler, DefinePlugin, EnvironmentPlugin, HotModuleReplacementPlugin, Plugin } from 'webpack'
 // @ts-ignore
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 // @ts-ignore
@@ -35,7 +35,7 @@ class ServiceWorkerEnvironment {
   }
 
   apply(compiler: Compiler) {
-    compiler.plugin('emit', (compilation, callback) => {
+    compiler.hooks.emit.tap('ServiceWorkerEnvironment', compilation => {
       const content = `self.__version = '${this.version}'; self.__debug = ${this.debug};`
 
       compilation.assets[this.dest] = {
@@ -46,8 +46,6 @@ class ServiceWorkerEnvironment {
           return content.length
         }
       }
-
-      callback()
     })
   }
 }
@@ -100,8 +98,6 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
       })
     )
   }
-
-  if (get(pluginsOptions, 'concatenate', true)) plugins.push(new optimize.ModuleConcatenationPlugin())
 
   if (options.environment === 'production') {
     if (get(pluginsOptions, 'minify', true)) {

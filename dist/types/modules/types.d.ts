@@ -3,6 +3,7 @@ import { default as Application, Middleware } from 'koa';
 import { Configuration, Entry, EntryFunc, ExternalsElement, Options as WebpackOptions, Plugin, RuleSetRule } from 'webpack';
 export declare type ExtendedConfiguration = Configuration & {
     serve: any;
+    devServer: any;
 };
 export declare type Entries = string | Array<string> | Entry | EntryFunc;
 export declare type Externals = ExternalsElement | Array<ExternalsElement>;
