@@ -35,7 +35,7 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
   const useTypescript = await checkTypescript(rulesOptions, options.srcFolder!)
   const useReact = await checkReact(rulesOptions, options.srcFolder!)
 
-  const babelPresets = [
+  const babelPresets: Array<Array<string | object> | string> = [
     [
       '@babel/preset-env',
       {
@@ -43,9 +43,16 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
         exclude: get(babelOptions, 'exclude', []),
         modules: get(babelOptions, 'modules', false)
       }
-    ],
-    '@babel/stage-3'
+    ]
   ]
+
+  const babelPlugins = [
+    ['@babel/plugin-proposal-class-properties', { loose: false }],
+    '@babel/plugin-proposal-json-strings',
+    '@babel/plugin-proposal-object-rest-spread',
+    '@babel/plugin-proposal-optional-catch-binding'
+  ]
+
   const babelConfiguration = get(babelOptions, 'configuration', {})
 
   let rules: Array<RuleSetRule> = []
@@ -56,7 +63,7 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
       exclude: /node_modules/,
       use: {
         loader: 'babel-loader',
-        options: { presets: babelPresets, ...babelConfiguration }
+        options: { presets: babelPresets, plugins: babelPlugins, ...babelConfiguration }
       }
     })
   }
@@ -67,7 +74,7 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
       exclude: /node_modules/,
       use: {
         loader: 'babel-loader',
-        options: { presets: babelPresets.concat('@babel/typescript'), ...babelConfiguration }
+        options: { presets: babelPresets.concat('@babel/typescript'), plugins: babelPlugins, ...babelConfiguration }
       }
     })
   }
@@ -76,7 +83,10 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
     rules.push({
       test: /\.jsx$/,
       exclude: /node_modules/,
-      use: { loader: 'babel-loader', options: { presets: babelPresets.concat('@babel/react'), ...babelConfiguration } }
+      use: {
+        loader: 'babel-loader',
+        options: { presets: babelPresets.concat('@babel/react'), plugins: babelPlugins, ...babelConfiguration }
+      }
     })
 
     if (useTypescript) {
@@ -85,7 +95,11 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: { presets: babelPresets.concat('@babel/react', '@babel/typescript'), ...babelConfiguration }
+          options: {
+            presets: babelPresets.concat('@babel/react', '@babel/typescript'),
+            plugins: babelPlugins,
+            ...babelConfiguration
+          }
         }
       })
     }

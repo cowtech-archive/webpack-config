@@ -39,8 +39,13 @@ async function setupRules(options) {
                 exclude: lodash_1.get(babelOptions, 'exclude', []),
                 modules: lodash_1.get(babelOptions, 'modules', false)
             }
-        ],
-        '@babel/stage-3'
+        ]
+    ];
+    const babelPlugins = [
+        ['@babel/plugin-proposal-class-properties', { loose: false }],
+        '@babel/plugin-proposal-json-strings',
+        '@babel/plugin-proposal-object-rest-spread',
+        '@babel/plugin-proposal-optional-catch-binding'
     ];
     const babelConfiguration = lodash_1.get(babelOptions, 'configuration', {});
     let rules = [];
@@ -50,7 +55,7 @@ async function setupRules(options) {
             exclude: /node_modules/,
             use: {
                 loader: 'babel-loader',
-                options: Object.assign({ presets: babelPresets }, babelConfiguration)
+                options: Object.assign({ presets: babelPresets, plugins: babelPlugins }, babelConfiguration)
             }
         });
     }
@@ -60,7 +65,7 @@ async function setupRules(options) {
             exclude: /node_modules/,
             use: {
                 loader: 'babel-loader',
-                options: Object.assign({ presets: babelPresets.concat('@babel/typescript') }, babelConfiguration)
+                options: Object.assign({ presets: babelPresets.concat('@babel/typescript'), plugins: babelPlugins }, babelConfiguration)
             }
         });
     }
@@ -68,7 +73,10 @@ async function setupRules(options) {
         rules.push({
             test: /\.jsx$/,
             exclude: /node_modules/,
-            use: { loader: 'babel-loader', options: Object.assign({ presets: babelPresets.concat('@babel/react') }, babelConfiguration) }
+            use: {
+                loader: 'babel-loader',
+                options: Object.assign({ presets: babelPresets.concat('@babel/react'), plugins: babelPlugins }, babelConfiguration)
+            }
         });
         if (useTypescript) {
             rules.push({
@@ -76,7 +84,7 @@ async function setupRules(options) {
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
-                    options: Object.assign({ presets: babelPresets.concat('@babel/react', '@babel/typescript') }, babelConfiguration)
+                    options: Object.assign({ presets: babelPresets.concat('@babel/react', '@babel/typescript'), plugins: babelPlugins }, babelConfiguration)
                 }
             });
         }
