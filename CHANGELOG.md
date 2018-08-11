@@ -1,3 +1,7 @@
+### 2018-08-11 / 1.7.3
+
+* fix: Fixed HMR.
+
 ### 2018-08-11 / 1.7.2
 
 * fix: Removed crappy Android rule.
