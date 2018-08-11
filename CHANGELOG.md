@@ -1,3 +1,7 @@
+### 2018-08-11 / 1.6.0
+
+* feat: Updated dependencies and removed deprecations.
+
 ### 2018-07-05 / 1.5.0
 
 * feat: Allow additional environment.
