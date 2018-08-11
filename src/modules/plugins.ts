@@ -7,7 +7,7 @@ import { get } from 'lodash'
 import { basename, resolve } from 'path'
 // @ts-ignore
 import * as UglifyJsPlugin from 'uglifyjs-webpack-plugin'
-import { Compiler, DefinePlugin, EnvironmentPlugin, HotModuleReplacementPlugin, Plugin } from 'webpack'
+import { Compiler, DefinePlugin, EnvironmentPlugin, Plugin } from 'webpack'
 // @ts-ignore
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 // @ts-ignore
@@ -102,10 +102,6 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
   if (options.environment === 'production') {
     if (get(pluginsOptions, 'minify', true)) {
       plugins.push(new UglifyJsPlugin({ uglifyOptions: get(options, 'uglify', {}) }))
-    }
-  } else {
-    if (get(pluginsOptions, 'hotModuleReload', true)) {
-      plugins.push(new HotModuleReplacementPlugin())
     }
   }
 

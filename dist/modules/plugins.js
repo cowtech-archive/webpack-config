@@ -85,11 +85,6 @@ async function setupPlugins(options) {
             plugins.push(new UglifyJsPlugin({ uglifyOptions: lodash_1.get(options, 'uglify', {}) }));
         }
     }
-    else {
-        if (lodash_1.get(pluginsOptions, 'hotModuleReload', true)) {
-            plugins.push(new webpack_1.HotModuleReplacementPlugin());
-        }
-    }
     const analyze = lodash_1.get(pluginsOptions, 'analyze', true);
     if (analyze) {
         if (path_1.basename(process.argv[1]) !== 'webpack') {
