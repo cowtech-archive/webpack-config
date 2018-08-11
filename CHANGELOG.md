@@ -1,3 +1,7 @@
+### 2018-08-11 / 1.7.0
+
+* feat: Reintroduced last existing stage 3 plugins singularly.
+
 ### 2018-08-11 / 1.6.0
 
 * feat: Updated dependencies and removed deprecations.
