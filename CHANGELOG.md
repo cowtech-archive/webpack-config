@@ -1,3 +1,8 @@
+### 2018-10-08 / 1.8.0
+
+* feat: Add stats support.
+* feat: Removed depreacted webpack-serve support.
+
 ### 2018-08-11 / 1.7.3
 
 * fix: Fixed HMR.
