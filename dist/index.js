@@ -51,8 +51,7 @@ async function setup(options = {}) {
         plugins: await plugins_1.setupPlugins(options),
         externals: options.externals,
         devtool: options.environment === 'development' ? lodash_1.get(options, 'sourceMaps', 'source-map') : false,
-        devServer: server,
-        serve: server
+        devServer: server
     };
     if (lodash_1.get(options, 'plugins.concatenate', true))
         config.optimization = Object.assign({}, config.optimization, { concatenateModules: true });

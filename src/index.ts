@@ -51,8 +51,7 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
     plugins: await setupPlugins(options),
     externals: options.externals,
     devtool: options.environment === 'development' ? get(options, 'sourceMaps', 'source-map') : false,
-    devServer: server,
-    serve: server
+    devServer: server
   }
 
   if (get(options, 'plugins.concatenate', true))

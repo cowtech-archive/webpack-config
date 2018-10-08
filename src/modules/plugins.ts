@@ -7,7 +7,7 @@ import { get } from 'lodash'
 import { basename, resolve } from 'path'
 // @ts-ignore
 import * as UglifyJsPlugin from 'uglifyjs-webpack-plugin'
-import { Compiler, DefinePlugin, EnvironmentPlugin, Plugin } from 'webpack'
+import { Compiler, DefinePlugin, EnvironmentPlugin, HotModuleReplacementPlugin, Plugin } from 'webpack'
 // @ts-ignore
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 // @ts-ignore
@@ -64,6 +64,8 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
   const pluginsOptions: Plugins = options.plugins || {}
   const swOptions: ServiceWorker = options.serviceWorker || {}
   const useTypescript = await checkTypescript(options.rules || {}, options.srcFolder!)
+  const analyze: boolean | string = get(pluginsOptions, 'analyze', true)!
+  const hmr = get(options, 'server.hot', true)
 
   const indexFile = await resolveFile(options, 'index', './index.html.(js|ts|jsx|tsx)')
 
@@ -103,9 +105,9 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
     if (get(pluginsOptions, 'minify', true)) {
       plugins.push(new UglifyJsPlugin({ uglifyOptions: get(options, 'uglify', {}) }))
     }
+  } else if (hmr) {
+    plugins.push(new HotModuleReplacementPlugin())
   }
-
-  const analyze: boolean | string = get(pluginsOptions, 'analyze', true)!
 
   if (analyze) {
     if (basename(process.argv[1]) !== 'webpack') {

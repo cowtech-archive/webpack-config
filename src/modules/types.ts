@@ -1,4 +1,3 @@
-import { default as Application, Middleware } from 'koa'
 import {
   Configuration,
   Entry,
@@ -9,13 +8,11 @@ import {
   RuleSetRule
 } from 'webpack'
 
-export type ExtendedConfiguration = Configuration & { serve: any; devServer: any }
+export type ExtendedConfiguration = Configuration & { devServer: any }
 
 export type Entries = string | Array<string> | Entry | EntryFunc
 
 export type Externals = ExternalsElement | Array<ExternalsElement>
-
-export type ServerAdd = (app: Application, middleware: Middleware, options: object) => void
 
 export type Target =
   | 'web'
@@ -88,8 +85,7 @@ export interface Server {
   https?: boolean | { [key: string]: string | Buffer }
   compress?: boolean
   hot?: boolean | object
-  history?: boolean | object
-  add?: ServerAdd
+  historyApiFallback?: boolean | object
   afterHook?(configuration: Server): Promise<Server>
 }
 

@@ -54,6 +54,8 @@ async function setupPlugins(options) {
     const pluginsOptions = options.plugins || {};
     const swOptions = options.serviceWorker || {};
     const useTypescript = await rules_1.checkTypescript(options.rules || {}, options.srcFolder);
+    const analyze = lodash_1.get(pluginsOptions, 'analyze', true);
+    const hmr = lodash_1.get(options, 'server.hot', true);
     const indexFile = await resolveFile(options, 'index', './index.html.(js|ts|jsx|tsx)');
     let plugins = [
         new webpack_1.EnvironmentPlugin({
@@ -85,7 +87,9 @@ async function setupPlugins(options) {
             plugins.push(new UglifyJsPlugin({ uglifyOptions: lodash_1.get(options, 'uglify', {}) }));
         }
     }
-    const analyze = lodash_1.get(pluginsOptions, 'analyze', true);
+    else if (hmr) {
+        plugins.push(new webpack_1.HotModuleReplacementPlugin());
+    }
     if (analyze) {
         if (path_1.basename(process.argv[1]) !== 'webpack') {
             plugins.push(new webpack_bundle_analyzer_1.BundleAnalyzerPlugin({
