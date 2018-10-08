@@ -34,6 +34,7 @@ async function setup(options = {}) {
     options.env = environment_1.setupEnvironment(options);
     options.icons = await icons_1.loadIcons(options);
     const server = await server_1.setupServer(options);
+    const stats = (server.stats = lodash_1.get(options, 'stats', options.environment === 'production' ? 'normal' : 'errors-only'));
     let config = {
         mode: options.environment === 'production' ? 'production' : 'development',
         entry: options.entries || (await entries_1.autoDetectEntries(options)),
@@ -51,7 +52,8 @@ async function setup(options = {}) {
         plugins: await plugins_1.setupPlugins(options),
         externals: options.externals,
         devtool: options.environment === 'development' ? lodash_1.get(options, 'sourceMaps', 'source-map') : false,
-        devServer: server
+        devServer: server,
+        stats
     };
     if (lodash_1.get(options, 'plugins.concatenate', true))
         config.optimization = Object.assign({}, config.optimization, { concatenateModules: true });

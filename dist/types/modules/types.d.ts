@@ -79,6 +79,7 @@ export interface Options extends Output {
     index?: boolean | string;
     rules?: Rules;
     plugins?: Plugins;
+    stats?: WebpackOptions.Stats;
     icons?: IconsToLoad | Icons;
     serviceWorker?: ServiceWorker;
     srcFolder?: string;

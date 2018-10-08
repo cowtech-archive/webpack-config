@@ -34,6 +34,8 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
 
   const server = await setupServer(options)
 
+  const stats = (server.stats = get(options, 'stats', options.environment === 'production' ? 'normal' : 'errors-only'))
+
   let config: ExtendedConfiguration = {
     mode: options.environment === 'production' ? 'production' : 'development',
     entry: options.entries || (await autoDetectEntries(options)),
@@ -51,7 +53,8 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
     plugins: await setupPlugins(options),
     externals: options.externals,
     devtool: options.environment === 'development' ? get(options, 'sourceMaps', 'source-map') : false,
-    devServer: server
+    devServer: server,
+    stats
   }
 
   if (get(options, 'plugins.concatenate', true))
