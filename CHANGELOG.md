@@ -1,3 +1,7 @@
+### 2018-10-09 / 1.9.0
+
+* feat: Switched to terser-webpack-plugin for uglification.
+
 ### 2018-10-08 / 1.8.0
 
 * feat: Add stats support.
