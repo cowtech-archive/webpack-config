@@ -6,7 +6,7 @@ import * as HtmlWebpackPlugin from 'html-webpack-plugin'
 import { get } from 'lodash'
 import { basename, resolve } from 'path'
 // @ts-ignore
-import * as UglifyJsPlugin from 'uglifyjs-webpack-plugin'
+import * as TerserPlugin from 'terser-webpack-plugin'
 import { Compiler, DefinePlugin, EnvironmentPlugin, HotModuleReplacementPlugin, Plugin } from 'webpack'
 // @ts-ignore
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
@@ -103,7 +103,7 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
 
   if (options.environment === 'production') {
     if (get(pluginsOptions, 'minify', true)) {
-      plugins.push(new UglifyJsPlugin({ uglifyOptions: get(options, 'uglify', {}) }))
+      plugins.push(new TerserPlugin(get(options, 'uglify', {})))
     }
   } else if (hmr) {
     plugins.push(new HotModuleReplacementPlugin())

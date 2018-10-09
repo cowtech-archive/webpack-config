@@ -8,7 +8,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const lodash_1 = require("lodash");
 const path_1 = require("path");
 // @ts-ignore
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const webpack_1 = require("webpack");
 // @ts-ignore
 const webpack_bundle_analyzer_1 = require("webpack-bundle-analyzer");
@@ -84,7 +84,7 @@ async function setupPlugins(options) {
     }
     if (options.environment === 'production') {
         if (lodash_1.get(pluginsOptions, 'minify', true)) {
-            plugins.push(new UglifyJsPlugin({ uglifyOptions: lodash_1.get(options, 'uglify', {}) }));
+            plugins.push(new TerserPlugin(lodash_1.get(options, 'uglify', {})));
         }
     }
     else if (hmr) {
