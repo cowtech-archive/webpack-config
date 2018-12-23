@@ -1,3 +1,7 @@
+### 2018-12-23 / 1.10.0
+
+* feat: Use new font-awesome naming.
+
 ### 2018-12-23 / 1.9.2
 
 * chore: Updated dependencies.
