@@ -20,7 +20,8 @@ async function setupServer(options) {
         port: lodash_1.get(serverOptions, 'port', 4200),
         https,
         compress: lodash_1.get(serverOptions, 'compress', true),
-        historyApiFallback: lodash_1.get(serverOptions, 'history', true)
+        historyApiFallback: lodash_1.get(serverOptions, 'history', true),
+        disableHostCheck: lodash_1.get(serverOptions, 'disableHostCheck', true)
     };
     if (config.https) {
         config.https = {
