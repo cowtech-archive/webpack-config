@@ -3,8 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = require("lodash");
 const path_1 = require("path");
 function generateSVG(icon, tag) {
-    const def = icon.icon;
-    return `<svg id="${tag}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${def[0]} ${def[1]}"><path fill="currentColor" d="${def[4]}"></path></svg>`;
+    const { width, height, svgPathData } = icon;
+    return `
+    <svg id="${tag}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">
+      <path fill="currentColor" d="${svgPathData}"></path>
+    </svg>
+  `;
 }
 exports.generateSVG = generateSVG;
 async function loadFontAwesomeIcons(icons, toLoad) {

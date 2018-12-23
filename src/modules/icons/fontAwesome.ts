@@ -2,13 +2,10 @@ import { camelCase } from 'lodash'
 import { resolve } from 'path'
 import { Icons } from '../types'
 
-// Fields: viewBoxWidth, viewBoxHeight, unused, unicodeCode, SVG path
-type IconDefinition = [number, number, Array<any>, string, string]
-
 export interface Icon {
-  prefix: string
-  iconName: string
-  icon: IconDefinition
+  width: number
+  height: number
+  svgPathData: string
 }
 
 export interface Tags {
@@ -16,11 +13,13 @@ export interface Tags {
 }
 
 export function generateSVG(icon: Icon, tag: string): string {
-  const def = icon.icon
+  const { width, height, svgPathData } = icon
 
-  return `<svg id="${tag}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${def[0]} ${
-    def[1]
-  }"><path fill="currentColor" d="${def[4]}"></path></svg>`
+  return `
+    <svg id="${tag}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">
+      <path fill="currentColor" d="${svgPathData}"></path>
+    </svg>
+  `
 }
 
 export async function loadFontAwesomeIcons(icons: Icons, toLoad: Array<string>): Promise<void> {
