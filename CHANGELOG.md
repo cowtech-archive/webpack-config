@@ -1,3 +1,7 @@
+### 2018-12-23 / 1.9.2
+
+* chore: Updated dependencies.
+
 ### 2018-12-23 / 1.9.1
 
 * chore: Updated dependencies.
