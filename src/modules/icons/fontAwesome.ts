@@ -31,7 +31,7 @@ export async function loadFontAwesomeIcons(icons: Icons, toLoad: Array<string>):
     const [alias, rawName] = entry.includes('@') ? entry.split('@') : [entry.replace(/:.+/, ''), entry]
     const [name, section] = rawName.includes(':') ? rawName.split(':') : [rawName, 'solid']
     const tag = `i${index}`
-    const iconPackage = `@fortawesome/fontawesome-free-${section}`
+    const iconPackage = `@fortawesome/free-${section}-svg-icons`
 
     // Check font-awesome exists in dependencies
     if (!dependencies.hasOwnProperty(iconPackage)) {
