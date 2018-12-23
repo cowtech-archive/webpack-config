@@ -86,6 +86,7 @@ export interface Server {
   compress?: boolean
   hot?: boolean | object
   historyApiFallback?: boolean | object
+  disableHostCheck?: boolean
   afterHook?(configuration: Server): Promise<Server>
 }
 
