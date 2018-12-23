@@ -1,3 +1,7 @@
+### 2018-12-23 / 1.12.0
+
+* feat: Added disableHostCheck to server options.
+
 ### 2018-12-23 / 1.11.0
 
 * feat: Updated font-awesome interface.
