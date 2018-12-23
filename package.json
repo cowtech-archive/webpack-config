@@ -1,6 +1,6 @@
 {
   "name": "@cowtech/webpack-config",
-  "version": "1.9.1",
+  "version": "1.9.2",
   "description": "CowTech WebPack configuration without any CSS handling.",
   "main": "dist/index.js",
   "files": [
