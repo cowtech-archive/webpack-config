@@ -1,3 +1,7 @@
+### 2018-12-23 / 1.11.0
+
+* feat: Updated font-awesome interface.
+
 ### 2018-12-23 / 1.10.0
 
 * feat: Use new font-awesome naming.
