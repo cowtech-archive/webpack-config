@@ -1,3 +1,7 @@
+### 2018-12-26 / 1.13.0
+
+* feat: Added babelRemoveFunctions.
+
 ### 2018-12-23 / 1.12.1
 
 * chore: Rebuild.
