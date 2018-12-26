@@ -67,6 +67,7 @@ export interface Server {
 }
 export interface Babel {
     browsersWhiteList?: Array<string>;
+    removeFunctions?: Array<string>;
     exclude?: Array<string>;
     modules?: boolean;
     configuration?: any;

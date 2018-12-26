@@ -1,4 +1,4 @@
-import { get } from 'lodash'
+import get from 'lodash.get'
 import { loadFontAwesomeIcons } from './icons/fontAwesome'
 import { Icons, IconsToLoad, Options } from './types'
 

@@ -1,10 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const lodash_1 = require("lodash");
+const lodash_get_1 = __importDefault(require("lodash.get"));
 const path_1 = require("path");
 function setupEnvironment(options) {
     const packageInfo = require(path_1.resolve(process.cwd(), './package.json'));
     const environment = options.environment;
-    return Object.assign({ environment, version: options.version, serviceWorkerEnabled: lodash_1.get(options.serviceWorker, 'enabled', options.environment === 'production') }, lodash_1.get(packageInfo, 'site.common', {}), lodash_1.get(packageInfo, `site.${environment}`, {}), lodash_1.get(options, 'additionalEnvironment', {}));
+    return Object.assign({ environment, version: options.version, serviceWorkerEnabled: lodash_get_1.default(options.serviceWorker, 'enabled', options.environment === 'production') }, lodash_get_1.default(packageInfo, 'site.common', {}), lodash_get_1.default(packageInfo, `site.${environment}`, {}), lodash_get_1.default(options, 'additionalEnvironment', {}));
 }
 exports.setupEnvironment = setupEnvironment;

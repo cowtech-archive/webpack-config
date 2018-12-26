@@ -1,6 +1,9 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const lodash_1 = require("lodash");
+const lodash_camelcase_1 = __importDefault(require("lodash.camelcase"));
 const path_1 = require("path");
 function generateSVG(icon, tag) {
     const { width, height, svgPathData } = icon;
@@ -24,7 +27,7 @@ async function loadFontAwesomeIcons(icons, toLoad) {
             throw new Error(`In order to load the "${entry}" icon, please add ${iconPackage} to the package.json dependencies.`);
         }
         // Load the icon then add to the definitions
-        const icon = require(path_1.resolve(process.cwd(), `node_modules/${iconPackage}/${lodash_1.camelCase(`fa_${name}`)}`));
+        const icon = require(path_1.resolve(process.cwd(), `node_modules/${iconPackage}/${lodash_camelcase_1.default(`fa_${name}`)}`));
         icons.definitions += generateSVG(icon, tag);
         accu[alias] = tag;
         return accu;

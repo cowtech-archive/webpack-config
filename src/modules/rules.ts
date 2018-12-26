@@ -1,7 +1,8 @@
-import * as globby from 'globby'
-import { get } from 'lodash'
+import globby from 'globby'
+import get from 'lodash.get'
 import { resolve, sep } from 'path'
 import { RuleSetRule } from 'webpack'
+import { babelRemoveFunction } from './plugins/babel-remove-function'
 import { Babel, Options, Rules } from './types'
 
 export async function checkTypescript(rulesOptions: Rules, srcFolder: string): Promise<boolean> {
@@ -57,10 +58,18 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
     ]
   ]
 
-  const babelPlugins = [
+  const babelPlugins: Array<Function | string | [string, object]> = [
     ['@babel/plugin-proposal-class-properties', { loose: false }],
     '@babel/plugin-proposal-optional-catch-binding'
   ]
+
+  if (options.environment === 'production') {
+    const removeFunctions: Array<string> = get(babelOptions, 'removeFunctions', ['debugClassName'])!
+
+    if (removeFunctions.length) {
+      for (const name of removeFunctions) babelPlugins.unshift(babelRemoveFunction({ name }))
+    }
+  }
 
   const babelConfiguration = get(babelOptions, 'configuration', {})
 

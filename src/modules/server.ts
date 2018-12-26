@@ -1,7 +1,7 @@
 // @ts-ignore
 import { readFile } from 'fs-extra'
-import * as globby from 'globby'
-import { get } from 'lodash'
+import globby from 'globby'
+import get from 'lodash.get'
 import { resolve } from 'path'
 import { Options, Server } from './types'
 

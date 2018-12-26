@@ -1,12 +1,12 @@
 // @ts-ignore
-import * as ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
-import * as globby from 'globby'
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
+import globby from 'globby'
 // @ts-ignore
-import * as HtmlWebpackPlugin from 'html-webpack-plugin'
-import { get } from 'lodash'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import get from 'lodash.get'
 import { basename, resolve } from 'path'
 // @ts-ignore
-import * as TerserPlugin from 'terser-webpack-plugin'
+import TerserPlugin from 'terser-webpack-plugin'
 import { Compiler, DefinePlugin, EnvironmentPlugin, HotModuleReplacementPlugin, Plugin } from 'webpack'
 // @ts-ignore
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
@@ -14,6 +14,8 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import { InjectManifest } from 'workbox-webpack-plugin'
 import { checkTypescript } from './rules'
 import { Options, Plugins, ServiceWorker } from './types'
+
+export * from './plugins/babel-remove-function'
 
 export const serviceWorkerDefaultInclude = [/\.(html|js|json|css)$/, /\/images.+\.(bmp|jpg|jpeg|png|svg|webp)$/]
 export const serviceWorkerDefaultExclude: Array<string | RegExp> = [
@@ -102,9 +104,7 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
   }
 
   if (options.environment === 'production') {
-    if (get(pluginsOptions, 'minify', true)) {
-      plugins.push(new TerserPlugin(get(options, 'uglify', {})))
-    }
+    if (get(pluginsOptions, 'minify', true)) plugins.push(new TerserPlugin(get(options, 'uglify', {})))
   } else if (hmr) {
     plugins.push(new HotModuleReplacementPlugin())
   }

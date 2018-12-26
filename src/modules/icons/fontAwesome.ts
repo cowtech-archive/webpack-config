@@ -1,4 +1,4 @@
-import { camelCase } from 'lodash'
+import camelCase from 'lodash.camelcase'
 import { resolve } from 'path'
 import { Icons } from '../types'
 

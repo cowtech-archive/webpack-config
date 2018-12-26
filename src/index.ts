@@ -1,4 +1,4 @@
-import { get } from 'lodash'
+import get from 'lodash.get'
 import { resolve } from 'path'
 import { autoDetectEntries } from './modules/entries'
 import { setupEnvironment } from './modules/environment'

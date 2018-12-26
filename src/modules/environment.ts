@@ -1,4 +1,4 @@
-import { get } from 'lodash'
+import get from 'lodash.get'
 import { resolve } from 'path'
 import { Environment, Options } from './types'
 

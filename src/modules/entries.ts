@@ -1,4 +1,4 @@
-import * as globby from 'globby'
+import globby from 'globby'
 import { resolve } from 'path'
 import { Entries, Options } from './types'
 

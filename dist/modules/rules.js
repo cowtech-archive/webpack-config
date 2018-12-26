@@ -1,18 +1,22 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const globby = require("globby");
-const lodash_1 = require("lodash");
+const globby_1 = __importDefault(require("globby"));
+const lodash_get_1 = __importDefault(require("lodash.get"));
 const path_1 = require("path");
+const babel_remove_function_1 = require("./plugins/babel-remove-function");
 async function checkTypescript(rulesOptions, srcFolder) {
     if (typeof rulesOptions.typescript === 'boolean')
         return rulesOptions.typescript;
-    return (await globby(path_1.resolve(srcFolder, './**/*.ts'))).length > 0;
+    return (await globby_1.default(path_1.resolve(srcFolder, './**/*.ts'))).length > 0;
 }
 exports.checkTypescript = checkTypescript;
 async function checkReact(rulesOptions, srcFolder) {
     if (typeof rulesOptions.react === 'boolean')
         return rulesOptions.react;
-    return (await globby(path_1.resolve(srcFolder, './**/*.(jsx|tsx)'))).length > 0;
+    return (await globby_1.default(path_1.resolve(srcFolder, './**/*.(jsx|tsx)'))).length > 0;
 }
 exports.checkReact = checkReact;
 function normalizeIncludePath(path) {
@@ -28,7 +32,7 @@ exports.normalizeIncludePath = normalizeIncludePath;
 async function setupRules(options) {
     const rulesOptions = options.rules || {};
     const babelOptions = options.babel || {};
-    const useBabel = lodash_1.get(rulesOptions, 'babel', true);
+    const useBabel = lodash_get_1.default(rulesOptions, 'babel', true);
     const useTypescript = await checkTypescript(rulesOptions, options.srcFolder);
     const useReact = await checkReact(rulesOptions, options.srcFolder);
     const babelPresets = [
@@ -36,7 +40,7 @@ async function setupRules(options) {
             '@babel/preset-env',
             {
                 targets: {
-                    browsers: lodash_1.get(babelOptions, 'browsersWhiteList', [
+                    browsers: lodash_get_1.default(babelOptions, 'browsersWhiteList', [
                         'last 2 versions',
                         'not ie <= 11',
                         /*
@@ -47,8 +51,8 @@ async function setupRules(options) {
                         'not android > 5'
                     ])
                 },
-                exclude: lodash_1.get(babelOptions, 'exclude', []),
-                modules: lodash_1.get(babelOptions, 'modules', false)
+                exclude: lodash_get_1.default(babelOptions, 'exclude', []),
+                modules: lodash_get_1.default(babelOptions, 'modules', false)
             }
         ]
     ];
@@ -56,7 +60,14 @@ async function setupRules(options) {
         ['@babel/plugin-proposal-class-properties', { loose: false }],
         '@babel/plugin-proposal-optional-catch-binding'
     ];
-    const babelConfiguration = lodash_1.get(babelOptions, 'configuration', {});
+    if (options.environment === 'production') {
+        const removeFunctions = lodash_get_1.default(babelOptions, 'removeFunctions', ['debugClassName']);
+        if (removeFunctions.length) {
+            for (const name of removeFunctions)
+                babelPlugins.unshift(babel_remove_function_1.babelRemoveFunction({ name }));
+        }
+    }
+    const babelConfiguration = lodash_get_1.default(babelOptions, 'configuration', {});
     let rules = [];
     if (useBabel) {
         rules.push({
@@ -98,7 +109,7 @@ async function setupRules(options) {
             });
         }
     }
-    if (lodash_1.get(rulesOptions, 'images', true)) {
+    if (lodash_get_1.default(rulesOptions, 'images', true)) {
         rules.push({
             test: /\.(?:bmp|png|jpg|jpeg|svg|webp)$/,
             use: [
@@ -109,7 +120,7 @@ async function setupRules(options) {
             ]
         });
     }
-    if (lodash_1.get(rulesOptions, 'manifest', true)) {
+    if (lodash_get_1.default(rulesOptions, 'manifest', true)) {
         rules.push({
             test: /manifest\.json$/,
             type: 'javascript/auto',
@@ -127,7 +138,7 @@ async function setupRules(options) {
             ]
         });
     }
-    if (lodash_1.get(rulesOptions, 'robots', true)) {
+    if (lodash_get_1.default(rulesOptions, 'robots', true)) {
         rules.push({
             test: /robots\.txt$/,
             use: [{ loader: 'file-loader', options: { name: 'robots.txt' } }]
