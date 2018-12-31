@@ -1,3 +1,7 @@
+### 2018-12-31 / 1.14.0
+
+* feat: Improved hook handling.
+
 ### 2018-12-26 / 1.13.0
 
 * feat: Added babelRemoveFunctions.
