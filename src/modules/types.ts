@@ -8,6 +8,8 @@ import {
   RuleSetRule
 } from 'webpack'
 
+export type HookReturn<T> = void | null | T | Promise<void | null | T>
+export type Hook<T> = (input: T) => HookReturn<T>
 export type ExtendedConfiguration = Configuration & { devServer: any }
 
 export type Entries = string | Array<string> | Entry | EntryFunc
@@ -50,7 +52,7 @@ export interface Rules {
   images?: boolean
   manifest?: boolean
   robots?: boolean
-  afterHook?(configuration: Array<RuleSetRule>): Promise<Array<RuleSetRule>>
+  afterHook?: Hook<Array<RuleSetRule>>
 }
 
 export interface Plugins {
@@ -60,7 +62,7 @@ export interface Plugins {
   hotModuleReload?: boolean
   commonChunks?: boolean
   analyze?: boolean | string
-  afterHook?(plugins: Array<Plugin>): Promise<Array<Plugin>>
+  afterHook?: Hook<Array<Plugin>>
 }
 
 export interface IconsToLoad {
@@ -87,7 +89,8 @@ export interface Server {
   hot?: boolean | object
   historyApiFallback?: boolean | object
   disableHostCheck?: boolean
-  afterHook?(configuration: Server): Promise<Server>
+  inline?: boolean
+  afterHook?: Hook<Server>
 }
 
 export interface Babel {
@@ -117,5 +120,5 @@ export interface Options extends Output {
   server?: Server
   babel?: Babel
   uglify?: object
-  afterHook?(configuration: ExtendedConfiguration): Promise<ExtendedConfiguration>
+  afterHook?: Hook<ExtendedConfiguration>
 }

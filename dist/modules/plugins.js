@@ -20,6 +20,7 @@ const webpack_1 = require("webpack");
 const webpack_bundle_analyzer_1 = require("webpack-bundle-analyzer");
 // @ts-ignore
 const workbox_webpack_plugin_1 = require("workbox-webpack-plugin");
+const environment_1 = require("./environment");
 const rules_1 = require("./rules");
 __export(require("./plugins/babel-remove-function"));
 exports.serviceWorkerDefaultInclude = [/\.(html|js|json|css)$/, /\/images.+\.(bmp|jpg|jpeg|png|svg|webp)$/];
@@ -130,9 +131,6 @@ async function setupPlugins(options) {
     }
     if (pluginsOptions.additional)
         plugins = plugins.concat(pluginsOptions.additional);
-    if (pluginsOptions && typeof pluginsOptions.afterHook === 'function') {
-        plugins = await pluginsOptions.afterHook(plugins);
-    }
-    return plugins;
+    return environment_1.runHook(plugins, pluginsOptions.afterHook);
 }
 exports.setupPlugins = setupPlugins;

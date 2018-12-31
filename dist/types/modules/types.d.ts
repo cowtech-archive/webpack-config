@@ -1,5 +1,7 @@
 /// <reference types="node" />
 import { Configuration, Entry, EntryFunc, ExternalsElement, Options as WebpackOptions, Plugin, RuleSetRule } from 'webpack';
+export declare type HookReturn<T> = void | null | T | Promise<void | null | T>;
+export declare type Hook<T> = (input: T) => HookReturn<T>;
 export declare type ExtendedConfiguration = Configuration & {
     devServer: any;
 };
@@ -27,7 +29,7 @@ export interface Rules {
     images?: boolean;
     manifest?: boolean;
     robots?: boolean;
-    afterHook?(configuration: Array<RuleSetRule>): Promise<Array<RuleSetRule>>;
+    afterHook?: Hook<Array<RuleSetRule>>;
 }
 export interface Plugins {
     additional?: Array<Plugin>;
@@ -36,7 +38,7 @@ export interface Plugins {
     hotModuleReload?: boolean;
     commonChunks?: boolean;
     analyze?: boolean | string;
-    afterHook?(plugins: Array<Plugin>): Promise<Array<Plugin>>;
+    afterHook?: Hook<Array<Plugin>>;
 }
 export interface IconsToLoad {
     [key: string]: Array<string>;
@@ -63,7 +65,8 @@ export interface Server {
     hot?: boolean | object;
     historyApiFallback?: boolean | object;
     disableHostCheck?: boolean;
-    afterHook?(configuration: Server): Promise<Server>;
+    inline?: boolean;
+    afterHook?: Hook<Server>;
 }
 export interface Babel {
     browsersWhiteList?: Array<string>;
@@ -91,5 +94,5 @@ export interface Options extends Output {
     server?: Server;
     babel?: Babel;
     uglify?: object;
-    afterHook?(configuration: ExtendedConfiguration): Promise<ExtendedConfiguration>;
+    afterHook?: Hook<ExtendedConfiguration>;
 }

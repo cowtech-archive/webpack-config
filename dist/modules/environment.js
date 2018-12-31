@@ -11,3 +11,10 @@ function setupEnvironment(options) {
     return Object.assign({ environment, version: options.version, serviceWorkerEnabled: lodash_get_1.default(options.serviceWorker, 'enabled', options.environment === 'production') }, lodash_get_1.default(packageInfo, 'site.common', {}), lodash_get_1.default(packageInfo, `site.${environment}`, {}), lodash_get_1.default(options, 'additionalEnvironment', {}));
 }
 exports.setupEnvironment = setupEnvironment;
+async function runHook(input, hook) {
+    if (typeof hook !== 'function')
+        return input;
+    const output = await hook(input);
+    return output ? output : input;
+}
+exports.runHook = runHook;

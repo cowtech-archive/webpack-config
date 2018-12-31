@@ -8,6 +8,7 @@ const fs_extra_1 = require("fs-extra");
 const globby_1 = __importDefault(require("globby"));
 const lodash_get_1 = __importDefault(require("lodash.get"));
 const path_1 = require("path");
+const environment_1 = require("./environment");
 async function setupServer(options) {
     const serverOptions = options.server || {};
     let https;
@@ -24,7 +25,8 @@ async function setupServer(options) {
         https,
         compress: lodash_get_1.default(serverOptions, 'compress', true),
         historyApiFallback: lodash_get_1.default(serverOptions, 'history', true),
-        disableHostCheck: lodash_get_1.default(serverOptions, 'disableHostCheck', true)
+        disableHostCheck: lodash_get_1.default(serverOptions, 'disableHostCheck', true),
+        inline: lodash_get_1.default(serverOptions, 'inline', true)
     };
     if (config.https) {
         config.https = {
@@ -32,8 +34,6 @@ async function setupServer(options) {
             cert: await fs_extra_1.readFile(path_1.resolve(process.cwd(), lodash_get_1.default(config.https, 'cert', './config/ssl/certificate.pem')))
         };
     }
-    if (typeof serverOptions.afterHook === 'function')
-        config = await serverOptions.afterHook(config);
-    return config;
+    return environment_1.runHook(config, serverOptions.afterHook);
 }
 exports.setupServer = setupServer;

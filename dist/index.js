@@ -60,8 +60,6 @@ async function setup(options = {}) {
     };
     if (lodash_get_1.default(options, 'plugins.concatenate', true))
         config.optimization = Object.assign({}, config.optimization, { concatenateModules: true });
-    if (typeof options.afterHook === 'function')
-        config = await options.afterHook(config);
-    return config;
+    return environment_1.runHook(config, options.afterHook);
 }
 exports.setup = setup;

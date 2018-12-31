@@ -2,6 +2,7 @@ import globby from 'globby'
 import get from 'lodash.get'
 import { resolve, sep } from 'path'
 import { RuleSetRule } from 'webpack'
+import { runHook } from './environment'
 import { babelRemoveFunction } from './plugins/babel-remove-function'
 import { Babel, Options, Rules } from './types'
 
@@ -162,7 +163,6 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
   }
 
   if (rulesOptions.additional) rules = rules.concat(rulesOptions.additional)
-  if (rulesOptions && typeof rulesOptions.afterHook === 'function') rules = await rulesOptions.afterHook(rules)
 
-  return rules
+  return runHook(rules, rulesOptions.afterHook)
 }

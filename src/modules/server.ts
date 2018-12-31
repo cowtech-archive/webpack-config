@@ -3,6 +3,7 @@ import { readFile } from 'fs-extra'
 import globby from 'globby'
 import get from 'lodash.get'
 import { resolve } from 'path'
+import { runHook } from './environment'
 import { Options, Server } from './types'
 
 export async function setupServer(options: Options): Promise<any> {
@@ -23,7 +24,8 @@ export async function setupServer(options: Options): Promise<any> {
     https,
     compress: get(serverOptions, 'compress', true),
     historyApiFallback: get(serverOptions, 'history', true),
-    disableHostCheck: get(serverOptions, 'disableHostCheck', true)
+    disableHostCheck: get(serverOptions, 'disableHostCheck', true),
+    inline: get(serverOptions, 'inline', true)
   }
 
   if (config.https) {
@@ -33,7 +35,5 @@ export async function setupServer(options: Options): Promise<any> {
     }
   }
 
-  if (typeof serverOptions.afterHook === 'function') config = await serverOptions.afterHook(config)
-
-  return config
+  return runHook(config, serverOptions.afterHook)
 }

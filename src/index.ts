@@ -1,7 +1,7 @@
 import get from 'lodash.get'
 import { resolve } from 'path'
 import { autoDetectEntries } from './modules/entries'
-import { setupEnvironment } from './modules/environment'
+import { runHook, setupEnvironment } from './modules/environment'
 import { loadIcons } from './modules/icons'
 import { setupPlugins } from './modules/plugins'
 import { setupRules } from './modules/rules'
@@ -60,7 +60,5 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
   if (get(options, 'plugins.concatenate', true))
     config.optimization = { ...config.optimization, concatenateModules: true }
 
-  if (typeof options.afterHook === 'function') config = await options.afterHook(config)
-
-  return config
+  return runHook(config, options.afterHook)
 }

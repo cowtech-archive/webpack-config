@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const globby_1 = __importDefault(require("globby"));
 const lodash_get_1 = __importDefault(require("lodash.get"));
 const path_1 = require("path");
+const environment_1 = require("./environment");
 const babel_remove_function_1 = require("./plugins/babel-remove-function");
 async function checkTypescript(rulesOptions, srcFolder) {
     if (typeof rulesOptions.typescript === 'boolean')
@@ -146,8 +147,6 @@ async function setupRules(options) {
     }
     if (rulesOptions.additional)
         rules = rules.concat(rulesOptions.additional);
-    if (rulesOptions && typeof rulesOptions.afterHook === 'function')
-        rules = await rulesOptions.afterHook(rules);
-    return rules;
+    return environment_1.runHook(rules, rulesOptions.afterHook);
 }
 exports.setupRules = setupRules;

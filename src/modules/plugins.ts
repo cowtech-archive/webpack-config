@@ -12,6 +12,7 @@ import { Compiler, DefinePlugin, EnvironmentPlugin, HotModuleReplacementPlugin, 
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 // @ts-ignore
 import { InjectManifest } from 'workbox-webpack-plugin'
+import { runHook } from './environment'
 import { checkTypescript } from './rules'
 import { Options, Plugins, ServiceWorker } from './types'
 
@@ -159,9 +160,6 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
   }
 
   if (pluginsOptions.additional) plugins = plugins.concat(pluginsOptions.additional)
-  if (pluginsOptions && typeof pluginsOptions.afterHook === 'function') {
-    plugins = await pluginsOptions.afterHook(plugins)
-  }
 
-  return plugins
+  return runHook(plugins, pluginsOptions.afterHook)
 }
