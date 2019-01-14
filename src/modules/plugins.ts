@@ -7,7 +7,7 @@ import get from 'lodash.get'
 import { basename, resolve } from 'path'
 // @ts-ignore
 import TerserPlugin from 'terser-webpack-plugin'
-import { Compiler, DefinePlugin, EnvironmentPlugin, HotModuleReplacementPlugin, Plugin } from 'webpack'
+import { compilation, Compiler, DefinePlugin, EnvironmentPlugin, HotModuleReplacementPlugin, Plugin } from 'webpack'
 // @ts-ignore
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 // @ts-ignore
@@ -18,7 +18,10 @@ import { Options, Plugins, ServiceWorker } from './types'
 
 export * from './plugins/babel-remove-function'
 
-export const serviceWorkerDefaultInclude = [/\.(html|js|json|css)$/, /\/images.+\.(bmp|jpg|jpeg|png|svg|webp)$/]
+export const serviceWorkerDefaultInclude: Array<string | RegExp> = [
+  /\.(html|js|json|css)$/,
+  /\/images.+\.(bmp|jpg|jpeg|png|svg|webp)$/
+]
 export const serviceWorkerDefaultExclude: Array<string | RegExp> = [
   /\.map$/,
   /manifest\.json/,
@@ -37,15 +40,15 @@ class ServiceWorkerEnvironment {
     this.debug = debug
   }
 
-  apply(compiler: Compiler) {
-    compiler.hooks.emit.tap('ServiceWorkerEnvironment', compilation => {
+  apply(compiler: Compiler): void {
+    compiler.hooks.emit.tap('ServiceWorkerEnvironment', (current: compilation.Compilation) => {
       const content = `self.__version = '${this.version}'; self.__debug = ${this.debug};`
 
-      compilation.assets[this.dest] = {
-        source: function() {
+      current.assets[this.dest] = {
+        source: function(): string {
           return content
         },
-        size: function() {
+        size: function(): number {
           return content.length
         }
       }

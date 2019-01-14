@@ -13,7 +13,7 @@ function babelRemoveFunction(options) {
                 },
                 // Remove any import of the function
                 ImportDeclaration(path) {
-                    const hasDebugName = path.node.specifiers.findIndex(s => s.imported && s.imported.name === 'debugClassName');
+                    const hasDebugName = path.node.specifiers.findIndex((s) => s.imported && s.imported.name === 'debugClassName');
                     if (hasDebugName >= 0) {
                         if (path.node.specifiers.length === 1) {
                             // If debugName is the only imported, just remove the statement completely

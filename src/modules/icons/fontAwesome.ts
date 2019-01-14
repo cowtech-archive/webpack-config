@@ -25,7 +25,7 @@ export function generateSVG(icon: Icon, tag: string): string {
 export async function loadFontAwesomeIcons(icons: Icons, toLoad: Array<string>): Promise<void> {
   const dependencies: { [key: string]: string } = require(resolve(process.cwd(), './package.json')).dependencies
 
-  icons.tags = toLoad.reduce<Tags>((accu, entry, index) => {
+  icons.tags = toLoad.reduce<Tags>((accu: Tags, entry: string, index: number) => {
     // Manipulate the icon name - Syntax: [alias@]<icon>[:section]
     const [alias, rawName] = entry.includes('@') ? entry.split('@') : [entry.replace(/:.+/, ''), entry]
     const [name, section] = rawName.includes(':') ? rawName.split(':') : [rawName, 'solid']

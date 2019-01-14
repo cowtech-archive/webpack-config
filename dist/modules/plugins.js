@@ -23,7 +23,10 @@ const workbox_webpack_plugin_1 = require("workbox-webpack-plugin");
 const environment_1 = require("./environment");
 const rules_1 = require("./rules");
 __export(require("./plugins/babel-remove-function"));
-exports.serviceWorkerDefaultInclude = [/\.(html|js|json|css)$/, /\/images.+\.(bmp|jpg|jpeg|png|svg|webp)$/];
+exports.serviceWorkerDefaultInclude = [
+    /\.(html|js|json|css)$/,
+    /\/images.+\.(bmp|jpg|jpeg|png|svg|webp)$/
+];
 exports.serviceWorkerDefaultExclude = [
     /\.map$/,
     /manifest\.json/,
@@ -37,9 +40,9 @@ class ServiceWorkerEnvironment {
         this.debug = debug;
     }
     apply(compiler) {
-        compiler.hooks.emit.tap('ServiceWorkerEnvironment', compilation => {
+        compiler.hooks.emit.tap('ServiceWorkerEnvironment', (current) => {
             const content = `self.__version = '${this.version}'; self.__debug = ${this.debug};`;
-            compilation.assets[this.dest] = {
+            current.assets[this.dest] = {
                 source: function () {
                     return content;
                 },
