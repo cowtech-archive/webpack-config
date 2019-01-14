@@ -1,3 +1,8 @@
+### 2019-01-14 / 1.14.1
+
+* chore: Added missing file.
+* fix: Improved types definition.
+
 ### 2018-12-31 / 1.14.0
 
 * feat: Improved hook handling.
