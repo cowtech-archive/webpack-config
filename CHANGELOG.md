@@ -1,3 +1,8 @@
+### 2019-08-30 / 1.15.0
+
+* feat: Updated dependencies and improved assets generation.
+* chore: Use NPM for locking.
+
 ### 2019-01-14 / 1.14.1
 
 * chore: Added missing file.
