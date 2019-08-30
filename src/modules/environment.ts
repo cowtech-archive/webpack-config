@@ -17,7 +17,9 @@ export function setupEnvironment(options: Options): Environment {
 }
 
 export async function runHook<T>(input: T, hook?: Hook<T>): Promise<T> {
-  if (typeof hook !== 'function') return input
+  if (typeof hook !== 'function') {
+    return input
+  }
 
   const output = await hook(input)
   return output ? output : input

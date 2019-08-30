@@ -12,8 +12,9 @@ async function loadIcons(options) {
     const toLoad = lodash_get_1.default(options, 'icons', {});
     let icons = { tags: {}, definitions: '' };
     // Font Awesome
-    if (toLoad.fontawesome)
+    if (toLoad.fontawesome) {
         await fontAwesome_1.loadFontAwesomeIcons(icons, toLoad.fontawesome);
+    }
     return icons;
 }
 exports.loadIcons = loadIcons;

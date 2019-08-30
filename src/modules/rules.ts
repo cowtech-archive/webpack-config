@@ -7,13 +7,17 @@ import { babelRemoveFunction } from './plugins/babel-remove-function'
 import { Babel, Options, Rules } from './types'
 
 export async function checkTypescript(rulesOptions: Rules, srcFolder: string): Promise<boolean> {
-  if (typeof rulesOptions.typescript === 'boolean') return rulesOptions.typescript
+  if (typeof rulesOptions.typescript === 'boolean') {
+    return rulesOptions.typescript
+  }
 
   return (await globby(resolve(srcFolder, './**/*.ts'))).length > 0
 }
 
 export async function checkReact(rulesOptions: Rules, srcFolder: string): Promise<boolean> {
-  if (typeof rulesOptions.react === 'boolean') return rulesOptions.react
+  if (typeof rulesOptions.react === 'boolean') {
+    return rulesOptions.react
+  }
 
   return (await globby(resolve(srcFolder, './**/*.(jsx|tsx)'))).length > 0
 }
@@ -21,8 +25,9 @@ export async function checkReact(rulesOptions: Rules, srcFolder: string): Promis
 export function normalizeIncludePath(path: string): string {
   const components = path.split(sep)
 
-  if (components[0] === 'src') components.shift()
-  else if (components[0] === 'node_modules') {
+  if (components[0] === 'src') {
+    components.shift()
+  } else if (components[0] === 'node_modules') {
     components.splice(0, components[1][0] === '@' ? 3 : 2) // Remove the folder, the scope (if present) and the package
   }
 
@@ -49,8 +54,7 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
               Android is excluded due to https://github.com/babel/babel/issues/8351
               We support Android > 5, which is in sync with Chrome, so support is guaranteed
             */
-            'not android < 5',
-            'not android > 5'
+            'not android < 5'
           ])
         },
         exclude: get(babelOptions, 'exclude', []),
@@ -68,7 +72,9 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
     const removeFunctions: Array<string> = get(babelOptions, 'removeFunctions', ['debugClassName'])!
 
     if (removeFunctions.length) {
-      for (const name of removeFunctions) babelPlugins.unshift(babelRemoveFunction({ name }))
+      for (const name of removeFunctions) {
+        babelPlugins.unshift(babelRemoveFunction({ name }))
+      }
     }
   }
 
@@ -126,43 +132,23 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
 
   if (get(rulesOptions, 'images', true)) {
     rules.push({
-      test: /\.(?:bmp|png|jpg|jpeg|svg|webp)$/,
+      test: /\.(?:bmp|png|jpg|jpeg|gif|svg|webp)$/,
       use: [
         {
           loader: 'file-loader',
-          options: { name: '[path][name].[ext]', outputPath: normalizeIncludePath, publicPath: normalizeIncludePath }
-        }
-      ]
-    })
-  }
-
-  if (get(rulesOptions, 'manifest', true)) {
-    rules.push({
-      test: /manifest\.json$/,
-      type: 'javascript/auto',
-      use: [
-        { loader: 'file-loader', options: { name: 'manifest.json' } },
-        {
-          loader: 'string-replace-loader',
           options: {
-            multiple: [
-              { search: '$version', replace: options.version },
-              { search: '$debug', replace: options.environment === 'production' ? 'false' : 'true' }
-            ]
+            name: '[path][name]-[hash].[ext]',
+            outputPath: normalizeIncludePath,
+            publicPath: normalizeIncludePath
           }
         }
       ]
     })
   }
 
-  if (get(rulesOptions, 'robots', true)) {
-    rules.push({
-      test: /robots\.txt$/,
-      use: [{ loader: 'file-loader', options: { name: 'robots.txt' } }]
-    })
+  if (rulesOptions.additional) {
+    rules = rules.concat(rulesOptions.additional)
   }
-
-  if (rulesOptions.additional) rules = rules.concat(rulesOptions.additional)
 
   return runHook(rules, rulesOptions.afterHook)
 }

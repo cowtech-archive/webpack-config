@@ -24,8 +24,8 @@ const environment_1 = require("./environment");
 const rules_1 = require("./rules");
 __export(require("./plugins/babel-remove-function"));
 exports.serviceWorkerDefaultInclude = [
-    /\.(html|js|json|css)$/,
-    /\/images.+\.(bmp|jpg|jpeg|png|svg|webp)$/
+    /\.(html|js|json|mjs|css)$/,
+    /images.+\.(bmp|jpg|jpeg|png|svg|webp)$/
 ];
 exports.serviceWorkerDefaultExclude = [
     /\.map$/,
@@ -43,10 +43,10 @@ class ServiceWorkerEnvironment {
         compiler.hooks.emit.tap('ServiceWorkerEnvironment', (current) => {
             const content = `self.__version = '${this.version}'; self.__debug = ${this.debug};`;
             current.assets[this.dest] = {
-                source: function () {
+                source() {
                     return content;
                 },
-                size: function () {
+                size() {
                     return content.length;
                 }
             };
@@ -68,6 +68,8 @@ async function setupPlugins(options) {
     const analyze = lodash_get_1.default(pluginsOptions, 'analyze', true);
     const hmr = lodash_get_1.default(options, 'server.hot', true);
     const indexFile = await resolveFile(options, 'index', './index.html.(js|ts|jsx|tsx)');
+    const manifest = (await globby_1.default(path_1.resolve(options.srcFolder, './manifest.json.{js|ts}')))[0];
+    const robots = (await globby_1.default(path_1.resolve(options.srcFolder, './robots.txt.{js|ts}')))[0];
     let plugins = [
         new webpack_1.EnvironmentPlugin({
             NODE_ENV: options.environment
@@ -82,20 +84,36 @@ async function setupPlugins(options) {
         plugins.push(new html_webpack_plugin_1.default({
             template: indexFile,
             minify: { collapseWhitespace: true },
-            inject: false,
-            excludeAssets: [/\.js$/]
+            inject: false
+        }));
+    }
+    if (manifest && lodash_get_1.default(options.rules, 'manifest', true)) {
+        plugins.push(new html_webpack_plugin_1.default({
+            filename: 'manifest.json',
+            template: manifest,
+            minify: true,
+            inject: false
+        }));
+    }
+    if (robots && lodash_get_1.default(options.rules, 'robots', true)) {
+        plugins.push(new html_webpack_plugin_1.default({
+            filename: 'robots.txt',
+            template: robots,
+            minify: false,
+            inject: false
         }));
     }
     if (useTypescript) {
         plugins.push(new fork_ts_checker_webpack_plugin_1.default({
             checkSyntacticErrors: true,
             async: false,
-            workers: fork_ts_checker_webpack_plugin_1.default.TWO_CPUS_FREE
+            useTypescriptIncrementalApi: true
         }));
     }
     if (options.environment === 'production') {
-        if (lodash_get_1.default(pluginsOptions, 'minify', true))
+        if (lodash_get_1.default(pluginsOptions, 'minify', true)) {
             plugins.push(new terser_webpack_plugin_1.default(lodash_get_1.default(options, 'uglify', {})));
+        }
     }
     else if (hmr) {
         plugins.push(new webpack_1.HotModuleReplacementPlugin());
@@ -132,8 +150,9 @@ async function setupPlugins(options) {
                 swDest, include: exports.serviceWorkerDefaultInclude, exclude: exports.serviceWorkerDefaultExclude, importScripts: [`/${envFile}`] }, lodash_get_1.default(swOptions, 'options', {}))));
         }
     }
-    if (pluginsOptions.additional)
+    if (pluginsOptions.additional) {
         plugins = plugins.concat(pluginsOptions.additional);
+    }
     return environment_1.runHook(plugins, pluginsOptions.afterHook);
 }
 exports.setupPlugins = setupPlugins;

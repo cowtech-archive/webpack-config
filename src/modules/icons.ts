@@ -14,7 +14,9 @@ export async function loadIcons(options: Options): Promise<Icons> {
   let icons: Icons = { tags: {}, definitions: '' }
 
   // Font Awesome
-  if (toLoad.fontawesome) await loadFontAwesomeIcons(icons, toLoad.fontawesome)
+  if (toLoad.fontawesome) {
+    await loadFontAwesomeIcons(icons, toLoad.fontawesome)
+  }
 
   return icons
 }

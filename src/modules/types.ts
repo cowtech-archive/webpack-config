@@ -1,4 +1,5 @@
 import {
+  compilation,
   Configuration,
   Entry,
   EntryFunc,
@@ -10,7 +11,6 @@ import {
 
 export type HookReturn<T> = void | null | T | Promise<void | null | T>
 export type Hook<T> = (input: T) => HookReturn<T>
-export type ExtendedConfiguration = Configuration & { devServer: any }
 
 export type Entries = string | Array<string> | Entry | EntryFunc
 
@@ -30,8 +30,15 @@ export type Target =
 
 export type LibraryTarget = 'var' | 'this' | 'commonjs' | 'commonjs2' | 'amd' | 'umd' | 'window' | 'assign' | 'jsonp'
 
+export type FilenameGenerator = (data: OutputData) => string
+
+export interface OutputData {
+  chunk: compilation.Chunk
+  hash: string
+}
+
 export interface Output {
-  filename?: string
+  filename?: string | FilenameGenerator
   publicPath?: string
   target?: Target
   libraryTarget?: LibraryTarget
@@ -101,6 +108,11 @@ export interface Babel {
   configuration?: any
 }
 
+export type ExtendedConfiguration = Configuration & {
+  output: any
+  devServer: any
+}
+
 export interface Options extends Output {
   environment?: string | object
   additionalEnvironment?: object
@@ -119,6 +131,7 @@ export interface Options extends Output {
   externals?: Externals
   server?: Server
   babel?: Babel
+  useESModules?: boolean
   uglify?: object
   afterHook?: Hook<ExtendedConfiguration>
 }

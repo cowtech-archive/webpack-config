@@ -28,21 +28,25 @@ function generateVersion() {
 }
 exports.generateVersion = generateVersion;
 async function setup(options = {}) {
-    if (!options.environment || typeof options.environment !== 'string')
+    if (!options.environment || typeof options.environment !== 'string') {
         options.environment = 'development';
-    if (!options.version)
+    }
+    if (!options.version) {
         options.version = generateVersion();
+    }
     options.srcFolder = path_1.resolve(process.cwd(), lodash_get_1.default(options, 'srcFolder', 'src'));
     options.destFolder = path_1.resolve(process.cwd(), lodash_get_1.default(options, 'destFolder', 'dist'));
     options.env = environment_1.setupEnvironment(options);
     options.icons = await icons_1.loadIcons(options);
     const server = await server_1.setupServer(options);
     const stats = (server.stats = lodash_get_1.default(options, 'stats', options.environment === 'production' ? 'normal' : 'errors-only'));
+    const mainExtension = lodash_get_1.default(options, 'useESModules', true) ? 'mjs' : 'js';
+    const filename = lodash_get_1.default(options, 'filename', (data) => `${data.chunk.name.replace(/\.[a-z]+$/, '')}-${data.hash}.${mainExtension}`);
     let config = {
         mode: options.environment === 'production' ? 'production' : 'development',
         entry: options.entries || (await entries_1.autoDetectEntries(options)),
         output: {
-            filename: lodash_get_1.default(options, 'filename', '[name]'),
+            filename,
             path: options.destFolder,
             publicPath: lodash_get_1.default(options, 'publicPath', '/'),
             libraryTarget: options.libraryTarget
@@ -58,8 +62,9 @@ async function setup(options = {}) {
         devServer: server,
         stats
     };
-    if (lodash_get_1.default(options, 'plugins.concatenate', true))
-        config.optimization = Object.assign({}, config.optimization, { concatenateModules: true });
+    if (lodash_get_1.default(options, 'plugins.concatenate', true)) {
+        config.optimization = Object.assign(Object.assign({}, config.optimization), { concatenateModules: true });
+    }
     return environment_1.runHook(config, options.afterHook);
 }
 exports.setup = setup;

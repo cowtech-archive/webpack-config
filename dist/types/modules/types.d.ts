@@ -1,16 +1,18 @@
 /// <reference types="node" />
-import { Configuration, Entry, EntryFunc, ExternalsElement, Options as WebpackOptions, Plugin, RuleSetRule } from 'webpack';
+import { compilation, Configuration, Entry, EntryFunc, ExternalsElement, Options as WebpackOptions, Plugin, RuleSetRule } from 'webpack';
 export declare type HookReturn<T> = void | null | T | Promise<void | null | T>;
 export declare type Hook<T> = (input: T) => HookReturn<T>;
-export declare type ExtendedConfiguration = Configuration & {
-    devServer: any;
-};
 export declare type Entries = string | Array<string> | Entry | EntryFunc;
 export declare type Externals = ExternalsElement | Array<ExternalsElement>;
 export declare type Target = 'web' | 'webworker' | 'node' | 'async-node' | 'node-webkit' | 'atom' | 'electron' | 'electron-renderer' | 'electron-main' | ((compiler?: any) => void);
 export declare type LibraryTarget = 'var' | 'this' | 'commonjs' | 'commonjs2' | 'amd' | 'umd' | 'window' | 'assign' | 'jsonp';
+export declare type FilenameGenerator = (data: OutputData) => string;
+export interface OutputData {
+    chunk: compilation.Chunk;
+    hash: string;
+}
 export interface Output {
-    filename?: string;
+    filename?: string | FilenameGenerator;
     publicPath?: string;
     target?: Target;
     libraryTarget?: LibraryTarget;
@@ -75,6 +77,10 @@ export interface Babel {
     modules?: boolean;
     configuration?: any;
 }
+export declare type ExtendedConfiguration = Configuration & {
+    output: any;
+    devServer: any;
+};
 export interface Options extends Output {
     environment?: string | object;
     additionalEnvironment?: object;
@@ -93,6 +99,7 @@ export interface Options extends Output {
     externals?: Externals;
     server?: Server;
     babel?: Babel;
+    useESModules?: boolean;
     uglify?: object;
     afterHook?: Hook<ExtendedConfiguration>;
 }

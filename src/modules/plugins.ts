@@ -19,8 +19,8 @@ import { Options, Plugins, ServiceWorker } from './types'
 export * from './plugins/babel-remove-function'
 
 export const serviceWorkerDefaultInclude: Array<string | RegExp> = [
-  /\.(html|js|json|css)$/,
-  /\/images.+\.(bmp|jpg|jpeg|png|svg|webp)$/
+  /\.(html|js|json|mjs|css)$/,
+  /images.+\.(bmp|jpg|jpeg|png|svg|webp)$/
 ]
 export const serviceWorkerDefaultExclude: Array<string | RegExp> = [
   /\.map$/,
@@ -45,10 +45,10 @@ class ServiceWorkerEnvironment {
       const content = `self.__version = '${this.version}'; self.__debug = ${this.debug};`
 
       current.assets[this.dest] = {
-        source: function(): string {
+        source(): string {
           return content
         },
-        size: function(): number {
+        size(): number {
           return content.length
         }
       }
@@ -74,6 +74,8 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
   const hmr = get(options, 'server.hot', true)
 
   const indexFile = await resolveFile(options, 'index', './index.html.(js|ts|jsx|tsx)')
+  const manifest = (await globby(resolve(options.srcFolder!, './manifest.json.{js|ts}')))[0]
+  const robots = (await globby(resolve(options.srcFolder!, './robots.txt.{js|ts}')))[0]
 
   let plugins: Array<Plugin> = [
     new EnvironmentPlugin({
@@ -91,8 +93,29 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
       new HtmlWebpackPlugin({
         template: indexFile,
         minify: { collapseWhitespace: true },
-        inject: false,
-        excludeAssets: [/\.js$/]
+        inject: false
+      })
+    )
+  }
+
+  if (manifest && get(options.rules, 'manifest', true)) {
+    plugins.push(
+      new HtmlWebpackPlugin({
+        filename: 'manifest.json',
+        template: manifest,
+        minify: true,
+        inject: false
+      })
+    )
+  }
+
+  if (robots && get(options.rules, 'robots', true)) {
+    plugins.push(
+      new HtmlWebpackPlugin({
+        filename: 'robots.txt',
+        template: robots,
+        minify: false,
+        inject: false
       })
     )
   }
@@ -102,13 +125,15 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
       new ForkTsCheckerWebpackPlugin({
         checkSyntacticErrors: true,
         async: false,
-        workers: ForkTsCheckerWebpackPlugin.TWO_CPUS_FREE
+        useTypescriptIncrementalApi: true
       })
     )
   }
 
   if (options.environment === 'production') {
-    if (get(pluginsOptions, 'minify', true)) plugins.push(new TerserPlugin(get(options, 'uglify', {})))
+    if (get(pluginsOptions, 'minify', true)) {
+      plugins.push(new TerserPlugin(get(options, 'uglify', {})))
+    }
   } else if (hmr) {
     plugins.push(new HotModuleReplacementPlugin())
   }
@@ -162,7 +187,9 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
     }
   }
 
-  if (pluginsOptions.additional) plugins = plugins.concat(pluginsOptions.additional)
+  if (pluginsOptions.additional) {
+    plugins = plugins.concat(pluginsOptions.additional)
+  }
 
   return runHook(plugins, pluginsOptions.afterHook)
 }

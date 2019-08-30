@@ -1,15 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function babelRemoveFunction(options) {
-    if (!options || typeof options.name !== 'string')
+    if (!options || typeof options.name !== 'string') {
         throw new Error('Please provide a function name in the options.');
+    }
     return function babelRemoveFunctionInstance({ types: t }) {
         return {
             visitor: {
                 // Remove any definition of the function
                 Function(path) {
-                    if (path.node.id && path.node.id.name === 'debugClassName')
+                    if (path.node.id && path.node.id.name === 'debugClassName') {
                         path.remove();
+                    }
                 },
                 // Remove any import of the function
                 ImportDeclaration(path) {

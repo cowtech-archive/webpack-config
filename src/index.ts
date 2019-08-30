@@ -6,7 +6,7 @@ import { loadIcons } from './modules/icons'
 import { setupPlugins } from './modules/plugins'
 import { setupRules } from './modules/rules'
 import { setupServer } from './modules/server'
-import { ExtendedConfiguration, Options } from './modules/types'
+import { ExtendedConfiguration, FilenameGenerator, Options, OutputData } from './modules/types'
 
 export * from './modules/entries'
 export * from './modules/environment'
@@ -24,8 +24,13 @@ export function generateVersion(): string {
 }
 
 export async function setup(options: Options = {}): Promise<ExtendedConfiguration> {
-  if (!options.environment || typeof options.environment !== 'string') options.environment = 'development'
-  if (!options.version) options.version = generateVersion()
+  if (!options.environment || typeof options.environment !== 'string') {
+    options.environment = 'development'
+  }
+
+  if (!options.version) {
+    options.version = generateVersion()
+  }
 
   options.srcFolder = resolve(process.cwd(), get(options, 'srcFolder', 'src')!)
   options.destFolder = resolve(process.cwd(), get(options, 'destFolder', 'dist')!)
@@ -36,11 +41,18 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
 
   const stats = (server.stats = get(options, 'stats', options.environment === 'production' ? 'normal' : 'errors-only'))
 
+  const mainExtension = get(options, 'useESModules', true) ? 'mjs' : 'js'
+  const filename = get(
+    options,
+    'filename',
+    (data: OutputData) => `${data.chunk.name.replace(/\.[a-z]+$/, '')}-${data.hash}.${mainExtension}`
+  ) as FilenameGenerator & string
+
   let config: ExtendedConfiguration = {
     mode: options.environment === 'production' ? 'production' : 'development',
     entry: options.entries || (await autoDetectEntries(options)),
     output: {
-      filename: get(options, 'filename', '[name]'),
+      filename,
       path: options.destFolder,
       publicPath: get(options, 'publicPath', '/'),
       libraryTarget: options.libraryTarget
@@ -57,8 +69,9 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
     stats
   }
 
-  if (get(options, 'plugins.concatenate', true))
+  if (get(options, 'plugins.concatenate', true)) {
     config.optimization = { ...config.optimization, concatenateModules: true }
+  }
 
   return runHook(config, options.afterHook)
 }

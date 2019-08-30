@@ -21,14 +21,18 @@ interface NodePath<C, P = unknown> {
 }
 
 export function babelRemoveFunction(options?: { name?: string }): (options: { types: Types }) => object {
-  if (!options || typeof options.name !== 'string') throw new Error('Please provide a function name in the options.')
+  if (!options || typeof options.name !== 'string') {
+    throw new Error('Please provide a function name in the options.')
+  }
 
   return function babelRemoveFunctionInstance({ types: t }: { types: Types }): object {
     return {
       visitor: {
         // Remove any definition of the function
         Function(path: NodePath<FunctionDeclaration>): void {
-          if (path.node.id && path.node.id.name === 'debugClassName') path.remove()
+          if (path.node.id && path.node.id.name === 'debugClassName') {
+            path.remove()
+          }
         },
         // Remove any import of the function
         ImportDeclaration(path: NodePath<ImportDeclaration>): void {
