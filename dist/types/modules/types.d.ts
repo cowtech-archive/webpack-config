@@ -81,7 +81,7 @@ export interface Babel {
     exclude?: Array<string>;
     modules?: boolean;
     configuration?: any;
-    debug?: boolean;
+    envDebug?: boolean;
 }
 export declare type ExtendedConfiguration = Configuration & {
     output: any;

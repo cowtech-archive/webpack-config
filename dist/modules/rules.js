@@ -70,7 +70,7 @@ async function setupRules(options) {
                 targets: lodash_get_1.default(babelOptions, 'browsersWhiteList', { esmodules: true }),
                 exclude: lodash_get_1.default(babelOptions, 'exclude', exports.unneededBabelPlugins),
                 modules: lodash_get_1.default(babelOptions, 'modules', false),
-                debug: lodash_get_1.default(babelOptions, 'debug', false)
+                debug: lodash_get_1.default(babelOptions, 'envDebug', false)
             }
         ]
     ];
