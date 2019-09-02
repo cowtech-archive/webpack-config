@@ -1,3 +1,7 @@
+### 2019-09-02 / 1.16.0
+
+* feat: Improved file generation.
+
 ### 2019-08-30 / 1.15.0
 
 * feat: Updated dependencies and improved assets generation.
