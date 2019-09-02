@@ -6,6 +6,32 @@ import { runHook } from './environment'
 import { babelRemoveFunction } from './plugins/babel-remove-function'
 import { Babel, Options, Rules } from './types'
 
+/*
+Refresh the following two constants periodically by running with 'last 2 versions' and debug=true
+Modifications:
+  android: remove - Follows Chrome version
+  opera: 60 - Use Chromium
+  edge: 18 - 17 is legacy
+  ie: remove - Is more than legacy
+*/
+export const minimumSupportedBrowsers = {
+  chrome: '74',
+  edge: '18',
+  firefox: '67',
+  ios: '11',
+  opera: '60',
+  safari: '11',
+  samsung: '8.2'
+}
+
+export const unneededBabelPlugins = [
+  '@babel/plugin-transform-regenerator',
+  '@babel/transform-template-literals',
+  '@babel/plugin-transform-function-name',
+  '@babel/proposal-async-generator-functions',
+  '@babel/proposal-object-rest-spread'
+]
+
 export async function checkTypescript(rulesOptions: Rules, srcFolder: string): Promise<boolean> {
   if (typeof rulesOptions.typescript === 'boolean') {
     return rulesOptions.typescript
@@ -46,18 +72,9 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
     [
       '@babel/preset-env',
       {
-        targets: {
-          browsers: get(babelOptions, 'browsersWhiteList', [
-            'last 2 versions',
-            'not ie <= 11',
-            /*
-              Android is excluded due to https://github.com/babel/babel/issues/8351
-              We support Android > 5, which is in sync with Chrome, so support is guaranteed
-            */
-            'not android < 5'
-          ])
-        },
-        exclude: get(babelOptions, 'exclude', []),
+        targets: get(babelOptions, 'browsersWhiteList', { esmodules: true }),
+        debug: true,
+        exclude: get(babelOptions, 'exclude', unneededBabelPlugins),
         modules: get(babelOptions, 'modules', false)
       }
     ]

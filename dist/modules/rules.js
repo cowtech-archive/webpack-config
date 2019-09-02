@@ -8,6 +8,30 @@ const lodash_get_1 = __importDefault(require("lodash.get"));
 const path_1 = require("path");
 const environment_1 = require("./environment");
 const babel_remove_function_1 = require("./plugins/babel-remove-function");
+/*
+Refresh the following two constants periodically by running with 'last 2 versions' and debug=true
+Modifications:
+  android: remove
+  opera: 60
+  edge: 18
+  ie: remove
+*/
+exports.minimumSupportedBrowsers = {
+    chrome: '74',
+    edge: '18',
+    firefox: '67',
+    ios: '11',
+    opera: '60',
+    safari: '11',
+    samsung: '8.2'
+};
+exports.unneededBabelPlugins = [
+    '@babel/plugin-transform-regenerator',
+    '@babel/transform-template-literals',
+    '@babel/plugin-transform-function-name',
+    '@babel/proposal-async-generator-functions',
+    '@babel/proposal-object-rest-spread'
+];
 async function checkTypescript(rulesOptions, srcFolder) {
     if (typeof rulesOptions.typescript === 'boolean') {
         return rulesOptions.typescript;
@@ -43,18 +67,9 @@ async function setupRules(options) {
         [
             '@babel/preset-env',
             {
-                targets: {
-                    browsers: lodash_get_1.default(babelOptions, 'browsersWhiteList', [
-                        'last 2 versions',
-                        'not ie <= 11',
-                        /*
-                          Android is excluded due to https://github.com/babel/babel/issues/8351
-                          We support Android > 5, which is in sync with Chrome, so support is guaranteed
-                        */
-                        'not android < 5'
-                    ])
-                },
-                exclude: lodash_get_1.default(babelOptions, 'exclude', []),
+                targets: lodash_get_1.default(babelOptions, 'browsersWhiteList', { esmodules: true }),
+                debug: true,
+                exclude: lodash_get_1.default(babelOptions, 'exclude', exports.unneededBabelPlugins),
                 modules: lodash_get_1.default(babelOptions, 'modules', false)
             }
         ]
