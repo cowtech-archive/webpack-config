@@ -73,9 +73,9 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
       '@babel/preset-env',
       {
         targets: get(babelOptions, 'browsersWhiteList', { esmodules: true }),
-        debug: true,
         exclude: get(babelOptions, 'exclude', unneededBabelPlugins),
-        modules: get(babelOptions, 'modules', false)
+        modules: get(babelOptions, 'modules', false),
+        debug: get(babelOptions, 'envDebug', false)
       }
     ]
   ]

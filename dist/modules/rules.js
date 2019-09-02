@@ -11,10 +11,10 @@ const babel_remove_function_1 = require("./plugins/babel-remove-function");
 /*
 Refresh the following two constants periodically by running with 'last 2 versions' and debug=true
 Modifications:
-  android: remove
-  opera: 60
-  edge: 18
-  ie: remove
+  android: remove - Follows Chrome version
+  opera: 60 - Use Chromium
+  edge: 18 - 17 is legacy
+  ie: remove - Is more than legacy
 */
 exports.minimumSupportedBrowsers = {
     chrome: '74',
@@ -68,9 +68,9 @@ async function setupRules(options) {
             '@babel/preset-env',
             {
                 targets: lodash_get_1.default(babelOptions, 'browsersWhiteList', { esmodules: true }),
-                debug: true,
                 exclude: lodash_get_1.default(babelOptions, 'exclude', exports.unneededBabelPlugins),
-                modules: lodash_get_1.default(babelOptions, 'modules', false)
+                modules: lodash_get_1.default(babelOptions, 'modules', false),
+                debug: lodash_get_1.default(babelOptions, 'debug', false)
             }
         ]
     ];
