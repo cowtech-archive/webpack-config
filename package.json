@@ -38,7 +38,7 @@
     "file-loader": "^4.2.0",
     "fs-extra": "^8.1.0",
     "globby": "^10.0.1",
-    "html-webpack-plugin": "^3.2.0",
+    "html-webpack-plugin": "^4.0.0-beta.8",
     "lodash.camelcase": "^4.3.0",
     "lodash.get": "^4.4.2",
     "string-replace-loader": "^2.2.0",
@@ -52,6 +52,7 @@
   "devDependencies": {
     "@cowtech/tslint-config": "^5.13.0",
     "@types/fs-extra": "^8.0.0",
+    "@types/html-minifier": "^3.5.3",
     "@types/lodash": "^4.14.138",
     "@types/lodash.camelcase": "^4.3.6",
     "@types/lodash.get": "^4.4.6",

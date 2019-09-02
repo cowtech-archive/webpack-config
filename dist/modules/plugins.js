@@ -7,9 +7,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // @ts-ignore
+const crypto_1 = require("crypto");
 const fork_ts_checker_webpack_plugin_1 = __importDefault(require("fork-ts-checker-webpack-plugin"));
 const globby_1 = __importDefault(require("globby"));
-// @ts-ignore
 const html_webpack_plugin_1 = __importDefault(require("html-webpack-plugin"));
 const lodash_get_1 = __importDefault(require("lodash.get"));
 const path_1 = require("path");
@@ -53,6 +53,21 @@ class ServiceWorkerEnvironment {
         });
     }
 }
+class HtmlWebpackTrackerPlugin {
+    constructor() {
+        this.files = new Map();
+    }
+    apply(compiler) {
+        compiler.hooks.compilation.tap('HtmlWebpackTrackerPlugin', (current) => {
+            const plugin = html_webpack_plugin_1.default;
+            plugin
+                .getHooks(current)
+                .afterEmit.tap('HtmlWebpackTrackerPlugin', ({ outputName, plugin }) => {
+                current.cache[`html-webpack-tracker-plugin:${plugin.options.id}`] = outputName;
+            });
+        });
+    }
+}
 async function resolveFile(options, key, pattern) {
     let file = lodash_get_1.default(options, key, true);
     if (file === true) {
@@ -78,18 +93,13 @@ async function setupPlugins(options) {
             ENV: JSON.stringify(options.env),
             VERSION: JSON.stringify(options.version),
             ICONS: JSON.stringify(options.icons)
-        })
+        }),
+        new HtmlWebpackTrackerPlugin()
     ];
-    if (indexFile) {
-        plugins.push(new html_webpack_plugin_1.default({
-            template: indexFile,
-            minify: { collapseWhitespace: true },
-            inject: false
-        }));
-    }
     if (manifest && lodash_get_1.default(options.rules, 'manifest', true)) {
         plugins.push(new html_webpack_plugin_1.default({
-            filename: 'manifest.json',
+            id: 'manifest',
+            filename: 'manifest-[contenthash].json',
             template: manifest,
             minify: true,
             inject: false
@@ -97,6 +107,7 @@ async function setupPlugins(options) {
     }
     if (robots && lodash_get_1.default(options.rules, 'robots', true)) {
         plugins.push(new html_webpack_plugin_1.default({
+            id: 'robots',
             filename: 'robots.txt',
             template: robots,
             minify: false,
@@ -108,6 +119,13 @@ async function setupPlugins(options) {
             checkSyntacticErrors: true,
             async: false,
             useTypescriptIncrementalApi: true
+        }));
+    }
+    if (indexFile) {
+        plugins.push(new html_webpack_plugin_1.default({
+            template: indexFile,
+            minify: { collapseWhitespace: true },
+            inject: false
         }));
     }
     if (options.environment === 'production') {
@@ -139,8 +157,12 @@ async function setupPlugins(options) {
     if (lodash_get_1.default(swOptions, 'enabled', options.environment === 'production')) {
         let swSrc = await resolveFile(options, 'serviceWorker.src', './(service-worker|sw).(js|ts)');
         if (swSrc) {
+            // Create the hash for the filename
+            const hashFactory = crypto_1.createHash('md4');
+            hashFactory.update(JSON.stringify({ version: options.version }));
+            const hash = hashFactory.digest('hex');
             const swDest = lodash_get_1.default(swOptions, 'dest', 'sw.js');
-            const envFile = swDest.replace(/\.js$/, `-env-${options.version}.js`);
+            const envFile = swDest.replace(/\.js$/, `-env-${hash}.js`);
             exports.serviceWorkerDefaultExclude.push(envFile);
             plugins.push(new ServiceWorkerEnvironment({
                 dest: envFile,

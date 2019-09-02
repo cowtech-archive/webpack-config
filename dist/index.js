@@ -41,7 +41,7 @@ async function setup(options = {}) {
     const server = await server_1.setupServer(options);
     const stats = (server.stats = lodash_get_1.default(options, 'stats', options.environment === 'production' ? 'normal' : 'errors-only'));
     const mainExtension = lodash_get_1.default(options, 'useESModules', true) ? 'mjs' : 'js';
-    const filename = lodash_get_1.default(options, 'filename', (data) => `${data.chunk.name.replace(/\.[a-z]+$/, '')}-${data.hash}.${mainExtension}`);
+    const filename = lodash_get_1.default(options, 'filename', (data) => `${data.chunk.name}-${data.hash}.${mainExtension}`);
     let config = {
         mode: options.environment === 'production' ? 'production' : 'development',
         entry: options.entries || (await entries_1.autoDetectEntries(options)),
@@ -59,6 +59,7 @@ async function setup(options = {}) {
         plugins: await plugins_1.setupPlugins(options),
         externals: options.externals,
         devtool: options.environment === 'development' ? lodash_get_1.default(options, 'sourceMaps', 'source-map') : false,
+        cache: true,
         devServer: server,
         stats
     };

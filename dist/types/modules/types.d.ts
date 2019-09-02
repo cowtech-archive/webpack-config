@@ -1,4 +1,5 @@
 /// <reference types="node" />
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { compilation, Configuration, Entry, EntryFunc, ExternalsElement, Options as WebpackOptions, Plugin, RuleSetRule } from 'webpack';
 export declare type HookReturn<T> = void | null | T | Promise<void | null | T>;
 export declare type Hook<T> = (input: T) => HookReturn<T>;
@@ -7,6 +8,10 @@ export declare type Externals = ExternalsElement | Array<ExternalsElement>;
 export declare type Target = 'web' | 'webworker' | 'node' | 'async-node' | 'node-webkit' | 'atom' | 'electron' | 'electron-renderer' | 'electron-main' | ((compiler?: any) => void);
 export declare type LibraryTarget = 'var' | 'this' | 'commonjs' | 'commonjs2' | 'amd' | 'umd' | 'window' | 'assign' | 'jsonp';
 export declare type FilenameGenerator = (data: OutputData) => string;
+export interface HtmlWebpackTrackerPluginParameters {
+    outputName: string;
+    plugin: HtmlWebpackPlugin.Options;
+}
 export interface OutputData {
     chunk: compilation.Chunk;
     hash: string;

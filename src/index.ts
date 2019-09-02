@@ -45,7 +45,7 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
   const filename = get(
     options,
     'filename',
-    (data: OutputData) => `${data.chunk.name.replace(/\.[a-z]+$/, '')}-${data.hash}.${mainExtension}`
+    (data: OutputData) => `${data.chunk.name}-${data.hash}.${mainExtension}`
   ) as FilenameGenerator & string
 
   let config: ExtendedConfiguration = {
@@ -65,6 +65,7 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
     plugins: await setupPlugins(options),
     externals: options.externals,
     devtool: options.environment === 'development' ? get(options, 'sourceMaps', 'source-map') : false,
+    cache: true,
     devServer: server,
     stats
   }

@@ -1,7 +1,7 @@
 // @ts-ignore
+import { createHash } from 'crypto'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import globby from 'globby'
-// @ts-ignore
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import get from 'lodash.get'
 import { basename, resolve } from 'path'
@@ -14,7 +14,7 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import { InjectManifest } from 'workbox-webpack-plugin'
 import { runHook } from './environment'
 import { checkTypescript } from './rules'
-import { Options, Plugins, ServiceWorker } from './types'
+import { HtmlWebpackTrackerPluginParameters, Options, Plugins, ServiceWorker } from './types'
 
 export * from './plugins/babel-remove-function'
 
@@ -56,6 +56,25 @@ class ServiceWorkerEnvironment {
   }
 }
 
+class HtmlWebpackTrackerPlugin {
+  public files: Map<string, string>
+
+  constructor() {
+    this.files = new Map<string, string>()
+  }
+
+  apply(compiler: Compiler): void {
+    compiler.hooks.compilation.tap('HtmlWebpackTrackerPlugin', (current: compilation.Compilation) => {
+      const plugin = HtmlWebpackPlugin as any
+      plugin
+        .getHooks(current)
+        .afterEmit.tap('HtmlWebpackTrackerPlugin', ({ outputName, plugin }: HtmlWebpackTrackerPluginParameters) => {
+          current.cache[`html-webpack-tracker-plugin:${plugin.options.id}`] = outputName
+        })
+    })
+  }
+}
+
 export async function resolveFile(options: Options, key: string, pattern: string): Promise<string | null> {
   let file: boolean | string = get(options, key, true)
 
@@ -85,23 +104,15 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
       ENV: JSON.stringify(options.env),
       VERSION: JSON.stringify(options.version),
       ICONS: JSON.stringify(options.icons)
-    })
+    }),
+    new HtmlWebpackTrackerPlugin()
   ]
-
-  if (indexFile) {
-    plugins.push(
-      new HtmlWebpackPlugin({
-        template: indexFile,
-        minify: { collapseWhitespace: true },
-        inject: false
-      })
-    )
-  }
 
   if (manifest && get(options.rules, 'manifest', true)) {
     plugins.push(
       new HtmlWebpackPlugin({
-        filename: 'manifest.json',
+        id: 'manifest',
+        filename: 'manifest-[contenthash].json',
         template: manifest,
         minify: true,
         inject: false
@@ -112,6 +123,7 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
   if (robots && get(options.rules, 'robots', true)) {
     plugins.push(
       new HtmlWebpackPlugin({
+        id: 'robots',
         filename: 'robots.txt',
         template: robots,
         minify: false,
@@ -126,6 +138,16 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
         checkSyntacticErrors: true,
         async: false,
         useTypescriptIncrementalApi: true
+      })
+    )
+  }
+
+  if (indexFile) {
+    plugins.push(
+      new HtmlWebpackPlugin({
+        template: indexFile,
+        minify: { collapseWhitespace: true },
+        inject: false
       })
     )
   }
@@ -164,8 +186,13 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
     let swSrc = await resolveFile(options, 'serviceWorker.src', './(service-worker|sw).(js|ts)')
 
     if (swSrc) {
+      // Create the hash for the filename
+      const hashFactory = createHash('md4')
+      hashFactory.update(JSON.stringify({ version: options.version }))
+      const hash = hashFactory.digest('hex')
+
       const swDest = get(swOptions, 'dest', 'sw.js')!
-      const envFile = swDest.replace(/\.js$/, `-env-${options.version}.js`)
+      const envFile = swDest.replace(/\.js$/, `-env-${hash}.js`)
 
       serviceWorkerDefaultExclude.push(envFile)
 

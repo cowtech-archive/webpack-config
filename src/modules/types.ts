@@ -1,3 +1,4 @@
+import HtmlWebpackPlugin from 'html-webpack-plugin'
 import {
   compilation,
   Configuration,
@@ -31,6 +32,11 @@ export type Target =
 export type LibraryTarget = 'var' | 'this' | 'commonjs' | 'commonjs2' | 'amd' | 'umd' | 'window' | 'assign' | 'jsonp'
 
 export type FilenameGenerator = (data: OutputData) => string
+
+export interface HtmlWebpackTrackerPluginParameters {
+  outputName: string
+  plugin: HtmlWebpackPlugin.Options
+}
 
 export interface OutputData {
   chunk: compilation.Chunk
