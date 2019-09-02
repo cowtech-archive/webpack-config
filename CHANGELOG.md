@@ -1,3 +1,8 @@
+### 2019-09-02 / 1.16.2
+
+* chore: Rebuild.
+* fix: Do not enable babel env debug by default.
+
 ### 2019-09-02 / 1.16.1
 
 * fix: Fix browser support.
