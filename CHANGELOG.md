@@ -1,3 +1,7 @@
+### 2019-09-02 / 1.16.1
+
+* fix: Fix browser support.
+
 ### 2019-09-02 / 1.16.0
 
 * feat: Improved file generation.
