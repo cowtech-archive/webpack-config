@@ -1,3 +1,8 @@
+### 2019-09-03 / 1.16.4
+
+* chore: Rebuild.
+* fix: Include mjs files in manifest.
+
 ### 2019-09-03 / 1.16.3
 
 * chore: Added required peer dependency.
