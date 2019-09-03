@@ -26,6 +26,7 @@ export const serviceWorkerDefaultExclude: Array<string | RegExp> = [
   /\.map$/,
   /manifest\.json/,
   /bundle\.js/,
+  /bundle\.mjs/,
   /404\.html/
 ]
 
