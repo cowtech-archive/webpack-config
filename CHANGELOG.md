@@ -1,3 +1,7 @@
+### 2019-09-03 / 1.16.5
+
+* fix: Fixed ServiceWorker defaults.
+
 ### 2019-09-03 / 1.16.4
 
 * chore: Rebuild.
