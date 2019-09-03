@@ -24,14 +24,12 @@ const environment_1 = require("./environment");
 const rules_1 = require("./rules");
 __export(require("./plugins/babel-remove-function"));
 exports.serviceWorkerDefaultInclude = [
-    /\.(html|js|json|mjs|css)$/,
-    /images.+\.(bmp|jpg|jpeg|png|svg|webp)$/
+    /\.(?:html|js|json|mjs|css)$/,
+    /images.+\.(?:bmp|jpg|jpeg|png|svg|webp)$/
 ];
 exports.serviceWorkerDefaultExclude = [
     /\.map$/,
-    /manifest\.json/,
-    /bundle\.js/,
-    /bundle\.mjs/,
+    /bundle(?:-.+)?\.(?:mjs|js)$/,
     /404\.html/
 ];
 class ServiceWorkerEnvironment {

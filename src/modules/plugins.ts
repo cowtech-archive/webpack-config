@@ -19,14 +19,12 @@ import { HtmlWebpackTrackerPluginParameters, Options, Plugins, ServiceWorker } f
 export * from './plugins/babel-remove-function'
 
 export const serviceWorkerDefaultInclude: Array<string | RegExp> = [
-  /\.(html|js|json|mjs|css)$/,
-  /images.+\.(bmp|jpg|jpeg|png|svg|webp)$/
+  /\.(?:html|js|json|mjs|css)$/,
+  /images.+\.(?:bmp|jpg|jpeg|png|svg|webp)$/
 ]
 export const serviceWorkerDefaultExclude: Array<string | RegExp> = [
   /\.map$/,
-  /manifest\.json/,
-  /bundle\.js/,
-  /bundle\.mjs/,
+  /bundle(?:-.+)?\.(?:mjs|js)$/,
   /404\.html/
 ]
 
