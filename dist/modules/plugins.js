@@ -31,6 +31,7 @@ exports.serviceWorkerDefaultExclude = [
     /\.map$/,
     /manifest\.json/,
     /bundle\.js/,
+    /bundle\.mjs/,
     /404\.html/
 ];
 class ServiceWorkerEnvironment {
