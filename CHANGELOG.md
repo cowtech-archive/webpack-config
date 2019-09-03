@@ -1,3 +1,7 @@
+### 2019-09-03 / 1.16.3
+
+* chore: Added required peer dependency.
+
 ### 2019-09-02 / 1.16.2
 
 * chore: Rebuild.
