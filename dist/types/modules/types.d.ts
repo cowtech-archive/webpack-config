@@ -70,7 +70,7 @@ export interface Server {
     };
     compress?: boolean;
     hot?: boolean | object;
-    historyApiFallback?: boolean | object;
+    history?: boolean | object;
     disableHostCheck?: boolean;
     inline?: boolean;
     afterHook?: Hook<Server>;
