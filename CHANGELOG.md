@@ -1,3 +1,8 @@
+### 2019-09-04 / 1.16.6
+
+* chore: Rebuild.
+* fix: Fixed typing.
+
 ### 2019-09-03 / 1.16.5
 
 * fix: Fixed ServiceWorker defaults.
