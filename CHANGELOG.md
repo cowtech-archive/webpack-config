@@ -1,3 +1,7 @@
+### 2019-09-04 / 1.17.0
+
+* feat: Added debug mode to ServiceWorker.
+
 ### 2019-09-04 / 1.16.6
 
 * chore: Rebuild.
