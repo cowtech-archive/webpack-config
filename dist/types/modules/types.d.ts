@@ -1,4 +1,5 @@
 /// <reference types="node" />
+import { ObjectMethod } from '@babel/types';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { compilation, Configuration, Entry, EntryFunc, ExternalsElement, Options as WebpackOptions, Plugin, RuleSetRule } from 'webpack';
 export declare type HookReturn<T> = void | null | T | Promise<void | null | T>;
@@ -60,7 +61,8 @@ export interface ServiceWorker {
     enabled?: boolean;
     src?: string;
     dest?: string;
-    options?: object;
+    options?: ObjectMethod;
+    debug?: boolean;
 }
 export interface Server {
     host?: string;

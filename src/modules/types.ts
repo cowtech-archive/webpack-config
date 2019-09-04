@@ -1,3 +1,4 @@
+import { ObjectMethod } from '@babel/types'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import {
   compilation,
@@ -91,7 +92,8 @@ export interface ServiceWorker {
   enabled?: boolean
   src?: string
   dest?: string
-  options?: object
+  options?: ObjectMethod
+  debug?: boolean
 }
 
 export interface Server {

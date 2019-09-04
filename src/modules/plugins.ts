@@ -199,7 +199,7 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
         new ServiceWorkerEnvironment({
           dest: envFile,
           version: options.version!,
-          debug: options.environment !== 'production'
+          debug: get(swOptions, 'debug', options.environment !== 'production')
         }),
         new InjectManifest({
           swSrc,

@@ -166,7 +166,7 @@ async function setupPlugins(options) {
             plugins.push(new ServiceWorkerEnvironment({
                 dest: envFile,
                 version: options.version,
-                debug: options.environment !== 'production'
+                debug: lodash_get_1.default(swOptions, 'debug', options.environment !== 'production')
             }), new workbox_webpack_plugin_1.InjectManifest(Object.assign({ swSrc,
                 swDest, include: exports.serviceWorkerDefaultInclude, exclude: exports.serviceWorkerDefaultExclude, importScripts: [`/${envFile}`] }, lodash_get_1.default(swOptions, 'options', {}))));
         }
