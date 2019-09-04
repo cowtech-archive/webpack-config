@@ -100,7 +100,7 @@ export interface Server {
   https?: boolean | { [key: string]: string | Buffer }
   compress?: boolean
   hot?: boolean | object
-  historyApiFallback?: boolean | object
+  history?: boolean | object
   disableHostCheck?: boolean
   inline?: boolean
   afterHook?: Hook<Server>
