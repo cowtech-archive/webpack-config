@@ -25,7 +25,8 @@ export async function setupServer(options: Options): Promise<any> {
     compress: get(serverOptions, 'compress', true),
     historyApiFallback: get(serverOptions, 'history', true),
     disableHostCheck: get(serverOptions, 'disableHostCheck', true),
-    inline: get(serverOptions, 'inline', true)
+    inline: get(serverOptions, 'inline', true),
+    ...get(serverOptions, 'options', {})
   }
 
   if (config.https) {

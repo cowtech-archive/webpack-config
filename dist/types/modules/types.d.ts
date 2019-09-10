@@ -1,5 +1,4 @@
 /// <reference types="node" />
-import { ObjectMethod } from '@babel/types';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { compilation, Configuration, Entry, EntryFunc, ExternalsElement, Options as WebpackOptions, Plugin, RuleSetRule } from 'webpack';
 export declare type HookReturn<T> = void | null | T | Promise<void | null | T>;
@@ -61,7 +60,7 @@ export interface ServiceWorker {
     enabled?: boolean;
     src?: string;
     dest?: string;
-    options?: ObjectMethod;
+    options?: object;
     debug?: boolean;
 }
 export interface Server {
@@ -75,6 +74,7 @@ export interface Server {
     history?: boolean | object;
     disableHostCheck?: boolean;
     inline?: boolean;
+    options?: object;
     afterHook?: Hook<Server>;
 }
 export interface Babel {

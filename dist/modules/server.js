@@ -19,15 +19,7 @@ async function setupServer(options) {
     else {
         https = lodash_get_1.default(serverOptions, 'https', false);
     }
-    let config = {
-        host: lodash_get_1.default(serverOptions, 'host', 'home.cowtech.it'),
-        port: lodash_get_1.default(serverOptions, 'port', 4200),
-        https,
-        compress: lodash_get_1.default(serverOptions, 'compress', true),
-        historyApiFallback: lodash_get_1.default(serverOptions, 'history', true),
-        disableHostCheck: lodash_get_1.default(serverOptions, 'disableHostCheck', true),
-        inline: lodash_get_1.default(serverOptions, 'inline', true)
-    };
+    let config = Object.assign({ host: lodash_get_1.default(serverOptions, 'host', 'home.cowtech.it'), port: lodash_get_1.default(serverOptions, 'port', 4200), https, compress: lodash_get_1.default(serverOptions, 'compress', true), historyApiFallback: lodash_get_1.default(serverOptions, 'history', true), disableHostCheck: lodash_get_1.default(serverOptions, 'disableHostCheck', true), inline: lodash_get_1.default(serverOptions, 'inline', true) }, lodash_get_1.default(serverOptions, 'options', {}));
     if (config.https) {
         config.https = {
             key: await fs_extra_1.readFile(path_1.resolve(process.cwd(), lodash_get_1.default(config.https, 'key', './config/ssl/private-key.pem'))),
