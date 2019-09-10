@@ -1,3 +1,7 @@
+### 2019-09-10 / 1.19.1
+
+* fix: Fixed 404 file path.
+
 ### 2019-09-10 / 1.19.0
 
 * feat: Added page 404 support.
