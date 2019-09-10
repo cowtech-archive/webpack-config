@@ -82,6 +82,7 @@ async function setupPlugins(options) {
     const analyze = lodash_get_1.default(pluginsOptions, 'analyze', true);
     const hmr = lodash_get_1.default(options, 'server.hot', true);
     const indexFile = await resolveFile(options, 'index', './index.html.(js|ts|jsx|tsx)');
+    const error404 = await resolveFile(options, 'error404', './404.html.(js|ts|jsx|tsx)');
     const manifest = (await globby_1.default(path_1.resolve(options.srcFolder, './manifest.json.{js|ts}')))[0];
     const robots = (await globby_1.default(path_1.resolve(options.srcFolder, './robots.txt.{js|ts}')))[0];
     let plugins = [
@@ -123,6 +124,13 @@ async function setupPlugins(options) {
     if (indexFile) {
         plugins.push(new html_webpack_plugin_1.default({
             template: indexFile,
+            minify: { collapseWhitespace: true },
+            inject: false
+        }));
+    }
+    if (error404) {
+        plugins.push(new html_webpack_plugin_1.default({
+            template: error404,
             minify: { collapseWhitespace: true },
             inject: false
         }));

@@ -92,6 +92,7 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
   const hmr = get(options, 'server.hot', true)
 
   const indexFile = await resolveFile(options, 'index', './index.html.(js|ts|jsx|tsx)')
+  const error404 = await resolveFile(options, 'error404', './404.html.(js|ts|jsx|tsx)')
   const manifest = (await globby(resolve(options.srcFolder!, './manifest.json.{js|ts}')))[0]
   const robots = (await globby(resolve(options.srcFolder!, './robots.txt.{js|ts}')))[0]
 
@@ -145,6 +146,16 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
     plugins.push(
       new HtmlWebpackPlugin({
         template: indexFile,
+        minify: { collapseWhitespace: true },
+        inject: false
+      })
+    )
+  }
+
+  if (error404) {
+    plugins.push(
+      new HtmlWebpackPlugin({
+        template: error404,
         minify: { collapseWhitespace: true },
         inject: false
       })
