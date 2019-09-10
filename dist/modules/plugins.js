@@ -131,6 +131,7 @@ async function setupPlugins(options) {
     if (error404) {
         plugins.push(new html_webpack_plugin_1.default({
             template: error404,
+            filename: '404.html',
             minify: { collapseWhitespace: true },
             inject: false
         }));

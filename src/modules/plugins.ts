@@ -156,6 +156,7 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
     plugins.push(
       new HtmlWebpackPlugin({
         template: error404,
+        filename: '404.html',
         minify: { collapseWhitespace: true },
         inject: false
       })
