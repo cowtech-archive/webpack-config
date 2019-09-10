@@ -1,3 +1,7 @@
+### 2019-09-10 / 1.18.0
+
+* feat: Added additional options to server.
+
 ### 2019-09-04 / 1.17.0
 
 * feat: Added debug mode to ServiceWorker.
