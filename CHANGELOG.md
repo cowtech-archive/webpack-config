@@ -1,3 +1,7 @@
+### 2019-09-10 / 1.19.0
+
+* feat: Added page 404 support.
+
 ### 2019-09-10 / 1.18.0
 
 * feat: Added additional options to server.
