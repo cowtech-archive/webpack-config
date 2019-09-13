@@ -41,12 +41,12 @@ async function setup(options = {}) {
     const server = await server_1.setupServer(options);
     const stats = (server.stats = lodash_get_1.default(options, 'stats', options.environment === 'production' ? 'normal' : 'errors-only'));
     const mainExtension = lodash_get_1.default(options, 'useESModules', true) ? 'mjs' : 'js';
-    const filename = lodash_get_1.default(options, 'filename', (data) => `${data.chunk.name}-${data.hash}.${mainExtension}`);
     let config = {
         mode: options.environment === 'production' ? 'production' : 'development',
         entry: options.entries || (await entries_1.autoDetectEntries(options)),
         output: {
-            filename,
+            filename: `[name]-[hash].${mainExtension}`,
+            chunkFilename: `[name]-[hash].${mainExtension}`,
             path: options.destFolder,
             publicPath: lodash_get_1.default(options, 'publicPath', '/'),
             libraryTarget: options.libraryTarget
@@ -62,11 +62,12 @@ async function setup(options = {}) {
         cache: true,
         devServer: server,
         performance: lodash_get_1.default(options, 'performance', { hints: false }),
-        stats
+        stats,
+        optimization: {
+            splitChunks: lodash_get_1.default(options, 'plugins.splitChunks', false),
+            concatenateModules: lodash_get_1.default(options, 'plugins.concatenate', true)
+        }
     };
-    if (lodash_get_1.default(options, 'plugins.concatenate', true)) {
-        config.optimization = Object.assign(Object.assign({}, config.optimization), { concatenateModules: true });
-    }
     return environment_1.runHook(config, options.afterHook);
 }
 exports.setup = setup;

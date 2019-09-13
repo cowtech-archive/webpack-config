@@ -6,7 +6,7 @@ import { loadIcons } from './modules/icons'
 import { setupPlugins } from './modules/plugins'
 import { setupRules } from './modules/rules'
 import { setupServer } from './modules/server'
-import { ExtendedConfiguration, FilenameGenerator, Options, OutputData } from './modules/types'
+import { ExtendedConfiguration, Options } from './modules/types'
 
 export * from './modules/entries'
 export * from './modules/environment'
@@ -42,17 +42,13 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
   const stats = (server.stats = get(options, 'stats', options.environment === 'production' ? 'normal' : 'errors-only'))
 
   const mainExtension = get(options, 'useESModules', true) ? 'mjs' : 'js'
-  const filename = get(
-    options,
-    'filename',
-    (data: OutputData) => `${data.chunk.name}-${data.hash}.${mainExtension}`
-  ) as FilenameGenerator & string
 
   let config: ExtendedConfiguration = {
     mode: options.environment === 'production' ? 'production' : 'development',
     entry: options.entries || (await autoDetectEntries(options)),
     output: {
-      filename,
+      filename: `[name]-[hash].${mainExtension}`,
+      chunkFilename: `[name]-[hash].${mainExtension}`,
       path: options.destFolder,
       publicPath: get(options, 'publicPath', '/'),
       libraryTarget: options.libraryTarget
@@ -68,11 +64,11 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
     cache: true,
     devServer: server,
     performance: get(options, 'performance', { hints: false }),
-    stats
-  }
-
-  if (get(options, 'plugins.concatenate', true)) {
-    config.optimization = { ...config.optimization, concatenateModules: true }
+    stats,
+    optimization: {
+      splitChunks: get(options, 'plugins.splitChunks', false),
+      concatenateModules: get(options, 'plugins.concatenate', true)
+    }
   }
 
   return runHook(config, options.afterHook)

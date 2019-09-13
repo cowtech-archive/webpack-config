@@ -73,7 +73,7 @@ export interface Plugins {
   concatenate?: boolean
   minify?: boolean
   hotModuleReload?: boolean
-  commonChunks?: boolean
+  splitChunks?: boolean | WebpackOptions.SplitChunksOptions
   analyze?: boolean | string
   afterHook?: Hook<Array<Plugin>>
 }
