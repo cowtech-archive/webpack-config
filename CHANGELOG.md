@@ -1,3 +1,7 @@
+### 2019-09-13 / 1.20.0
+
+* feat: Disable performance hints by default.
+
 ### 2019-09-10 / 1.19.1
 
 * fix: Fixed 404 file path.
