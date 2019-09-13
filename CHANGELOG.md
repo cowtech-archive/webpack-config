@@ -1,3 +1,7 @@
+### 2019-09-13 / 1.20.1
+
+* fix: Support disabling chunks splitting.
+
 ### 2019-09-13 / 1.20.0
 
 * feat: Disable performance hints by default.
