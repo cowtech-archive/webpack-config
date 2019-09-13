@@ -61,6 +61,7 @@ async function setup(options = {}) {
         devtool: options.environment === 'development' ? lodash_get_1.default(options, 'sourceMaps', 'source-map') : false,
         cache: true,
         devServer: server,
+        performance: lodash_get_1.default(options, 'performance', { hints: false }),
         stats
     };
     if (lodash_get_1.default(options, 'plugins.concatenate', true)) {

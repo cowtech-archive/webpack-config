@@ -132,6 +132,7 @@ export interface Options extends Output {
   rules?: Rules
   plugins?: Plugins
   stats?: WebpackOptions.Stats
+  performance?: WebpackOptions.Performance
   icons?: IconsToLoad | Icons
   serviceWorker?: ServiceWorker
   srcFolder?: string

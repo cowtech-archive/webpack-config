@@ -67,6 +67,7 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
     devtool: options.environment === 'development' ? get(options, 'sourceMaps', 'source-map') : false,
     cache: true,
     devServer: server,
+    performance: get(options, 'performance', { hints: false }),
     stats
   }
 
