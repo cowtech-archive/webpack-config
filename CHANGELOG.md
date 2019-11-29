@@ -1,287 +1,283 @@
 ### 2019-09-13 / 1.20.1
 
-* fix: Support disabling chunks splitting.
+- fix: Support disabling chunks splitting.
 
 ### 2019-09-13 / 1.20.0
 
-* feat: Disable performance hints by default.
+- feat: Disable performance hints by default.
 
 ### 2019-09-10 / 1.19.1
 
-* fix: Fixed 404 file path.
+- fix: Fixed 404 file path.
 
 ### 2019-09-10 / 1.19.0
 
-* feat: Added page 404 support.
+- feat: Added page 404 support.
 
 ### 2019-09-10 / 1.18.0
 
-* feat: Added additional options to server.
+- feat: Added additional options to server.
 
 ### 2019-09-04 / 1.17.0
 
-* feat: Added debug mode to ServiceWorker.
+- feat: Added debug mode to ServiceWorker.
 
 ### 2019-09-04 / 1.16.6
 
-* chore: Rebuild.
-* fix: Fixed typing.
+- chore: Rebuild.
+- fix: Fixed typing.
 
 ### 2019-09-03 / 1.16.5
 
-* fix: Fixed ServiceWorker defaults.
+- fix: Fixed ServiceWorker defaults.
 
 ### 2019-09-03 / 1.16.4
 
-* chore: Rebuild.
-* fix: Include mjs files in manifest.
+- chore: Rebuild.
+- fix: Include mjs files in manifest.
 
 ### 2019-09-03 / 1.16.3
 
-* chore: Added required peer dependency.
+- chore: Added required peer dependency.
 
 ### 2019-09-02 / 1.16.2
 
-* chore: Rebuild.
-* fix: Do not enable babel env debug by default.
+- chore: Rebuild.
+- fix: Do not enable babel env debug by default.
 
 ### 2019-09-02 / 1.16.1
 
-* fix: Fix browser support.
+- fix: Fix browser support.
 
 ### 2019-09-02 / 1.16.0
 
-* feat: Improved file generation.
+- feat: Improved file generation.
 
 ### 2019-08-30 / 1.15.0
 
-* feat: Updated dependencies and improved assets generation.
-* chore: Use NPM for locking.
+- feat: Updated dependencies and improved assets generation.
+- chore: Use NPM for locking.
 
 ### 2019-01-14 / 1.14.1
 
-* chore: Added missing file.
-* fix: Improved types definition.
+- chore: Added missing file.
+- fix: Improved types definition.
 
 ### 2018-12-31 / 1.14.0
 
-* feat: Improved hook handling.
+- feat: Improved hook handling.
 
 ### 2018-12-26 / 1.13.0
 
-* feat: Added babelRemoveFunctions.
+- feat: Added babelRemoveFunctions.
 
 ### 2018-12-23 / 1.12.1
 
-* chore: Rebuild.
+- chore: Rebuild.
 
 ### 2018-12-23 / 1.12.0
 
-* feat: Added disableHostCheck to server options.
+- feat: Added disableHostCheck to server options.
 
 ### 2018-12-23 / 1.11.0
 
-* feat: Updated font-awesome interface.
+- feat: Updated font-awesome interface.
 
 ### 2018-12-23 / 1.10.0
 
-* feat: Use new font-awesome naming.
+- feat: Use new font-awesome naming.
 
 ### 2018-12-23 / 1.9.2
 
-* chore: Updated dependencies.
+- chore: Updated dependencies.
 
 ### 2018-12-23 / 1.9.1
 
-* chore: Updated dependencies.
+- chore: Updated dependencies.
 
 ### 2018-10-09 / 1.9.0
 
-* feat: Switched to terser-webpack-plugin for uglification.
+- feat: Switched to terser-webpack-plugin for uglification.
 
 ### 2018-10-08 / 1.8.0
 
-* feat: Add stats support.
-* feat: Removed depreacted webpack-serve support.
+- feat: Add stats support.
+- feat: Removed depreacted webpack-serve support.
 
 ### 2018-08-11 / 1.7.3
 
-* fix: Fixed HMR.
+- fix: Fixed HMR.
 
 ### 2018-08-11 / 1.7.2
 
-* fix: Removed crappy Android rule.
+- fix: Removed crappy Android rule.
 
 ### 2018-08-11 / 1.7.1
 
-* fix: Added missing dependency.
+- fix: Added missing dependency.
 
 ### 2018-08-11 / 1.7.0
 
-* feat: Reintroduced last existing stage 3 plugins singularly.
+- feat: Reintroduced last existing stage 3 plugins singularly.
 
 ### 2018-08-11 / 1.6.0
 
-* feat: Updated dependencies and removed deprecations.
+- feat: Updated dependencies and removed deprecations.
 
 ### 2018-07-05 / 1.5.0
 
-* feat: Allow additional environment.
+- feat: Allow additional environment.
 
 ### 2018-07-04 / 1.4.0
 
-* feat: Add support for webpack-serve middlewares.
+- feat: Add support for webpack-serve middlewares.
 
 ### 2018-07-02 / 1.3.2
 
-* fix: Normalize environment.
+- fix: Normalize environment.
 
 ### 2018-07-02 / 1.3.1
 
-* fix: Assume development by default.
+- fix: Assume development by default.
 
 ### 2018-06-26 / 1.3.0
 
-* feat: Improve ServiceWorker versioning.
+- feat: Improve ServiceWorker versioning.
 
 ### 2018-06-24 / 1.2.1
 
-* fix: Rebuilt JS version.
-* fix: Minor fix.
+- fix: Rebuilt JS version.
+- fix: Minor fix.
 
 ### 2018-06-23 / 1.2.0
 
-* feat: Export Service Worker default inclusion and exclusion lists.
+- feat: Export Service Worker default inclusion and exclusion lists.
 
 ### 2018-06-23 / 1.1.1
 
-* fix: Fix Service Worker generation.
+- fix: Fix Service Worker generation.
 
 ### 2018-06-23 / 1.1.0
 
-* feat: Support webpack-serve.
+- feat: Support webpack-serve.
 
 ### 2018-06-23 / 1.0.4
 
-* fix: Import globby properly.
+- fix: Import globby properly.
 
 ### 2018-06-23 / 1.0.3
 
-* fix: Export Font Awesome methods. Use tsc directly for building.
+- fix: Export Font Awesome methods. Use tsc directly for building.
 
 ### 2018-06-23 / 1.0.2
 
-* fix: Export all files.
+- fix: Export all files.
 
 ### 2018-06-23 / 1.0.1
 
-* fix: Use right options for string-replace-loader.
+- fix: Use right options for string-replace-loader.
 
 ### 2018-06-19 / 1.0.0
 
-* chore: Rebuild dist.
-* feat: Full rewrite as @cowtech/webpack-config
+- chore: Rebuild dist.
+- feat: Full rewrite as @cowtech/webpack-config
 
 ### 2018-02-21 / 0.4.6
 
-* Minor fix.
+- fix: Minor fix.
 
 ### 2018-02-21 / 0.4.5
 
-* ServiceWorker bugfix.
+- fix: ServiceWorker bugfix.
 
 ### 2018-02-21 / 0.4.4
 
-* Updated dependencies.
+- chore: Updated dependencies.
 
 ### 2018-02-20 / 0.4.3
 
-* Bugfix.
+- fix: Bugfix.
 
 ### 2018-02-20 / 0.4.2
 
-* Bugfix.
+- fix: Bugfix.
 
 ### 2018-02-20 / 0.4.1
 
-* Bugfix.
+- fix: Bugfix.
 
 ### 2018-02-20 / 0.4.0
 
-* Updated ServiceWorker generation.
+- feat: Updated ServiceWorker generation.
 
 ### 2018-02-19 / 0.3.7
 
-* Updated to Workbox 3.0.
+- feat: Updated to Workbox 3.0.
 
 ### 2018-02-19 / 0.3.6
 
-* Simplified code.
+- chore: Simplified code.
 
 ### 2018-01-19 / 0.3.5
 
-* Bugfix.
+- fix: Bugfix.
 
 ### 2018-01-19 / 0.3.4
 
-* Relax engine requirement.
+- feat: Relax engine requirement.
 
 ### 2018-01-19 / 0.3.3
 
-* Switched to Uglify-ES.
+- feat: Switched to Uglify-ES.
 
 ### 2018-01-19 / 0.3.2
 
-* Minor bugfix.
+- fix: Minor bugfix.
 
 ### 2018-01-19 / 0.3.1
 
-* Include type checking.
+- feat: Include type checking.
 
 ### 2018-01-19 / 0.3.0
 
-* Switch to Babel 7.
+- feat: Switch to Babel 7.
 
 ### 2018-01-19 / 0.2.1
 
-* Improve loaders.
+- feat: Improve loaders.
 
 ### 2018-01-18 / 0.2.0
 
-* Updated dependencies. Removed moment. Require Node.js 9.
+- chore: Updated dependencies. Removed moment. Require Node.js 9.
 
 ### 2018-01-04 / 0.1.7
 
-* Updated dependencies.
+- chore: Updated dependencies.
 
 ### 2018-01-03 / 0.1.6
 
-* Fixed TypeScript tree-shaking.
+- fix: Fixed TypeScript tree-shaking.
 
 ### 2018-01-02 / 0.1.5
 
-* Add minification customization.
+- feat: Add minification customization.
 
 ### 2018-01-01 / 0.1.4
 
-* Removed useless method.
+- chore: Removed useless method.
 
 ### 2018-01-01 / 0.1.3
 
-* Removed useless method.
+- chore: Removed useless method.
 
 ### 2017-12-30 / 0.1.2
 
-* Added sitemap.xml to loading rules.
+- feat: Added sitemap.xml to loading rules.
 
 ### 2017-12-25 / 0.1.1
 
-* Added missing types.
+- fix: Added missing types.
 
 ### 2017-12-25 / 0.1.0
 
-* Initial version.
-
-### 2017-12-25 / 0.0.1
-
-* Initial version.
+- feat: Initial version.
