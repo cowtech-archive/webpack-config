@@ -1,3 +1,7 @@
+### 2019-12-30 / 1.22.2
+
+- chore: Simplified code.
+
 ### 2019-12-30 / 1.22.1
 
 - fix: Minor font-awesome fix.
