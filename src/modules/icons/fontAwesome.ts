@@ -40,7 +40,10 @@ export async function loadFontAwesomeIcons(icons: Icons, toLoad: Array<string>):
     }
 
     // Load the icon then add to the definitions
-    const icon = require(resolve(process.cwd(), `node_modules/${iconPackage}/${camelCase(`fa_${name}`)}`))
+    const icon = require(resolve(
+      process.cwd(),
+      `node_modules/${iconPackage}/fa${camelCase(`${name}`).replace(/\s/g, '')}`
+    ))
     icons.definitions += generateSVG(icon, tag)
     accu[alias] = tag
 
