@@ -4,7 +4,6 @@ import { RuleSetRule } from 'webpack'
 import { runHook } from './environment'
 import { babelRemoveFunction } from './plugins/babel-remove-function'
 import { Babel, Options, Rules } from './types'
-import { get } from './utils'
 
 /*
 Refresh the following two constants periodically by running with 'last 2 versions' and debug=true
@@ -61,21 +60,21 @@ export function normalizeIncludePath(path: string): string {
 }
 
 export async function setupRules(options: Options): Promise<Array<RuleSetRule>> {
-  const rulesOptions: Rules = options.rules || {}
-  const babelOptions: Babel = options.babel || {}
+  const rulesOptions: Rules = options.rules ?? {}
+  const babelOptions: Babel = options.babel ?? {}
 
-  const useBabel = get(rulesOptions, 'babel', true)
-  const useTypescript = await checkTypescript(rulesOptions, options.srcFolder!)
-  const useReact = await checkReact(rulesOptions, options.srcFolder!)
+  const useBabel = rulesOptions.babel ?? true
+  const useTypescript = await checkTypescript(rulesOptions, options.srcFolder as string)
+  const useReact = await checkReact(rulesOptions, options.srcFolder as string)
 
   const babelPresets: Array<Array<string | object> | string> = [
     [
       '@babel/preset-env',
       {
-        targets: get(babelOptions, 'browsersWhiteList', { esmodules: true }),
-        exclude: get(babelOptions, 'exclude', unneededBabelPlugins),
-        modules: get(babelOptions, 'modules', false),
-        debug: get(babelOptions, 'envDebug', false)
+        targets: babelOptions.browsersWhiteList ?? { esmodules: true },
+        exclude: babelOptions.exclude ?? unneededBabelPlugins,
+        modules: babelOptions.modules ?? false,
+        debug: babelOptions.envDebug ?? false
       }
     ]
   ]
@@ -86,7 +85,7 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
   ]
 
   if (options.environment === 'production') {
-    const removeFunctions: Array<string> = get(babelOptions, 'removeFunctions', ['debugClassName'])!
+    const removeFunctions: Array<string> = babelOptions.removeFunctions ?? ['debugClassName']
 
     if (removeFunctions.length) {
       for (const name of removeFunctions) {
@@ -95,7 +94,7 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
     }
   }
 
-  const babelConfiguration = get(babelOptions, 'configuration', {})
+  const babelConfiguration = babelOptions.configuration ?? {}
 
   let rules: Array<RuleSetRule> = []
 
@@ -147,7 +146,7 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
     }
   }
 
-  if (get(rulesOptions, 'images', true)) {
+  if (rulesOptions.images ?? true) {
     rules.push({
       test: /\.(?:bmp|png|jpg|jpeg|gif|svg|webp)$/,
       use: [

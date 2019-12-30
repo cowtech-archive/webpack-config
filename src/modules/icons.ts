@@ -1,6 +1,5 @@
 import { loadFontAwesomeIcons } from './icons/fontAwesome'
 import { Icons, IconsToLoad, Options } from './types'
-import { get } from './utils'
 
 export {
   generateSVG as generateFontAwesomeSVG,
@@ -10,7 +9,7 @@ export {
 } from './icons/fontAwesome'
 
 export async function loadIcons(options: Options): Promise<Icons> {
-  const toLoad = get(options, 'icons', {}) as IconsToLoad
+  const toLoad = (options.icons ?? {}) as IconsToLoad
   let icons: Icons = { tags: {}, definitions: '' }
 
   // Font Awesome

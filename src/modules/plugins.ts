@@ -13,8 +13,7 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import { InjectManifest } from 'workbox-webpack-plugin'
 import { runHook } from './environment'
 import { checkTypescript } from './rules'
-import { HtmlWebpackTrackerPluginParameters, Options, Plugins, ServiceWorker } from './types'
-import { get } from './utils'
+import { HtmlWebpackTrackerPluginParameters, Options, Plugins, Rules, ServiceWorker } from './types'
 
 export * from './plugins/babel-remove-function'
 
@@ -75,7 +74,7 @@ class HtmlWebpackTrackerPlugin {
 }
 
 export async function resolveFile(options: Options, key: string, pattern: string): Promise<string | null> {
-  let file = get<boolean | string>(options, key, true)
+  let file = options[key as keyof Options] ?? true
 
   if (file === true) {
     file = (await globby(resolve(options.srcFolder!, pattern)))[0]
@@ -85,11 +84,12 @@ export async function resolveFile(options: Options, key: string, pattern: string
 }
 
 export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
-  const pluginsOptions: Plugins = options.plugins || {}
-  const swOptions: ServiceWorker = options.serviceWorker || {}
-  const useTypescript = await checkTypescript(options.rules || {}, options.srcFolder!)
-  const analyze: boolean | string = get<boolean | string>(pluginsOptions, 'analyze', true)!
-  const hmr = get(options, 'server.hot', true)
+  const pluginsOptions: Plugins = options.plugins ?? {}
+  const swOptions: ServiceWorker = options.serviceWorker ?? {}
+  const rules: Rules = options.rules ?? {}
+  const useTypescript = await checkTypescript(rules, options.srcFolder!)
+  const analyze = pluginsOptions.analyze ?? true
+  const hmr = options.server?.hot ?? true
 
   const indexFile = await resolveFile(options, 'index', './index.html.(js|ts|jsx|tsx)')
   const error404 = await resolveFile(options, 'error404', './404.html.(js|ts|jsx|tsx)')
@@ -108,7 +108,7 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
     new HtmlWebpackTrackerPlugin()
   ]
 
-  if (manifest && get(options.rules, 'manifest', true)) {
+  if (manifest && (rules.manifest ?? true)) {
     plugins.push(
       new HtmlWebpackPlugin({
         id: 'manifest',
@@ -120,7 +120,7 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
     )
   }
 
-  if (robots && get(options.rules, 'robots', true)) {
+  if (robots && (rules.robots ?? true)) {
     plugins.push(
       new HtmlWebpackPlugin({
         id: 'robots',
@@ -164,8 +164,8 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
   }
 
   if (options.environment === 'production') {
-    if (get(pluginsOptions, 'minify', true)) {
-      plugins.push(new TerserPlugin(get(options, 'uglify', {})))
+    if (pluginsOptions.minify ?? true) {
+      plugins.push(new TerserPlugin(options.uglify ?? {}))
     }
   } else if (hmr) {
     plugins.push(new HotModuleReplacementPlugin())
@@ -176,8 +176,8 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
       plugins.push(
         new BundleAnalyzerPlugin({
           analyzerMode: typeof analyze === 'string' ? analyze : 'server',
-          analyzerHost: get(options, 'server.host', 'home.cowtech.it'),
-          analyzerPort: get(options, 'server.port', 4200)! + 2,
+          analyzerHost: options.server?.host ?? 'home.cowtech.it',
+          analyzerPort: (options.server?.port ?? 4200) + 2,
           generateStatsFile: analyze === 'static',
           openAnalyzer: false
         })
@@ -193,7 +193,7 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
     }
   }
 
-  if (get(swOptions, 'enabled', options.environment === 'production')) {
+  if ((swOptions.enabled ?? options.environment) === 'production') {
     let swSrc = await resolveFile(options, 'serviceWorker.src', './(service-worker|sw).(js|ts)')
 
     if (swSrc) {
@@ -202,7 +202,7 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
       hashFactory.update(JSON.stringify({ version: options.version }))
       const hash = hashFactory.digest('hex')
 
-      const swDest = get(swOptions, 'dest', 'sw.js')!
+      const swDest = swOptions.dest ?? 'sw.js'
       const envFile = swDest.replace(/\.js$/, `-env-${hash}.js`)
 
       serviceWorkerDefaultExclude.push(envFile)
@@ -211,7 +211,7 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
         new ServiceWorkerEnvironment({
           dest: envFile,
           version: options.version!,
-          debug: get(swOptions, 'debug', options.environment !== 'production')!
+          debug: swOptions.debug ?? options.environment !== 'production'
         }),
         new InjectManifest({
           swSrc,
@@ -219,7 +219,7 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
           include: serviceWorkerDefaultInclude,
           exclude: serviceWorkerDefaultExclude,
           importScripts: [`/${envFile}`],
-          ...get(swOptions, 'options', {})
+          ...(swOptions.options ?? {})
         })
       )
     }

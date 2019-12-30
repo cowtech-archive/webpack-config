@@ -1,6 +1,5 @@
 import { resolve } from 'path'
 import { Icons } from '../types'
-import { camelCase } from '../utils'
 
 export interface Icon {
   width: number
@@ -10,6 +9,18 @@ export interface Icon {
 
 export interface Tags {
   [key: string]: string
+}
+
+function camelCase(source: any): string {
+  // tslint:disable-next-line strict-type-predicates
+  if (typeof source !== 'string' || !source.length) {
+    return source
+  }
+
+  return source
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/(^.|\s.)/g, (...t: Array<string>) => t[1].toUpperCase())
 }
 
 export function generateSVG(icon: Icon, tag: string): string {

@@ -1,4 +1,5 @@
 import { resolve } from 'path'
+import { Options as WebpackOptions } from 'webpack'
 import { autoDetectEntries } from './modules/entries'
 import { runHook, setupEnvironment } from './modules/environment'
 import { loadIcons } from './modules/icons'
@@ -6,7 +7,6 @@ import { setupPlugins } from './modules/plugins'
 import { setupRules } from './modules/rules'
 import { setupServer } from './modules/server'
 import { ExtendedConfiguration, Options } from './modules/types'
-import { get } from './modules/utils'
 
 export * from './modules/entries'
 export * from './modules/environment'
@@ -32,16 +32,17 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
     options.version = generateVersion()
   }
 
-  options.srcFolder = resolve(process.cwd(), get<string>(options, 'srcFolder.src')!)
-  options.destFolder = resolve(process.cwd(), get<string>(options, 'destFolder.dist')!)
+  options.srcFolder = resolve(process.cwd(), options.srcFolder!)
+  options.destFolder = resolve(process.cwd(), options.destFolder!)
   options.env = setupEnvironment(options)
   options.icons = await loadIcons(options)
 
   const server = await setupServer(options)
 
-  const stats = (server.stats = get(options, 'stats', options.environment === 'production' ? 'normal' : 'errors-only'))
+  const stats = options.stats ?? options.environment === 'production' ? 'normal' : 'errors-only'
+  server.stats = stats
 
-  const mainExtension = get(options, 'useESModules', true) ? 'mjs' : 'js'
+  const mainExtension = options.useESModules ?? true ? 'mjs' : 'js'
 
   let config: ExtendedConfiguration = {
     mode: options.environment === 'production' ? 'production' : 'development',
@@ -50,7 +51,7 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
       filename: `[name]-[hash].${mainExtension}`,
       chunkFilename: `[name]-[hash].${mainExtension}`,
       path: options.destFolder,
-      publicPath: get(options, 'publicPath', '/'),
+      publicPath: options.publicPath ?? '/',
       libraryTarget: options.libraryTarget
     },
     target: options.target,
@@ -60,14 +61,14 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
     resolve: { extensions: ['.json', '.js', '.jsx', '.ts', '.tsx'] },
     plugins: await setupPlugins(options),
     externals: options.externals,
-    devtool: options.environment === 'development' ? get(options, 'sourceMaps', 'source-map') : false,
+    devtool: options.environment === 'development' ? options.sourceMaps ?? 'source-map' : false,
     cache: true,
     devServer: server,
-    performance: get(options, 'performance', { hints: false }),
+    performance: options.performance ?? { hints: false },
     stats,
     optimization: {
-      splitChunks: get(options, 'plugins.splitChunks', false),
-      concatenateModules: get(options, 'plugins.concatenate', true)
+      splitChunks: (options.plugins?.splitChunks as WebpackOptions.SplitChunksOptions) ?? false,
+      concatenateModules: options.plugins?.concatenate ?? true
     }
   }
 
