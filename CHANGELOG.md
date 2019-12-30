@@ -1,3 +1,7 @@
+### 2019-12-30 / 1.22.0
+
+- chore: Updated dependencies.
+
 ### 2019-12-30 / 1.21.0
 
 - feat: Drop lodash dependencies.
