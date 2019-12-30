@@ -1,3 +1,7 @@
+### 2019-12-30 / 1.21.0
+
+- feat: Drop lodash dependencies.
+
 ### 2019-09-13 / 1.20.1
 
 - fix: Support disabling chunks splitting.
