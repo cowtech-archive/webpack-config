@@ -64,8 +64,8 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
   const babelOptions: Babel = options.babel ?? {}
 
   const useBabel = rulesOptions.babel ?? true
-  const useTypescript = await checkTypescript(rulesOptions, options.srcFolder as string)
-  const useReact = await checkReact(rulesOptions, options.srcFolder as string)
+  const useTypescript = await checkTypescript(rulesOptions, options.srcFolder!)
+  const useReact = await checkReact(rulesOptions, options.srcFolder!)
 
   const babelPresets: Array<Array<string | object> | string> = [
     [
