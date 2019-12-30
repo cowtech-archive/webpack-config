@@ -1,10 +1,10 @@
 import globby from 'globby'
-import get from 'lodash.get'
 import { resolve, sep } from 'path'
 import { RuleSetRule } from 'webpack'
 import { runHook } from './environment'
 import { babelRemoveFunction } from './plugins/babel-remove-function'
 import { Babel, Options, Rules } from './types'
+import { get } from './utils'
 
 /*
 Refresh the following two constants periodically by running with 'last 2 versions' and debug=true

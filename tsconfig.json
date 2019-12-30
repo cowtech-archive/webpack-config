@@ -4,7 +4,8 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "jsx": "react",
-    "outDir": "dist",
+    "outDir": "lib",
+    "declarationDir": "types",
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -12,8 +13,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "lib": ["dom", "es2017"],
-    "declaration": true,
-    "declarationDir": "dist/types/"
+    "declaration": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules/**/*.ts"]

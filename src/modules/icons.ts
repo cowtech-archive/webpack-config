@@ -1,6 +1,6 @@
-import get from 'lodash.get'
 import { loadFontAwesomeIcons } from './icons/fontAwesome'
 import { Icons, IconsToLoad, Options } from './types'
+import { get } from './utils'
 
 export {
   generateSVG as generateFontAwesomeSVG,

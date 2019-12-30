@@ -1,10 +1,10 @@
 // @ts-ignore
 import { readFile } from 'fs-extra'
 import globby from 'globby'
-import get from 'lodash.get'
 import { resolve } from 'path'
 import { runHook } from './environment'
 import { Options, Server } from './types'
+import { get } from './utils'
 
 export async function setupServer(options: Options): Promise<any> {
   const serverOptions: Server = options.server || {}
@@ -31,8 +31,8 @@ export async function setupServer(options: Options): Promise<any> {
 
   if (config.https) {
     config.https = {
-      key: await readFile(resolve(process.cwd(), get(config.https, 'key', './config/ssl/private-key.pem'))),
-      cert: await readFile(resolve(process.cwd(), get(config.https, 'cert', './config/ssl/certificate.pem')))
+      key: await readFile(resolve(process.cwd(), get(config.https, 'key', './config/ssl/private-key.pem')!)),
+      cert: await readFile(resolve(process.cwd(), get(config.https, 'cert', './config/ssl/certificate.pem')!))
     }
   }
 

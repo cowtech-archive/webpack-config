@@ -1,15 +1,15 @@
-import get from 'lodash.get'
 import { resolve } from 'path'
 import { Environment, Hook, Options } from './types'
+import { get } from './utils'
 
 export function setupEnvironment(options: Options): Environment {
   const packageInfo = require(resolve(process.cwd(), './package.json'))
-  const environment = options.environment
+  const environment = options.environment as string
 
   return {
     environment,
-    version: options.version,
-    serviceWorkerEnabled: get(options.serviceWorker, 'enabled', options.environment === 'production'),
+    version: options.version as string,
+    serviceWorkerEnabled: get(options.serviceWorker, 'enabled', options.environment === 'production')!,
     ...get(packageInfo, 'site.common', {}),
     ...get(packageInfo, `site.${environment}`, {}),
     ...get(options, 'additionalEnvironment', {})

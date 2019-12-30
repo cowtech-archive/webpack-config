@@ -1,6 +1,6 @@
-import camelCase from 'lodash.camelcase'
 import { resolve } from 'path'
 import { Icons } from '../types'
+import { camelCase } from '../utils'
 
 export interface Icon {
   width: number

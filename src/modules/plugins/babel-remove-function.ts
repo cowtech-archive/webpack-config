@@ -1,10 +1,10 @@
 import {
-  BaseNode,
   CallExpression,
   FunctionDeclaration,
   Identifier,
   ImportDeclaration,
   ImportSpecifier,
+  Node,
   StringLiteral
 } from '@babel/types'
 
@@ -17,7 +17,7 @@ interface NodePath<C, P = unknown> {
   node: C
   parent: P
   remove(): void
-  replaceWith(node: BaseNode): void
+  replaceWith(node: Node): void
 }
 
 export function babelRemoveFunction(options?: { name?: string }): (options: { types: Types }) => object {

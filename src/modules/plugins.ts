@@ -3,7 +3,6 @@ import { createHash } from 'crypto'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import globby from 'globby'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
-import get from 'lodash.get'
 import { basename, resolve } from 'path'
 // @ts-ignore
 import TerserPlugin from 'terser-webpack-plugin'
@@ -15,6 +14,7 @@ import { InjectManifest } from 'workbox-webpack-plugin'
 import { runHook } from './environment'
 import { checkTypescript } from './rules'
 import { HtmlWebpackTrackerPluginParameters, Options, Plugins, ServiceWorker } from './types'
+import { get } from './utils'
 
 export * from './plugins/babel-remove-function'
 
@@ -75,7 +75,7 @@ class HtmlWebpackTrackerPlugin {
 }
 
 export async function resolveFile(options: Options, key: string, pattern: string): Promise<string | null> {
-  let file: boolean | string = get(options, key, true)
+  let file = get<boolean | string>(options, key, true)
 
   if (file === true) {
     file = (await globby(resolve(options.srcFolder!, pattern)))[0]
@@ -88,7 +88,7 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
   const pluginsOptions: Plugins = options.plugins || {}
   const swOptions: ServiceWorker = options.serviceWorker || {}
   const useTypescript = await checkTypescript(options.rules || {}, options.srcFolder!)
-  const analyze: boolean | string = get(pluginsOptions, 'analyze', true)!
+  const analyze: boolean | string = get<boolean | string>(pluginsOptions, 'analyze', true)!
   const hmr = get(options, 'server.hot', true)
 
   const indexFile = await resolveFile(options, 'index', './index.html.(js|ts|jsx|tsx)')
@@ -177,7 +177,7 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
         new BundleAnalyzerPlugin({
           analyzerMode: typeof analyze === 'string' ? analyze : 'server',
           analyzerHost: get(options, 'server.host', 'home.cowtech.it'),
-          analyzerPort: get(options, 'server.port', 4200) + 2,
+          analyzerPort: get(options, 'server.port', 4200)! + 2,
           generateStatsFile: analyze === 'static',
           openAnalyzer: false
         })
@@ -211,7 +211,7 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
         new ServiceWorkerEnvironment({
           dest: envFile,
           version: options.version!,
-          debug: get(swOptions, 'debug', options.environment !== 'production')
+          debug: get(swOptions, 'debug', options.environment !== 'production')!
         }),
         new InjectManifest({
           swSrc,

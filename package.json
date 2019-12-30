@@ -2,77 +2,75 @@
   "name": "@cowtech/webpack-config",
   "version": "1.20.1",
   "description": "CowTech WebPack configuration without any CSS handling.",
-  "main": "dist/index.js",
-  "files": [
-    "dist",
-    "README.md",
-    "CHANGELOG.md"
-  ],
-  "types": "dist/types",
-  "scripts": {
-    "prebuild": "rm -rf dist && ./node_modules/.bin/tslint --project tsconfig.json -t stylish",
-    "build": "tsc -p .",
-    "postpublish": "git push origin && git push origin -f --tags"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/cowtech/webpack-config"
-  },
+  "homepage": "https://sw.cowtech.it/webpack-config",
+  "repository": "github:cowtech/webpack-config",
   "keywords": [],
-  "author": "Shogun <shogun@cowtech.it>",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/cowtech/webpack-config/issues"
   },
-  "homepage": "https://github.com/cowtech/webpack-config",
+  "author": "Shogun <shogun@cowtech.it>",
+  "license": "ISC",
+  "files": [
+    "lib",
+    "types",
+    "CHANGELOG.md",
+    "LICENSE.md",
+    "README.md"
+  ],
+  "main": "lib/index.js",
+  "typings": "types/index.d.ts",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "lint": "tslint --project tsconfig.json -t stylish src/*.ts test/*.ts",
+    "test": "jest test --verbose --coverage --coverageReporters=html --coverageReporters=text",
+    "ci": "yarn lint",
+    "prebuild": "rm -rf lib/* types/* && yarn lint",
+    "build": "tsc -p .",
+    "prepublishOnly": "yarn ci",
+    "postpublish": "git push origin && git push origin -f --tags"
+  },
   "dependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/plugin-proposal-class-properties": "^7.5.5",
-    "@babel/plugin-proposal-optional-catch-binding": "^7.2.0",
-    "@babel/preset-env": "^7.5.5",
-    "@babel/preset-react": "^7.0.0",
-    "@babel/preset-typescript": "^7.3.3",
-    "@babel/types": "^7.5.5",
+    "@babel/core": "^7.7.7",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/plugin-proposal-optional-catch-binding": "^7.7.4",
+    "@babel/preset-env": "^7.7.7",
+    "@babel/preset-react": "^7.7.4",
+    "@babel/preset-typescript": "^7.7.7",
+    "@babel/types": "^7.7.4",
     "babel-loader": "^8.0.6",
     "connect-history-api-fallback": "^1.6.0",
-    "file-loader": "^4.2.0",
+    "file-loader": "^5.0.2",
     "fs-extra": "^8.1.0",
     "globby": "^10.0.1",
     "html-webpack-plugin": "^4.0.0-beta.8",
-    "lodash.camelcase": "^4.3.0",
-    "lodash.get": "^4.4.2",
     "string-replace-loader": "^2.2.0",
-    "terser-webpack-plugin": "^1.4.1",
-    "webpack": "^4.39.3",
-    "webpack-bundle-analyzer": "^3.4.1",
-    "webpack-cli": "^3.3.7",
-    "webpack-dev-server": "^3.8.0",
+    "terser-webpack-plugin": "^2.3.1",
+    "webpack": "^4.41.5",
+    "webpack-bundle-analyzer": "^3.6.0",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1",
     "workbox-webpack-plugin": "^4.3.1"
   },
   "devDependencies": {
     "@cowtech/tslint-config": "^5.13.0",
-    "@types/fs-extra": "^8.0.0",
+    "@types/fs-extra": "^8.0.1",
     "@types/html-minifier": "^3.5.3",
-    "@types/lodash": "^4.14.138",
-    "@types/lodash.camelcase": "^4.3.6",
-    "@types/lodash.get": "^4.4.6",
     "@types/node": "^12.7.3",
-    "@types/webpack": "^4.39.1",
-    "fork-ts-checker-webpack-plugin": "^1.5.0",
-    "prettier": "^1.18.2",
-    "tslint": "^5.19.0",
-    "typescript": "^3.6.2"
+    "@types/webpack": "^4.41.0",
+    "fork-ts-checker-webpack-plugin": "^3.1.1",
+    "prettier": "^1.19.1",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.4"
   },
   "peerDependencies": {
-    "@types/fs-extra": "^8.0.0",
-    "@types/lodash": "^4.14.138",
+    "@types/fs-extra": "^8.0.1",
     "@types/node": "^12.7.3",
-    "@types/webpack": "^4.39.1",
+    "@types/webpack": "^4.41.0",
     "@types/html-minifier": "^3.5.3",
-    "fork-ts-checker-webpack-plugin": "^1.5.0",
-    "typescript": "^3.6.2"
+    "fork-ts-checker-webpack-plugin": "^3.1.1",
+    "typescript": "^3.7.4"
   },
   "engines": {
-    "node": ">=10.0"
+    "node": ">=12.0"
   }
 }

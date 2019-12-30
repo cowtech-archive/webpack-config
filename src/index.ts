@@ -1,4 +1,3 @@
-import get from 'lodash.get'
 import { resolve } from 'path'
 import { autoDetectEntries } from './modules/entries'
 import { runHook, setupEnvironment } from './modules/environment'
@@ -7,6 +6,7 @@ import { setupPlugins } from './modules/plugins'
 import { setupRules } from './modules/rules'
 import { setupServer } from './modules/server'
 import { ExtendedConfiguration, Options } from './modules/types'
+import { get } from './modules/utils'
 
 export * from './modules/entries'
 export * from './modules/environment'
@@ -32,8 +32,8 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
     options.version = generateVersion()
   }
 
-  options.srcFolder = resolve(process.cwd(), get(options, 'srcFolder', 'src')!)
-  options.destFolder = resolve(process.cwd(), get(options, 'destFolder', 'dist')!)
+  options.srcFolder = resolve(process.cwd(), get<string>(options, 'srcFolder.src')!)
+  options.destFolder = resolve(process.cwd(), get<string>(options, 'destFolder.dist')!)
   options.env = setupEnvironment(options)
   options.icons = await loadIcons(options)
 
