@@ -1,3 +1,8 @@
+### 2019-12-30 / 1.23.0
+
+- chore: Updated TS settings.
+- chore: Minor style fix.
+
 ### 2019-12-30 / 1.22.2
 
 - chore: Simplified code.
