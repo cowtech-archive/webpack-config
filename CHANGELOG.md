@@ -1,3 +1,7 @@
+### 2019-12-30 / 1.22.1
+
+- fix: Minor font-awesome fix.
+
 ### 2019-12-30 / 1.22.0
 
 - chore: Updated dependencies.
