@@ -1,3 +1,7 @@
+### 2020-04-04 / 1.23.2
+
+- fix: Fixed default folders.
+
 ### 2020-04-04 / 1.23.1
 
 - feat: Improve SSL detection.
