@@ -32,8 +32,8 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
     options.version = generateVersion()
   }
 
-  options.srcFolder = resolve(process.cwd(), options.srcFolder!)
-  options.destFolder = resolve(process.cwd(), options.destFolder!)
+  options.srcFolder = resolve(process.cwd(), options.srcFolder ?? 'src')
+  options.destFolder = resolve(process.cwd(), options.destFolder ?? 'dist')
   options.env = setupEnvironment(options)
   options.icons = await loadIcons(options)
 
@@ -44,9 +44,9 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
 
   const mainExtension = options.useESModules ?? true ? 'mjs' : 'js'
 
-  let config: ExtendedConfiguration = {
+  const config: ExtendedConfiguration = {
     mode: options.environment === 'production' ? 'production' : 'development',
-    entry: options.entries || (await autoDetectEntries(options)),
+    entry: options.entries ?? (await autoDetectEntries(options)),
     output: {
       filename: `[name]-[hash].${mainExtension}`,
       chunkFilename: `[name]-[hash].${mainExtension}`,
