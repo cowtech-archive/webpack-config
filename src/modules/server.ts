@@ -14,8 +14,8 @@ export async function setupServer(options: Options): Promise<any> {
 
   if (!('https' in serverOptions)) {
     // Autodetect HTTPS
-    cert = (await globby(resolve(process.cwd(), './config/ssl/(private-key|privkey).pem'))).pop()
-    privkey = (await globby(resolve(process.cwd(), './config/ssl/(certificate|cert).pem'))).pop()
+    cert = (await globby(resolve(process.cwd(), './config/ssl/(certificate|cert).pem'))).pop()
+    privkey = (await globby(resolve(process.cwd(), './config/ssl/(private-key|privkey).pem'))).pop()
     https = !!(cert && privkey)
   } else {
     https = (serverOptions.https as boolean) ?? false
