@@ -2,6 +2,7 @@ import { resolve } from 'path'
 import { Environment, Hook, Options } from './types'
 
 export function setupEnvironment(options: Options): Environment {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const packageInfo = require(resolve(process.cwd(), './package.json'))
   const environment = options.environment as string
 
@@ -21,5 +22,5 @@ export async function runHook<T>(input: T, hook?: Hook<T>): Promise<T> {
   }
 
   const output = await hook(input)
-  return output ? output : input
+  return (output as T) ?? input
 }

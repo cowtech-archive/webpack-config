@@ -10,7 +10,7 @@ export {
 
 export async function loadIcons(options: Options): Promise<Icons> {
   const toLoad = (options.icons ?? {}) as IconsToLoad
-  let icons: Icons = { tags: {}, definitions: '' }
+  const icons: Icons = { tags: {}, definitions: '' }
 
   // Font Awesome
   if (toLoad.fontawesome) {

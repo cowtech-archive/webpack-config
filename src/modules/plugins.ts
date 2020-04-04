@@ -27,12 +27,18 @@ export const serviceWorkerDefaultExclude: Array<string | RegExp> = [
   /404\.html/
 ]
 
+interface ServiceWorkConstructorArguments {
+  dest: string
+  version: string
+  debug: boolean
+}
+
 class ServiceWorkerEnvironment {
   public dest: string
   public version: string
   public debug: boolean
 
-  constructor({ dest, version, debug }: { dest: string; version: string; debug: boolean }) {
+  constructor({ dest, version, debug }: ServiceWorkConstructorArguments) {
     this.dest = dest
     this.version = version
     this.debug = debug
@@ -194,7 +200,7 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
   }
 
   if ((swOptions.enabled ?? options.environment) === 'production') {
-    let swSrc = await resolveFile(options, 'serviceWorker.src', './(service-worker|sw).(js|ts)')
+    const swSrc = await resolveFile(options, 'serviceWorker.src', './(service-worker|sw).(js|ts)')
 
     if (swSrc) {
       // Create the hash for the filename

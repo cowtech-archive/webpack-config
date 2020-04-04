@@ -11,7 +11,7 @@ export async function autoDetectEntries(options: Options): Promise<Entries> {
   const entries: { [key: string]: string } = {}
 
   if (attempts.bundle.length) {
-    entries['bundle'] = attempts.bundle[0]
+    entries.bundle = attempts.bundle[0]
   } else if (attempts.application.length) {
     entries['js/app'] = attempts.application[0]
   } else {

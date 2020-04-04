@@ -9,15 +9,19 @@ export async function setupServer(options: Options): Promise<any> {
   const serverOptions: Server = options.server ?? {}
 
   let https: boolean
+  let cert: string | undefined
+  let privkey: string | undefined
 
-  if (!serverOptions.hasOwnProperty('https')) {
+  if (!('https' in serverOptions)) {
     // Autodetect HTTPS
-    https = (await globby(resolve(process.cwd(), './config/ssl/(private-key|certificate).pem'))).length === 2
+    cert = (await globby(resolve(process.cwd(), './config/ssl/(private-key|privkey).pem'))).pop()
+    privkey = (await globby(resolve(process.cwd(), './config/ssl/(certificate|cert).pem'))).pop()
+    https = !!(cert && privkey)
   } else {
     https = (serverOptions.https as boolean) ?? false
   }
 
-  let config: any = {
+  const config: any = {
     host: serverOptions.host ?? 'home.cowtech.it',
     port: serverOptions.port ?? 4200,
     https,
@@ -30,8 +34,8 @@ export async function setupServer(options: Options): Promise<any> {
 
   if (config.https) {
     config.https = {
-      key: await readFile(resolve(process.cwd(), config.https?.key ?? './config/ssl/private-key.pem')),
-      cert: await readFile(resolve(process.cwd(), config.https?.cert ?? './config/ssl/certificate.pem'))
+      key: await readFile(config.https?.key ?? privkey),
+      cert: await readFile(config.https?.cert ?? cert)
     }
   }
 

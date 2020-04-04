@@ -21,7 +21,7 @@
   "typings": "types/index.d.ts",
   "types": "types/index.d.ts",
   "scripts": {
-    "lint": "tslint --project tsconfig.json -t stylish src/*.ts test/*.ts",
+    "lint": "eslint src/**/*.ts",
     "test": "jest test --verbose --coverage --coverageReporters=html --coverageReporters=text",
     "ci": "yarn lint",
     "prebuild": "rm -rf lib/* types/* && yarn lint",
@@ -52,14 +52,13 @@
     "workbox-webpack-plugin": "^4.3.1"
   },
   "devDependencies": {
-    "@cowtech/tslint-config": "^5.13.0",
+    "@cowtech/eslint-config": "^6.8.4",
     "@types/fs-extra": "^8.0.1",
     "@types/html-minifier": "^3.5.3",
     "@types/node": "^12.12.22",
     "@types/webpack": "^4.41.0",
     "fork-ts-checker-webpack-plugin": "^3.1.1",
     "prettier": "^1.19.1",
-    "tslint": "^5.20.1",
     "typescript": "^3.7.4"
   },
   "peerDependencies": {
@@ -71,6 +70,6 @@
     "typescript": "^3.7.4"
   },
   "engines": {
-    "node": ">=12.0"
+    "node": ">=12.15.0"
   }
 }
