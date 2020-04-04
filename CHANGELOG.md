@@ -1,3 +1,7 @@
+### 2020-04-04 / 1.23.1
+
+- feat: Improve SSL detection.
+
 ### 2019-12-30 / 1.23.0
 
 - chore: Updated TS settings.
