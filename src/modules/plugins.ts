@@ -45,10 +45,12 @@ class ServiceWorkerEnvironment {
   }
 
   apply(compiler: Compiler): void {
+    const dest = this.dest
+
     compiler.hooks.emit.tap('ServiceWorkerEnvironment', (current: compilation.Compilation) => {
       const content = `self.__version = '${this.version}'; self.__debug = ${this.debug};`
 
-      current.assets[this.dest] = {
+      current.assets[dest] = {
         source(): string {
           return content
         },
@@ -56,6 +58,10 @@ class ServiceWorkerEnvironment {
           return content.length
         }
       }
+    })
+
+    compiler.hooks.compilation.tap('ServiceWorkerEnvironment', (current: compilation.Compilation) => {
+      current.cache['service-worker-environment'] = dest
     })
   }
 }
