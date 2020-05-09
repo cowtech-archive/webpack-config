@@ -1,3 +1,7 @@
+### 2020-05-09 / 1.23.4
+
+- fix: Fixed globbing.
+
 ### 2020-04-04 / 1.23.3
 
 - fix: Fixed SSL detection.
