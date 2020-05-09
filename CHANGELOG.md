@@ -1,3 +1,7 @@
+### 2020-05-09 / 1.23.5
+
+- feat: Added service-worker-environment to cache.
+
 ### 2020-05-09 / 1.23.4
 
 - fix: Fixed globbing.
