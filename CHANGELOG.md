@@ -1,3 +1,7 @@
+### 2020-06-02 / 1.23.6
+
+- fix: Update default browser settings.
+
 ### 2020-05-09 / 1.23.5
 
 - feat: Added service-worker-environment to cache.
