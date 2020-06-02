@@ -78,7 +78,9 @@ export interface Server {
     afterHook?: Hook<Server>;
 }
 export interface Babel {
-    browsersWhiteList?: Array<string>;
+    browsersWhiteList?: string | Array<string> | {
+        [key: string]: string;
+    };
     removeFunctions?: Array<string>;
     exclude?: Array<string>;
     modules?: boolean;

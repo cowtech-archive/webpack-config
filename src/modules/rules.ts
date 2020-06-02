@@ -14,13 +14,13 @@ Modifications:
   ie: remove - Is more than legacy
 */
 export const minimumSupportedBrowsers = {
-  chrome: '74',
-  edge: '18',
-  firefox: '67',
-  ios: '11',
-  opera: '60',
-  safari: '11',
-  samsung: '8.2'
+  chrome: '80',
+  edge: '80',
+  firefox: '75',
+  ios: '12',
+  opera: '67',
+  safari: '12',
+  samsung: '10.1'
 }
 
 export const unneededBabelPlugins = [
@@ -71,7 +71,7 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
     [
       '@babel/preset-env',
       {
-        targets: babelOptions.browsersWhiteList ?? { esmodules: true },
+        targets: babelOptions.browsersWhiteList ?? minimumSupportedBrowsers,
         exclude: babelOptions.exclude ?? unneededBabelPlugins,
         modules: babelOptions.modules ?? false,
         debug: babelOptions.envDebug ?? false
