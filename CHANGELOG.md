@@ -1,3 +1,7 @@
+### 2020-06-14 / 1.23.7
+
+- fix: Fixed SW enabling in non development.
+
 ### 2020-06-02 / 1.23.6
 
 - fix: Update default browser settings.
