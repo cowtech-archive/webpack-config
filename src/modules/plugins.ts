@@ -205,7 +205,7 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
     }
   }
 
-  if ((swOptions.enabled ?? options.environment) === 'production') {
+  if (swOptions.enabled === true || options.environment === 'production') {
     const swSrc = await resolveFile(options, 'serviceWorker.src', './(service-worker|sw).(js|ts)')
 
     if (swSrc) {
