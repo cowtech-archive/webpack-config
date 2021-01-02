@@ -1,5 +1,5 @@
 import { resolve } from 'path'
-import { Icons } from '../types'
+import { Icons } from './types'
 
 export interface Icon {
   width: number
@@ -34,6 +34,7 @@ export function generateSVG(icon: Icon, tag: string): string {
 }
 
 export async function loadFontAwesomeIcons(icons: Icons, toLoad: Array<string>): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const dependencies: { [key: string]: string } = require(resolve(process.cwd(), './package.json')).dependencies
 
   icons.tags = toLoad.reduce<Tags>((accu: Tags, entry: string, index: number) => {
@@ -44,13 +45,14 @@ export async function loadFontAwesomeIcons(icons: Icons, toLoad: Array<string>):
     const iconPackage = `@fortawesome/free-${section}-svg-icons`
 
     // Check font-awesome exists in dependencies
-    if (!dependencies.hasOwnProperty(iconPackage)) {
+    if (!(iconPackage in dependencies)) {
       throw new Error(
         `In order to load the "${entry}" icon, please add ${iconPackage} to the package.json dependencies.`
       )
     }
 
     // Load the icon then add to the definitions
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const icon = require(resolve(
       process.cwd(),
       `node_modules/${iconPackage}/fa${camelCase(`${name}`).replace(/\s/g, '')}`

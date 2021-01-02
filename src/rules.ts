@@ -1,8 +1,8 @@
 import globby from 'globby'
 import { resolve, sep } from 'path'
 import { RuleSetRule } from 'webpack'
+import { babelRemoveFunction } from './babel-remove-function'
 import { runHook } from './environment'
-import { babelRemoveFunction } from './plugins/babel-remove-function'
 import { Babel, Options, Rules } from './types'
 
 /*

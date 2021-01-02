@@ -1,21 +1,20 @@
-// @ts-ignore
 import { createHash } from 'crypto'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import globby from 'globby'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { basename, resolve } from 'path'
-// @ts-ignore
+// @ts-expect-error
 import TerserPlugin from 'terser-webpack-plugin'
 import { compilation, Compiler, DefinePlugin, EnvironmentPlugin, HotModuleReplacementPlugin, Plugin } from 'webpack'
-// @ts-ignore
+// @ts-expect-error
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
-// @ts-ignore
+// @ts-expect-error
 import { InjectManifest } from 'workbox-webpack-plugin'
 import { runHook } from './environment'
 import { checkTypescript } from './rules'
 import { HtmlWebpackTrackerPluginParameters, Options, Plugins, Rules, ServiceWorker } from './types'
 
-export * from './plugins/babel-remove-function'
+export * from './babel-remove-function'
 
 export const serviceWorkerDefaultInclude: Array<string | RegExp> = [
   /\.(?:html|js|json|mjs|css)$/,
@@ -147,9 +146,10 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
   if (useTypescript) {
     plugins.push(
       new ForkTsCheckerWebpackPlugin({
-        checkSyntacticErrors: true,
         async: false,
-        useTypescriptIncrementalApi: true
+        typescript: {
+          enabled: true
+        }
       })
     )
   }

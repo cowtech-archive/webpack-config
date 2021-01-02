@@ -1,11 +1,11 @@
 # @cowtech/webpack-config
 
-[![Package Version](https://img.shields.io/npm/v/@cowtech/webpack-config.svg)](https://npmjs.com/package/@cowtech/webpack-config)
-[![Dependency Status](https://img.shields.io/gemnasium/github.com/cowtech/webpack-config.svg)](https://gemnasium.com/github.com/cowtech/webpack-config)
+[![Package Version](https://img.shields.io/npm/v/@cowtech/webpack-config.svg)](https://npm.im/@cowtech/webpack-config)
+[![Dependency Status](https://img.shields.io/david/cowtech/webpack-config)](https://david-dm.org/cowtech/webpack-config)
 
 CowTech WebPack configuration without any CSS handling.
 
-https://github.com/cowtech/webpack-config
+https://sw.cowtech.it/webpack-config
 
 ## Contributing to webpack-config
 

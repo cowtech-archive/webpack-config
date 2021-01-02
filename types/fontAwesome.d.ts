@@ -1,4 +1,4 @@
-import { Icons } from '../types';
+import { Icons } from './types';
 export interface Icon {
     width: number;
     height: number;

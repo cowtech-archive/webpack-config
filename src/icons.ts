@@ -1,4 +1,4 @@
-import { loadFontAwesomeIcons } from './icons/fontAwesome'
+import { loadFontAwesomeIcons } from './fontAwesome'
 import { Icons, IconsToLoad, Options } from './types'
 
 export {
@@ -6,7 +6,7 @@ export {
   Icon as FontAwesomeIcon,
   loadFontAwesomeIcons,
   Tags as FontAwesomeTags
-} from './icons/fontAwesome'
+} from './fontAwesome'
 
 export async function loadIcons(options: Options): Promise<Icons> {
   const toLoad = (options.icons ?? {}) as IconsToLoad

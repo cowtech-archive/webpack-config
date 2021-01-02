@@ -1,4 +1,3 @@
-// @ts-ignore
 import { readFile } from 'fs-extra'
 import globby from 'globby'
 import { resolve } from 'path'

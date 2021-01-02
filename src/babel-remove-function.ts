@@ -9,15 +9,15 @@ import {
 } from '@babel/types'
 
 interface Types {
-  isCallExpression(node: object): node is CallExpression
-  StringLiteral(value: string): StringLiteral
+  isCallExpression: (node: object) => node is CallExpression
+  StringLiteral: (value: string) => StringLiteral
 }
 
 interface NodePath<C, P = unknown> {
   node: C
   parent: P
-  remove(): void
-  replaceWith(node: Node): void
+  remove: () => void
+  replaceWith: (node: Node) => void
 }
 
 export function babelRemoveFunction(options?: { name?: string }): (options: { types: Types }) => object {
@@ -37,7 +37,7 @@ export function babelRemoveFunction(options?: { name?: string }): (options: { ty
         // Remove any import of the function
         ImportDeclaration(path: NodePath<ImportDeclaration>): void {
           const hasDebugName = (path.node.specifiers as Array<ImportSpecifier>).findIndex(
-            (s: ImportSpecifier) => s.imported && s.imported.name === 'debugClassName'
+            (s: ImportSpecifier) => (s.imported as Identifier)?.name === 'debugClassName'
           )
 
           if (hasDebugName >= 0) {

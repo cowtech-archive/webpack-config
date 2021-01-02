@@ -10,6 +10,7 @@ import {
   RuleSetRule
 } from 'webpack'
 
+// eslint-disable-next-line @typescript-eslint/no-invalid-void-type
 export type HookReturn<T> = void | null | T | Promise<void | null | T>
 export type Hook<T> = (input: T) => HookReturn<T>
 
