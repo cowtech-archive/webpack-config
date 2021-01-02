@@ -1,3 +1,7 @@
+### 2021-01-02 / 1.24.0
+
+- chore: Updated dependencies, code and tools.
+
 ### 2020-06-14 / 1.23.7
 
 - fix: Fixed SW enabling in non development.
