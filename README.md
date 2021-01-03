@@ -20,4 +20,4 @@ https://sw.cowtech.it/webpack-config
 
 Copyright (C) 2017 and above Shogun <mailto:shogun@cowtech.it>.
 
-Licensed under the MIT license, which can be found at https://choosealicense.com/licenses/mit.
+Licensed under the MIT license, which can be found at https://choosealicense.com/licenses/isc.
