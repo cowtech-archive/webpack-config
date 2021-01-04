@@ -24,7 +24,6 @@ export function generateSVG(icon, tag) {
   `;
 }
 export async function loadFontAwesomeIcons(icons, toLoad) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const dependencies = JSON.parse(readFileSync(resolve(process.cwd(), './package.json'), 'utf-8')).dependencies;
     icons.tags = toLoad.reduce((accu, entry, index) => {
         // Manipulate the icon name - Syntax: [alias@]<icon>[:section]
