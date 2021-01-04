@@ -48,7 +48,6 @@ export function generateSVG(icon: Icon, tag: string): string {
 }
 
 export async function loadFontAwesomeIcons(icons: Icons, toLoad: Array<string>): Promise<void> {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const dependencies: { [key: string]: string } = JSON.parse(
     readFileSync(resolve(process.cwd(), './package.json'), 'utf-8')
   ).dependencies
