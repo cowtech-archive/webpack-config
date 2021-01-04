@@ -1,3 +1,6 @@
+import { parse } from '@babel/parser'
+import { Identifier, NumericLiteral, Statement, StringLiteral, VariableDeclaration } from '@babel/types'
+import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import { Icons } from './types'
 
@@ -9,6 +12,17 @@ export interface Icon {
 
 export interface Tags {
   [key: string]: string
+}
+
+function findVariable<Type extends NumericLiteral | StringLiteral>(
+  statements: Array<Statement>,
+  id: string
+): number | string {
+  const declaration = statements.find(
+    (t: Statement) => t.type === 'VariableDeclaration' && (t.declarations[0].id as Identifier).name === id
+  )!
+
+  return ((((declaration as unknown) as VariableDeclaration).declarations[1].init as unknown) as Type).value
 }
 
 function camelCase(source: any): string {
@@ -35,7 +49,9 @@ export function generateSVG(icon: Icon, tag: string): string {
 
 export async function loadFontAwesomeIcons(icons: Icons, toLoad: Array<string>): Promise<void> {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const dependencies: { [key: string]: string } = require(resolve(process.cwd(), './package.json')).dependencies
+  const dependencies: { [key: string]: string } = JSON.parse(
+    readFileSync(resolve(process.cwd(), './package.json'), 'utf-8')
+  ).dependencies
 
   icons.tags = toLoad.reduce<Tags>((accu: Tags, entry: string, index: number) => {
     // Manipulate the icon name - Syntax: [alias@]<icon>[:section]
@@ -52,12 +68,21 @@ export async function loadFontAwesomeIcons(icons: Icons, toLoad: Array<string>):
     }
 
     // Load the icon then add to the definitions
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const icon = require(resolve(
+    const iconFile = resolve(
       process.cwd(),
-      `node_modules/${iconPackage}/fa${camelCase(`${name}`).replace(/\s/g, '')}`
-    ))
-    icons.definitions += generateSVG(icon, tag)
+      `node_modules/${iconPackage}/fa${camelCase(`${name}`).replace(/\s/g, '')}.js`
+    )
+    const iconData = parse(readFileSync(iconFile, 'utf-8')).program.body
+
+    icons.definitions += generateSVG(
+      {
+        width: findVariable<NumericLiteral>(iconData, 'width') as number,
+        height: findVariable<NumericLiteral>(iconData, 'height') as number,
+        svgPathData: findVariable<StringLiteral>(iconData, 'svgPathData') as string
+      },
+      tag
+    )
+
     accu[alias] = tag
 
     return accu

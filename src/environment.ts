@@ -1,9 +1,9 @@
+import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import { Environment, Hook, Options } from './types'
 
 export function setupEnvironment(options: Options): Environment {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const packageInfo = require(resolve(process.cwd(), './package.json'))
+  const packageInfo = JSON.parse(readFileSync(resolve(process.cwd(), './package.json'), 'utf-8'))
   const environment = options.environment as string
 
   return {

@@ -16,25 +16,30 @@
   "license": "ISC",
   "private": false,
   "files": [
-    "lib",
+    "dist",
     "types",
     "CHANGELOG.md",
     "LICENSE.md",
     "README.md"
   ],
-  "main": "lib/index.js",
+  "main": "dist/cjs/index.js",
+  "exports": {
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/mjs/index.mjs"
+  },
   "typings": "types/index.d.ts",
   "types": "types/index.d.ts",
   "scripts": {
     "lint": "eslint src/*.ts",
     "ci": "yarn lint",
-    "prebuild": "rm -rf lib/* types/* && yarn lint",
-    "build": "tsc -p .",
+    "prebuild": "rm -rf dist types && yarn lint",
+    "build": "tsc -p . && tsc -p tsconfig.modules.json && renamer --find js --replace mjs dist/mjs/* >> /dev/null && jscodeshift -s --extensions=mjs -t node_modules/@cowtech/esm-package-utils dist/mjs/**",
     "prepublishOnly": "yarn ci",
     "postpublish": "git push origin && git push origin -f --tags"
   },
   "dependencies": {
     "@babel/core": "^7.12.10",
+    "@babel/parser": "^7.12.11",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/plugin-proposal-optional-catch-binding": "^7.12.1",
     "@babel/preset-env": "^7.12.11",
@@ -57,6 +62,7 @@
   },
   "devDependencies": {
     "@cowtech/eslint-config": "^7.14.0",
+    "@cowtech/esm-package-utils": "^0.2.0",
     "@types/fs-extra": "^9.0.6",
     "@types/html-minifier": "^4.0.0",
     "@types/node": "^14.14.19",
@@ -67,9 +73,9 @@
   },
   "peerDependencies": {
     "@types/fs-extra": "^9.0.6",
+    "@types/html-minifier": "^4.0.0",
     "@types/node": "^14.14.19",
     "@types/webpack": "^4.41.25",
-    "@types/html-minifier": "^4.0.0",
     "fork-ts-checker-webpack-plugin": "^6.0.8",
     "typescript": "^4.1.3"
   },

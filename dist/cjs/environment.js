@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.runHook = exports.setupEnvironment = void 0;
+const fs_1 = require("fs");
 const path_1 = require("path");
 function setupEnvironment(options) {
     var _a, _b, _c, _d, _e, _f, _g;
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const packageInfo = require(path_1.resolve(process.cwd(), './package.json'));
+    const packageInfo = JSON.parse(fs_1.readFileSync(path_1.resolve(process.cwd(), './package.json'), 'utf-8'));
     const environment = options.environment;
     return {
         environment,
