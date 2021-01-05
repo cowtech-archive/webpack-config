@@ -1,3 +1,7 @@
+### 2021-01-05 / 2.2.0
+
+- feat: Fixed service worker generation.
+
 ### 2021-01-05 / 2.1.3
 
 - fix: Bugfix.
