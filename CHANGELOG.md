@@ -1,3 +1,7 @@
+### 2021-01-05 / 2.1.2
+
+- fix: Improve compatibility with Webpack 5.
+
 ### 2021-01-05 / 2.1.1
 
 - fix: Fixed dev server options.
