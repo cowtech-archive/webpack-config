@@ -1,4 +1,4 @@
-import { ExtendedConfiguration, Options } from './types';
+import { ExtendedConfiguration, Options, WebpackCliEnvironment } from './types';
 export * from './entries';
 export * from './environment';
 export * from './icons';
@@ -7,4 +7,5 @@ export * from './rules';
 export * from './server';
 export * from './types';
 export declare function generateVersion(): string;
+export declare function normalizeWebpackEnvironment(env: WebpackCliEnvironment): 'production' | 'development';
 export declare function setup(options?: Options): Promise<ExtendedConfiguration>;

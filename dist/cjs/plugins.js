@@ -122,16 +122,6 @@ async function setupPlugins(options) {
             inject: false
         }));
     }
-    // if (useTypescript) {
-    //   plugins.push(
-    //     new ForkTsCheckerWebpackPlugin({
-    //       async: false,
-    //       typescript: {
-    //         enabled: true
-    //       }
-    //     })
-    //   )
-    // }
     if (indexFile) {
         plugins.push(new html_webpack_plugin_1.default({
             template: indexFile,

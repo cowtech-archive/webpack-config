@@ -10,7 +10,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setup = exports.generateVersion = void 0;
+exports.setup = exports.normalizeWebpackEnvironment = exports.generateVersion = void 0;
 const path_1 = require("path");
 const entries_1 = require("./entries");
 const environment_1 = require("./environment");
@@ -32,6 +32,10 @@ function generateVersion() {
         .replace('T', '.');
 }
 exports.generateVersion = generateVersion;
+function normalizeWebpackEnvironment(env) {
+    return env.production === true ? 'production' : 'development';
+}
+exports.normalizeWebpackEnvironment = normalizeWebpackEnvironment;
 async function setup(options = {}) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
     if (!options.environment || typeof options.environment !== 'string') {
@@ -54,7 +58,8 @@ async function setup(options = {}) {
             chunkFilename: `[name]-[contenthash].${mainExtension}`,
             path: options.destFolder,
             publicPath: (_e = options.publicPath) !== null && _e !== void 0 ? _e : '/',
-            libraryTarget: options.libraryTarget
+            libraryTarget: options.libraryTarget,
+            assetModuleFilename: rules_1.normalizeAssetPath
         },
         target: options.target,
         module: {

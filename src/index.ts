@@ -3,9 +3,9 @@ import { autoDetectEntries } from './entries'
 import { runHook, setupEnvironment } from './environment'
 import { loadIcons } from './icons'
 import { setupPlugins } from './plugins'
-import { setupRules } from './rules'
+import { normalizeAssetPath, setupRules } from './rules'
 import { setupServer } from './server'
-import { ExtendedConfiguration, Options } from './types'
+import { ExtendedConfiguration, Options, WebpackCliEnvironment } from './types'
 
 export * from './entries'
 export * from './environment'
@@ -20,6 +20,10 @@ export function generateVersion(): string {
     .toISOString()
     .replace(/([-:])|(\.\d+Z$)/g, '')
     .replace('T', '.')
+}
+
+export function normalizeWebpackEnvironment(env: WebpackCliEnvironment): 'production' | 'development' {
+  return env.production === true ? 'production' : 'development'
 }
 
 export async function setup(options: Options = {}): Promise<ExtendedConfiguration> {
@@ -48,7 +52,8 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
       chunkFilename: `[name]-[contenthash].${mainExtension}`,
       path: options.destFolder,
       publicPath: options.publicPath ?? '/',
-      libraryTarget: options.libraryTarget
+      libraryTarget: options.libraryTarget,
+      assetModuleFilename: normalizeAssetPath
     },
     target: options.target as string,
     module: {

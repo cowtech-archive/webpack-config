@@ -152,17 +152,6 @@ export async function setupPlugins(options: Options): Promise<Array<WebpackPlugi
     )
   }
 
-  // if (useTypescript) {
-  //   plugins.push(
-  //     new ForkTsCheckerWebpackPlugin({
-  //       async: false,
-  //       typescript: {
-  //         enabled: true
-  //       }
-  //     })
-  //   )
-  // }
-
   if (indexFile) {
     plugins.push(
       new HtmlWebpackPlugin({

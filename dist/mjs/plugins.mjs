@@ -105,16 +105,6 @@ export async function setupPlugins(options) {
             inject: false
         }));
     }
-    // if (useTypescript) {
-    //   plugins.push(
-    //     new ForkTsCheckerWebpackPlugin({
-    //       async: false,
-    //       typescript: {
-    //         enabled: true
-    //       }
-    //     })
-    //   )
-    // }
     if (indexFile) {
         plugins.push(new HtmlWebpackPlugin({
             template: indexFile,

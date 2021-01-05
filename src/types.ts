@@ -132,3 +132,7 @@ export interface Options extends Output {
   uglify?: object
   afterHook?: Hook<ExtendedConfiguration>
 }
+
+export interface WebpackCliEnvironment {
+  [key: string]: boolean | string
+}

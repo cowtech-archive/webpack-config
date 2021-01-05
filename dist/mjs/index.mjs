@@ -3,7 +3,7 @@ import { autoDetectEntries } from "./entries.mjs";
 import { runHook, setupEnvironment } from "./environment.mjs";
 import { loadIcons } from "./icons.mjs";
 import { setupPlugins } from "./plugins.mjs";
-import { setupRules } from "./rules.mjs";
+import { normalizeAssetPath, setupRules } from "./rules.mjs";
 import { setupServer } from "./server.mjs";
 export * from "./entries.mjs";
 export * from "./environment.mjs";
@@ -17,6 +17,9 @@ export function generateVersion() {
         .toISOString()
         .replace(/([-:])|(\.\d+Z$)/g, '')
         .replace('T', '.');
+}
+export function normalizeWebpackEnvironment(env) {
+    return env.production === true ? 'production' : 'development';
 }
 export async function setup(options = {}) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
@@ -40,7 +43,8 @@ export async function setup(options = {}) {
             chunkFilename: `[name]-[contenthash].${mainExtension}`,
             path: options.destFolder,
             publicPath: (_e = options.publicPath) !== null && _e !== void 0 ? _e : '/',
-            libraryTarget: options.libraryTarget
+            libraryTarget: options.libraryTarget,
+            assetModuleFilename: normalizeAssetPath
         },
         target: options.target,
         module: {

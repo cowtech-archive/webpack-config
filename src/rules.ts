@@ -31,6 +31,8 @@ export const unneededBabelPlugins = [
   '@babel/proposal-object-rest-spread'
 ]
 
+export const imagesExtensions = /\.(?:bmp|png|jpg|jpeg|gif|svg|webp)$/
+
 export async function checkTypescript(rulesOptions: Rules, srcFolder: string): Promise<boolean> {
   if (typeof rulesOptions.typescript === 'boolean') {
     return rulesOptions.typescript
@@ -47,8 +49,8 @@ export async function checkReact(rulesOptions: Rules, srcFolder: string): Promis
   return (await globby(resolve(srcFolder, './**/*.(jsx|tsx)'))).length > 0
 }
 
-export function normalizeIncludePath(path: string): string {
-  const components = path.split(sep)
+export function normalizeAssetPath({ filename }: { filename?: string }): string {
+  const components = filename!.split(sep)
 
   if (components[0] === 'src') {
     components.shift()
@@ -56,7 +58,7 @@ export function normalizeIncludePath(path: string): string {
     components.splice(0, components[1][0] === '@' ? 3 : 2) // Remove the folder, the scope (if present) and the package
   }
 
-  return components.join(sep)
+  return components.join(sep).replace(imagesExtensions, '-[contenthash]$&')
 }
 
 export async function setupRules(options: Options): Promise<Array<RuleSetRule>> {
@@ -148,13 +150,8 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
 
   if (rulesOptions.images ?? true) {
     rules.push({
-      test: /\.(?:bmp|png|jpg|jpeg|gif|svg|webp)$/,
-      type: 'asset/resource',
-      options: {
-        name: '[path][name]-[contenthash].[ext]',
-        outputPath: normalizeIncludePath,
-        publicPath: normalizeIncludePath
-      }
+      test: imagesExtensions,
+      type: 'asset/resource'
     })
   }
 

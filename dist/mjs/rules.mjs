@@ -26,6 +26,7 @@ export const unneededBabelPlugins = [
     '@babel/proposal-async-generator-functions',
     '@babel/proposal-object-rest-spread'
 ];
+export const imagesExtensions = /\.(?:bmp|png|jpg|jpeg|gif|svg|webp)$/;
 export async function checkTypescript(rulesOptions, srcFolder) {
     if (typeof rulesOptions.typescript === 'boolean') {
         return rulesOptions.typescript;
@@ -38,15 +39,15 @@ export async function checkReact(rulesOptions, srcFolder) {
     }
     return (await globby(resolve(srcFolder, './**/*.(jsx|tsx)'))).length > 0;
 }
-export function normalizeIncludePath(path) {
-    const components = path.split(sep);
+export function normalizeAssetPath({ filename }) {
+    const components = filename.split(sep);
     if (components[0] === 'src') {
         components.shift();
     }
     else if (components[0] === 'node_modules') {
         components.splice(0, components[1][0] === '@' ? 3 : 2); // Remove the folder, the scope (if present) and the package
     }
-    return components.join(sep);
+    return components.join(sep).replace(imagesExtensions, '-[contenthash]$&');
 }
 export async function setupRules(options) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
@@ -126,13 +127,8 @@ export async function setupRules(options) {
     }
     if ((_k = rulesOptions.images) !== null && _k !== void 0 ? _k : true) {
         rules.push({
-            test: /\.(?:bmp|png|jpg|jpeg|gif|svg|webp)$/,
-            type: 'asset/resource',
-            options: {
-                name: '[path][name]-[contenthash].[ext]',
-                outputPath: normalizeIncludePath,
-                publicPath: normalizeIncludePath
-            }
+            test: imagesExtensions,
+            type: 'asset/resource'
         });
     }
     if (rulesOptions.additional) {
