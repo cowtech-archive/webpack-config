@@ -1,3 +1,7 @@
+### 2021-01-05 / 2.1.3
+
+- fix: Bugfix.
+
 ### 2021-01-05 / 2.1.2
 
 - fix: Improve compatibility with Webpack 5.
