@@ -45,17 +45,15 @@ async function setup(options = {}) {
     options.env = environment_1.setupEnvironment(options);
     options.icons = await icons_1.loadIcons(options);
     const server = await server_1.setupServer(options);
-    const stats = ((_c = options.stats) !== null && _c !== void 0 ? _c : options.environment === 'production') ? 'normal' : 'errors-only';
-    server.stats = stats;
-    const mainExtension = ((_d = options.useESModules) !== null && _d !== void 0 ? _d : true) ? 'mjs' : 'js';
+    const mainExtension = ((_c = options.useESModules) !== null && _c !== void 0 ? _c : true) ? 'mjs' : 'js';
     const config = {
         mode: options.environment === 'production' ? 'production' : 'development',
-        entry: (_e = options.entries) !== null && _e !== void 0 ? _e : (await entries_1.autoDetectEntries(options)),
+        entry: (_d = options.entries) !== null && _d !== void 0 ? _d : (await entries_1.autoDetectEntries(options)),
         output: {
             filename: `[name]-[contenthash].${mainExtension}`,
             chunkFilename: `[name]-[contenthash].${mainExtension}`,
             path: options.destFolder,
-            publicPath: (_f = options.publicPath) !== null && _f !== void 0 ? _f : '/',
+            publicPath: (_e = options.publicPath) !== null && _e !== void 0 ? _e : '/',
             libraryTarget: options.libraryTarget
         },
         target: options.target,
@@ -65,11 +63,11 @@ async function setup(options = {}) {
         resolve: { extensions: ['.json', '.js', '.jsx', '.ts', '.tsx'] },
         plugins: await plugins_1.setupPlugins(options),
         externals: options.externals,
-        devtool: options.environment === 'development' ? (_g = options.sourceMaps) !== null && _g !== void 0 ? _g : 'source-map' : false,
+        devtool: options.environment === 'development' ? (_f = options.sourceMaps) !== null && _f !== void 0 ? _f : 'source-map' : false,
         cache: true,
         devServer: server,
-        performance: (_h = options.performance) !== null && _h !== void 0 ? _h : { hints: false },
-        stats,
+        performance: (_g = options.performance) !== null && _g !== void 0 ? _g : { hints: false },
+        stats: ((_h = options.stats) !== null && _h !== void 0 ? _h : options.environment === 'production') ? 'normal' : 'errors-only',
         optimization: {
             splitChunks: (_k = (_j = options.plugins) === null || _j === void 0 ? void 0 : _j.splitChunks) !== null && _k !== void 0 ? _k : { chunks: 'all' },
             concatenateModules: (_m = (_l = options.plugins) === null || _l === void 0 ? void 0 : _l.concatenate) !== null && _m !== void 0 ? _m : true

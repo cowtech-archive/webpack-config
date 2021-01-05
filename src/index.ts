@@ -38,9 +38,6 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
 
   const server = await setupServer(options)
 
-  const stats = options.stats ?? options.environment === 'production' ? 'normal' : 'errors-only'
-  server.stats = stats
-
   const mainExtension = options.useESModules ?? true ? 'mjs' : 'js'
 
   const config: ExtendedConfiguration = {
@@ -64,7 +61,7 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
     cache: true,
     devServer: server,
     performance: options.performance ?? { hints: false },
-    stats,
+    stats: options.stats ?? options.environment === 'production' ? 'normal' : 'errors-only',
     optimization: {
       splitChunks: options.plugins?.splitChunks ?? { chunks: 'all' },
       concatenateModules: options.plugins?.concatenate ?? true

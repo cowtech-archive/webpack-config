@@ -26,8 +26,7 @@ export async function setupServer(options: Options): Promise<any> {
     https,
     compress: serverOptions.compress ?? true,
     historyApiFallback: serverOptions.history ?? true,
-    disableHostCheck: serverOptions.disableHostCheck ?? true,
-    inline: serverOptions.inline ?? true,
+    firewall: serverOptions.firewall ?? true,
     ...(serverOptions.options ?? {})
   }
 
