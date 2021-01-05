@@ -18,7 +18,6 @@ const crypto_1 = require("crypto");
 const globby_1 = __importDefault(require("globby"));
 const html_webpack_plugin_1 = __importDefault(require("html-webpack-plugin"));
 const path_1 = require("path");
-const terser_webpack_plugin_1 = __importDefault(require("terser-webpack-plugin"));
 const webpack_1 = require("webpack");
 // @ts-expect-error - Even if @types/webpack-bundle-analyzer, it generates a conflict with Webpack 5. Revisit in the future.
 const webpack_bundle_analyzer_1 = require("webpack-bundle-analyzer");
@@ -37,22 +36,18 @@ exports.serviceWorkerDefaultExclude = [
 class ServiceWorkerEnvironment {
     constructor({ dest, version, debug }) {
         this.dest = dest;
-        this.version = version;
-        this.debug = debug;
+        this.content = `self.__version = '${version}'\nself.__debug = ${debug};`;
     }
     apply(compiler) {
-        const dest = this.dest;
-        compiler.hooks.compilation.tap('ServiceWorkerEnvironment', (current) => {
-            const content = `self.__version = '${this.version}'; self.__debug = ${this.debug};`;
+        compiler.hooks.thisCompilation.tap('ServiceWorkerEnvironment', (current) => {
             current.hooks.processAssets.tap({
                 name: 'ServiceWorkerEnvironment',
-                stage: webpack_1.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL
+                stage: webpack_1.Compilation.PROCESS_ASSETS_STAGE_PRE_PROCESS
             }, () => {
-                current.emitAsset(dest, new webpack_1.sources.RawSource(content));
+                current.emitAsset(this.dest, new webpack_1.sources.RawSource(this.content));
             });
-            compiler.hooks.emit.tapPromise('ServiceWorkerEnvironment', (current) => {
-                return current.getCache('cowtech').storePromise('service-worker-environment', null, dest);
-            });
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
+            current.getCache('cowtech').storePromise('service-worker-environment', null, this.dest);
         });
     }
 }
@@ -61,7 +56,7 @@ class HtmlWebpackTrackerPlugin {
         this.files = new Map();
     }
     apply(compiler) {
-        compiler.hooks.emit.tap('HtmlWebpackTrackerPlugin', (current) => {
+        compiler.hooks.thisCompilation.tap('HtmlWebpackTrackerPlugin', (current) => {
             const plugin = html_webpack_plugin_1.default;
             plugin
                 .getHooks(current)
@@ -83,7 +78,7 @@ async function resolveFile(options, key, pattern) {
 }
 exports.resolveFile = resolveFile;
 async function setupPlugins(options) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
     const pluginsOptions = (_a = options.plugins) !== null && _a !== void 0 ? _a : {};
     const swOptions = (_b = options.serviceWorker) !== null && _b !== void 0 ? _b : {};
     const rules = (_c = options.rules) !== null && _c !== void 0 ? _c : {};
@@ -137,12 +132,7 @@ async function setupPlugins(options) {
             inject: false
         }));
     }
-    if (options.environment === 'production') {
-        if ((_j = pluginsOptions.minify) !== null && _j !== void 0 ? _j : true) {
-            plugins.push(new terser_webpack_plugin_1.default((_k = options.uglify) !== null && _k !== void 0 ? _k : {}));
-        }
-    }
-    else if (hmr) {
+    if (options.environment !== 'production' && hmr) {
         plugins.push(new webpack_1.HotModuleReplacementPlugin());
     }
     if (analyze) {
@@ -150,8 +140,8 @@ async function setupPlugins(options) {
             const analyzerMode = typeof analyze === 'string' ? analyze : 'server';
             plugins.push(new webpack_bundle_analyzer_1.BundleAnalyzerPlugin({
                 analyzerMode: analyzerMode,
-                analyzerHost: (_m = (_l = options.server) === null || _l === void 0 ? void 0 : _l.host) !== null && _m !== void 0 ? _m : 'home.cowtech.it',
-                analyzerPort: ((_p = (_o = options.server) === null || _o === void 0 ? void 0 : _o.port) !== null && _p !== void 0 ? _p : 4200) + 2,
+                analyzerHost: (_k = (_j = options.server) === null || _j === void 0 ? void 0 : _j.host) !== null && _k !== void 0 ? _k : 'home.cowtech.it',
+                analyzerPort: ((_m = (_l = options.server) === null || _l === void 0 ? void 0 : _l.port) !== null && _m !== void 0 ? _m : 4200) + 2,
                 generateStatsFile: analyze === 'static',
                 openAnalyzer: false
             }));
@@ -168,23 +158,23 @@ async function setupPlugins(options) {
         const swSrc = await resolveFile(options, 'serviceWorker.src', './(service-worker|sw).(js|ts)');
         if (swSrc) {
             // Create the hash for the filename
-            const hashFactory = crypto_1.createHash('md4');
-            hashFactory.update(JSON.stringify({ version: options.version }));
-            const hash = hashFactory.digest('hex');
-            const swDest = (_q = swOptions.dest) !== null && _q !== void 0 ? _q : 'sw.js';
+            const hash = crypto_1.createHash('sha1')
+                .update(JSON.stringify({ version: options.version }))
+                .digest('hex')
+                .slice(0, 8);
+            const swDest = (_o = swOptions.dest) !== null && _o !== void 0 ? _o : 'sw.js';
             const envFile = swDest.replace(/\.js$/, `-env-${hash}.js`);
             exports.serviceWorkerDefaultExclude.push(envFile);
             plugins.push(new ServiceWorkerEnvironment({
                 dest: envFile,
                 version: options.version,
-                debug: (_r = swOptions.debug) !== null && _r !== void 0 ? _r : options.environment !== 'production'
+                debug: (_p = swOptions.debug) !== null && _p !== void 0 ? _p : options.environment !== 'production'
             }), new workbox_webpack_plugin_1.InjectManifest({
                 swSrc,
                 swDest,
                 include: exports.serviceWorkerDefaultInclude,
                 exclude: exports.serviceWorkerDefaultExclude,
-                chunks: [`/${envFile}`],
-                ...((_s = swOptions.options) !== null && _s !== void 0 ? _s : {})
+                ...((_q = swOptions.options) !== null && _q !== void 0 ? _q : {})
             }));
         }
     }

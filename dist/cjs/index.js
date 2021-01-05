@@ -9,9 +9,13 @@ var __createBinding = (this && this.__createBinding) || (Object.create ? (functi
 var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setup = exports.normalizeWebpackEnvironment = exports.generateVersion = void 0;
 const path_1 = require("path");
+const terser_webpack_plugin_1 = __importDefault(require("terser-webpack-plugin"));
 const entries_1 = require("./entries");
 const environment_1 = require("./environment");
 const icons_1 = require("./icons");
@@ -37,7 +41,7 @@ function normalizeWebpackEnvironment(env) {
 }
 exports.normalizeWebpackEnvironment = normalizeWebpackEnvironment;
 async function setup(options = {}) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
     if (!options.environment || typeof options.environment !== 'string') {
         options.environment = 'development';
     }
@@ -50,14 +54,18 @@ async function setup(options = {}) {
     options.icons = await icons_1.loadIcons(options);
     const server = await server_1.setupServer(options);
     const mainExtension = ((_c = options.useESModules) !== null && _c !== void 0 ? _c : true) ? 'mjs' : 'js';
+    const minimizer = [];
+    if (options.environment === 'production' && ((_e = (_d = options.plugins) === null || _d === void 0 ? void 0 : _d.minify) !== null && _e !== void 0 ? _e : true)) {
+        minimizer.push(new terser_webpack_plugin_1.default((_f = options.uglify) !== null && _f !== void 0 ? _f : {}));
+    }
     const config = {
         mode: options.environment === 'production' ? 'production' : 'development',
-        entry: (_d = options.entries) !== null && _d !== void 0 ? _d : (await entries_1.autoDetectEntries(options)),
+        entry: (_g = options.entries) !== null && _g !== void 0 ? _g : (await entries_1.autoDetectEntries(options)),
         output: {
             filename: `[name]-[contenthash].${mainExtension}`,
             chunkFilename: `[name]-[contenthash].${mainExtension}`,
             path: options.destFolder,
-            publicPath: (_e = options.publicPath) !== null && _e !== void 0 ? _e : '/',
+            publicPath: (_h = options.publicPath) !== null && _h !== void 0 ? _h : '/',
             libraryTarget: options.libraryTarget,
             assetModuleFilename: rules_1.normalizeAssetPath
         },
@@ -68,14 +76,16 @@ async function setup(options = {}) {
         resolve: { extensions: ['.json', '.js', '.jsx', '.ts', '.tsx'] },
         plugins: await plugins_1.setupPlugins(options),
         externals: options.externals,
-        devtool: options.environment === 'development' ? (_f = options.sourceMaps) !== null && _f !== void 0 ? _f : 'source-map' : false,
+        devtool: options.environment === 'development' ? (_j = options.sourceMaps) !== null && _j !== void 0 ? _j : 'source-map' : false,
         cache: true,
         devServer: server,
-        performance: (_g = options.performance) !== null && _g !== void 0 ? _g : { hints: false },
-        stats: ((_h = options.stats) !== null && _h !== void 0 ? _h : options.environment === 'production') ? 'normal' : 'errors-only',
+        performance: (_k = options.performance) !== null && _k !== void 0 ? _k : { hints: false },
+        stats: ((_l = options.stats) !== null && _l !== void 0 ? _l : options.environment === 'production') ? 'normal' : 'errors-only',
         optimization: {
-            splitChunks: (_k = (_j = options.plugins) === null || _j === void 0 ? void 0 : _j.splitChunks) !== null && _k !== void 0 ? _k : { chunks: 'all' },
-            concatenateModules: (_m = (_l = options.plugins) === null || _l === void 0 ? void 0 : _l.concatenate) !== null && _m !== void 0 ? _m : true
+            splitChunks: (_o = (_m = options.plugins) === null || _m === void 0 ? void 0 : _m.splitChunks) !== null && _o !== void 0 ? _o : { chunks: 'all' },
+            concatenateModules: (_q = (_p = options.plugins) === null || _p === void 0 ? void 0 : _p.concatenate) !== null && _q !== void 0 ? _q : true,
+            minimize: true,
+            minimizer
         }
     };
     return environment_1.runHook(config, options.afterHook);

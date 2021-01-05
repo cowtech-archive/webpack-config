@@ -1,4 +1,6 @@
 import { resolve } from 'path'
+import TerserPlugin from 'terser-webpack-plugin'
+import { WebpackPluginInstance } from 'webpack'
 import { autoDetectEntries } from './entries'
 import { runHook, setupEnvironment } from './environment'
 import { loadIcons } from './icons'
@@ -44,6 +46,12 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
 
   const mainExtension = options.useESModules ?? true ? 'mjs' : 'js'
 
+  const minimizer: Array<WebpackPluginInstance> = []
+
+  if (options.environment === 'production' && (options.plugins?.minify ?? true)) {
+    minimizer.push(new TerserPlugin(options.uglify ?? {}))
+  }
+
   const config: ExtendedConfiguration = {
     mode: options.environment === 'production' ? 'production' : 'development',
     entry: options.entries ?? (await autoDetectEntries(options)),
@@ -69,7 +77,9 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
     stats: options.stats ?? options.environment === 'production' ? 'normal' : 'errors-only',
     optimization: {
       splitChunks: options.plugins?.splitChunks ?? { chunks: 'all' },
-      concatenateModules: options.plugins?.concatenate ?? true
+      concatenateModules: options.plugins?.concatenate ?? true,
+      minimize: true,
+      minimizer
     }
   }
 

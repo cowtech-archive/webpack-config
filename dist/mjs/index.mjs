@@ -1,4 +1,5 @@
 import { resolve } from 'path';
+import TerserPlugin from 'terser-webpack-plugin';
 import { autoDetectEntries } from "./entries.mjs";
 import { runHook, setupEnvironment } from "./environment.mjs";
 import { loadIcons } from "./icons.mjs";
@@ -22,7 +23,7 @@ export function normalizeWebpackEnvironment(env) {
     return env.production === true ? 'production' : 'development';
 }
 export async function setup(options = {}) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
     if (!options.environment || typeof options.environment !== 'string') {
         options.environment = 'development';
     }
@@ -35,14 +36,18 @@ export async function setup(options = {}) {
     options.icons = await loadIcons(options);
     const server = await setupServer(options);
     const mainExtension = ((_c = options.useESModules) !== null && _c !== void 0 ? _c : true) ? 'mjs' : 'js';
+    const minimizer = [];
+    if (options.environment === 'production' && ((_e = (_d = options.plugins) === null || _d === void 0 ? void 0 : _d.minify) !== null && _e !== void 0 ? _e : true)) {
+        minimizer.push(new TerserPlugin((_f = options.uglify) !== null && _f !== void 0 ? _f : {}));
+    }
     const config = {
         mode: options.environment === 'production' ? 'production' : 'development',
-        entry: (_d = options.entries) !== null && _d !== void 0 ? _d : (await autoDetectEntries(options)),
+        entry: (_g = options.entries) !== null && _g !== void 0 ? _g : (await autoDetectEntries(options)),
         output: {
             filename: `[name]-[contenthash].${mainExtension}`,
             chunkFilename: `[name]-[contenthash].${mainExtension}`,
             path: options.destFolder,
-            publicPath: (_e = options.publicPath) !== null && _e !== void 0 ? _e : '/',
+            publicPath: (_h = options.publicPath) !== null && _h !== void 0 ? _h : '/',
             libraryTarget: options.libraryTarget,
             assetModuleFilename: normalizeAssetPath
         },
@@ -53,14 +58,16 @@ export async function setup(options = {}) {
         resolve: { extensions: ['.json', '.js', '.jsx', '.ts', '.tsx'] },
         plugins: await setupPlugins(options),
         externals: options.externals,
-        devtool: options.environment === 'development' ? (_f = options.sourceMaps) !== null && _f !== void 0 ? _f : 'source-map' : false,
+        devtool: options.environment === 'development' ? (_j = options.sourceMaps) !== null && _j !== void 0 ? _j : 'source-map' : false,
         cache: true,
         devServer: server,
-        performance: (_g = options.performance) !== null && _g !== void 0 ? _g : { hints: false },
-        stats: ((_h = options.stats) !== null && _h !== void 0 ? _h : options.environment === 'production') ? 'normal' : 'errors-only',
+        performance: (_k = options.performance) !== null && _k !== void 0 ? _k : { hints: false },
+        stats: ((_l = options.stats) !== null && _l !== void 0 ? _l : options.environment === 'production') ? 'normal' : 'errors-only',
         optimization: {
-            splitChunks: (_k = (_j = options.plugins) === null || _j === void 0 ? void 0 : _j.splitChunks) !== null && _k !== void 0 ? _k : { chunks: 'all' },
-            concatenateModules: (_m = (_l = options.plugins) === null || _l === void 0 ? void 0 : _l.concatenate) !== null && _m !== void 0 ? _m : true
+            splitChunks: (_o = (_m = options.plugins) === null || _m === void 0 ? void 0 : _m.splitChunks) !== null && _o !== void 0 ? _o : { chunks: 'all' },
+            concatenateModules: (_q = (_p = options.plugins) === null || _p === void 0 ? void 0 : _p.concatenate) !== null && _q !== void 0 ? _q : true,
+            minimize: true,
+            minimizer
         }
     };
     return runHook(config, options.afterHook);

@@ -2,7 +2,6 @@ import { createHash } from 'crypto'
 import globby from 'globby'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { basename, resolve } from 'path'
-import TerserPlugin from 'terser-webpack-plugin'
 import {
   Compilation,
   Compiler,
@@ -38,34 +37,27 @@ interface ServiceWorkConstructorArguments {
 
 class ServiceWorkerEnvironment {
   public dest: string
-  public version: string
-  public debug: boolean
+  public content: string
 
   constructor({ dest, version, debug }: ServiceWorkConstructorArguments) {
     this.dest = dest
-    this.version = version
-    this.debug = debug
+    this.content = `self.__version = '${version}'\nself.__debug = ${debug};`
   }
 
   apply(compiler: Compiler): void {
-    const dest = this.dest
-
-    compiler.hooks.compilation.tap('ServiceWorkerEnvironment', (current: Compilation) => {
-      const content = `self.__version = '${this.version}'; self.__debug = ${this.debug};`
-
+    compiler.hooks.thisCompilation.tap('ServiceWorkerEnvironment', (current: Compilation) => {
       current.hooks.processAssets.tap(
         {
           name: 'ServiceWorkerEnvironment',
-          stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL
+          stage: Compilation.PROCESS_ASSETS_STAGE_PRE_PROCESS
         },
         () => {
-          current.emitAsset(dest, new sources.RawSource(content))
+          current.emitAsset(this.dest, new sources.RawSource(this.content))
         }
       )
 
-      compiler.hooks.emit.tapPromise('ServiceWorkerEnvironment', (current: Compilation) => {
-        return current.getCache('cowtech').storePromise('service-worker-environment', null, dest)
-      })
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      current.getCache('cowtech').storePromise('service-worker-environment', null, this.dest)
     })
   }
 }
@@ -78,8 +70,9 @@ class HtmlWebpackTrackerPlugin {
   }
 
   apply(compiler: Compiler): void {
-    compiler.hooks.emit.tap('HtmlWebpackTrackerPlugin', (current: Compilation) => {
+    compiler.hooks.thisCompilation.tap('HtmlWebpackTrackerPlugin', (current: Compilation) => {
       const plugin = HtmlWebpackPlugin as any
+
       plugin
         .getHooks(current)
         .afterEmit.tapPromise(
@@ -173,11 +166,7 @@ export async function setupPlugins(options: Options): Promise<Array<WebpackPlugi
     )
   }
 
-  if (options.environment === 'production') {
-    if (pluginsOptions.minify ?? true) {
-      plugins.push(new TerserPlugin(options.uglify ?? {}))
-    }
-  } else if (hmr) {
+  if (options.environment !== 'production' && hmr) {
     plugins.push(new HotModuleReplacementPlugin())
   }
 
@@ -210,9 +199,10 @@ export async function setupPlugins(options: Options): Promise<Array<WebpackPlugi
 
     if (swSrc) {
       // Create the hash for the filename
-      const hashFactory = createHash('md4')
-      hashFactory.update(JSON.stringify({ version: options.version }))
-      const hash = hashFactory.digest('hex')
+      const hash = createHash('sha1')
+        .update(JSON.stringify({ version: options.version }))
+        .digest('hex')
+        .slice(0, 8)
 
       const swDest = swOptions.dest ?? 'sw.js'
       const envFile = swDest.replace(/\.js$/, `-env-${hash}.js`)
@@ -230,7 +220,6 @@ export async function setupPlugins(options: Options): Promise<Array<WebpackPlugi
           swDest,
           include: serviceWorkerDefaultInclude,
           exclude: serviceWorkerDefaultExclude,
-          chunks: [`/${envFile}`],
           ...(swOptions.options ?? {})
         })
       )

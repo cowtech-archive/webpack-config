@@ -49,7 +49,6 @@
     "connect-history-api-fallback": "^1.6.0",
     "globby": "^11.0.1",
     "html-webpack-plugin": "jantimon/html-webpack-plugin#next",
-    "terser-webpack-plugin": "^5.0.3",
     "webpack": "^5.11.1",
     "webpack-bundle-analyzer": "^4.3.0",
     "webpack-cli": "^4.3.1",
@@ -66,7 +65,6 @@
     "typescript": "^4.1.3"
   },
   "peerDependencies": {
-    "@types/node": "^14.14.20",
     "typescript": "^4.1.3"
   },
   "engines": {
