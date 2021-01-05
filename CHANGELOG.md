@@ -1,3 +1,7 @@
+### 2021-01-05 / 2.1.1
+
+- fix: Fixed dev server options.
+
 ### 2021-01-05 / 2.1.0
 
 - feat: Updated dependencies.
