@@ -1,3 +1,7 @@
+### 2021-01-05 / 2.1.0
+
+- feat: Updated dependencies.
+
 ### 2021-01-04 / 1.25.0
 
 - feat: Export as ESM.
