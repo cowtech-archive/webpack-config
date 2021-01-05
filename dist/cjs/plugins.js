@@ -15,6 +15,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setupPlugins = exports.resolveFile = exports.serviceWorkerDefaultExclude = exports.serviceWorkerDefaultInclude = void 0;
 const crypto_1 = require("crypto");
+const fs_1 = require("fs");
 const globby_1 = __importDefault(require("globby"));
 const html_webpack_plugin_1 = __importDefault(require("html-webpack-plugin"));
 const path_1 = require("path");
@@ -34,9 +35,10 @@ exports.serviceWorkerDefaultExclude = [
     /404\.html/
 ];
 class ServiceWorkerEnvironment {
-    constructor({ dest, version, debug }) {
+    constructor(dest, version, workboxVersion, debug) {
         this.dest = dest;
         this.content = `self.__version = '${version}'\nself.__debug = ${debug};`;
+        this.workboxUrl = `https://storage.googleapis.com/workbox-cdn/releases/${workboxVersion}/workbox-sw.js`;
     }
     apply(compiler) {
         compiler.hooks.thisCompilation.tap('ServiceWorkerEnvironment', (current) => {
@@ -48,6 +50,19 @@ class ServiceWorkerEnvironment {
             });
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
             current.getCache('cowtech').storePromise('service-worker-environment', null, this.dest);
+        });
+        compiler.hooks.compilation.tap('ServiceWorkerEnvironment', (current) => {
+            current.hooks.processAssets.tap({
+                name: 'ServiceWorkerEnvironment',
+                stage: webpack_1.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE
+            }, () => {
+                const serviceWorkerAsset = current.getAsset('sw.js');
+                if (!serviceWorkerAsset) {
+                    return;
+                }
+                const source = serviceWorkerAsset.source.source();
+                current.updateAsset('sw.js', new webpack_1.sources.RawSource(source.replace('importScripts([])', `importScripts(['/${this.dest}', '${this.workboxUrl}'])`)));
+            });
         });
     }
 }
@@ -164,16 +179,16 @@ async function setupPlugins(options) {
                 .slice(0, 8);
             const swDest = (_o = swOptions.dest) !== null && _o !== void 0 ? _o : 'sw.js';
             const envFile = swDest.replace(/\.js$/, `-env-${hash}.js`);
+            const wbInfo = JSON.parse(fs_1.readFileSync(path_1.resolve(process.cwd(), './node_modules/workbox-sw/package.json'), 'utf-8'));
             exports.serviceWorkerDefaultExclude.push(envFile);
-            plugins.push(new ServiceWorkerEnvironment({
-                dest: envFile,
-                version: options.version,
-                debug: (_p = swOptions.debug) !== null && _p !== void 0 ? _p : options.environment !== 'production'
-            }), new workbox_webpack_plugin_1.InjectManifest({
+            plugins.push(new workbox_webpack_plugin_1.InjectManifest({
                 swSrc,
                 swDest,
                 include: exports.serviceWorkerDefaultInclude,
                 exclude: exports.serviceWorkerDefaultExclude,
+                webpackCompilationPlugins: [
+                    new ServiceWorkerEnvironment(envFile, options.version, wbInfo.version, (_p = swOptions.debug) !== null && _p !== void 0 ? _p : options.environment !== 'production')
+                ],
                 ...((_q = swOptions.options) !== null && _q !== void 0 ? _q : {})
             }));
         }

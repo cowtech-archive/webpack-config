@@ -1,4 +1,5 @@
 import { createHash } from 'crypto'
+import { readFileSync } from 'fs'
 import globby from 'globby'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { basename, resolve } from 'path'
@@ -29,19 +30,15 @@ export const serviceWorkerDefaultExclude: Array<string | RegExp> = [
   /404\.html/
 ]
 
-interface ServiceWorkConstructorArguments {
-  dest: string
-  version: string
-  debug: boolean
-}
-
 class ServiceWorkerEnvironment {
   public dest: string
   public content: string
+  public workboxUrl: string
 
-  constructor({ dest, version, debug }: ServiceWorkConstructorArguments) {
+  constructor(dest: string, version: string, workboxVersion: string, debug: boolean) {
     this.dest = dest
     this.content = `self.__version = '${version}'\nself.__debug = ${debug};`
+    this.workboxUrl = `https://storage.googleapis.com/workbox-cdn/releases/${workboxVersion}/workbox-sw.js`
   }
 
   apply(compiler: Compiler): void {
@@ -58,6 +55,31 @@ class ServiceWorkerEnvironment {
 
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       current.getCache('cowtech').storePromise('service-worker-environment', null, this.dest)
+    })
+
+    compiler.hooks.compilation.tap('ServiceWorkerEnvironment', (current: Compilation) => {
+      current.hooks.processAssets.tap(
+        {
+          name: 'ServiceWorkerEnvironment',
+          stage: Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE
+        },
+        () => {
+          const serviceWorkerAsset = current.getAsset('sw.js')
+
+          if (!serviceWorkerAsset) {
+            return
+          }
+
+          const source = serviceWorkerAsset.source.source() as string
+
+          current.updateAsset(
+            'sw.js',
+            new sources.RawSource(
+              source.replace('importScripts([])', `importScripts(['/${this.dest}', '${this.workboxUrl}'])`)
+            )
+          )
+        }
+      )
     })
   }
 }
@@ -206,20 +228,24 @@ export async function setupPlugins(options: Options): Promise<Array<WebpackPlugi
 
       const swDest = swOptions.dest ?? 'sw.js'
       const envFile = swDest.replace(/\.js$/, `-env-${hash}.js`)
+      const wbInfo = JSON.parse(readFileSync(resolve(process.cwd(), './node_modules/workbox-sw/package.json'), 'utf-8'))
 
       serviceWorkerDefaultExclude.push(envFile)
 
       plugins.push(
-        new ServiceWorkerEnvironment({
-          dest: envFile,
-          version: options.version!,
-          debug: swOptions.debug ?? options.environment !== 'production'
-        }),
         new InjectManifest({
           swSrc,
           swDest,
           include: serviceWorkerDefaultInclude,
           exclude: serviceWorkerDefaultExclude,
+          webpackCompilationPlugins: [
+            new ServiceWorkerEnvironment(
+              envFile,
+              options.version!,
+              wbInfo.version,
+              swOptions.debug ?? options.environment !== 'production'
+            )
+          ],
           ...(swOptions.options ?? {})
         })
       )
