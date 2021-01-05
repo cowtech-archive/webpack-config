@@ -3,9 +3,7 @@ interface Types {
     isCallExpression: (node: object) => node is CallExpression;
     StringLiteral: (value: string) => StringLiteral;
 }
-export declare function babelRemoveFunction(options?: {
-    name?: string;
-}): (options: {
+export declare function babelRemoveFunction(functionToRemove: string): (options: {
     types: Types;
 }) => object;
 export {};

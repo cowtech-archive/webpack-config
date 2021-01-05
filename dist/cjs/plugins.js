@@ -15,19 +15,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setupPlugins = exports.resolveFile = exports.serviceWorkerDefaultExclude = exports.serviceWorkerDefaultInclude = void 0;
 const crypto_1 = require("crypto");
-const fork_ts_checker_webpack_plugin_1 = __importDefault(require("fork-ts-checker-webpack-plugin"));
 const globby_1 = __importDefault(require("globby"));
 const html_webpack_plugin_1 = __importDefault(require("html-webpack-plugin"));
 const path_1 = require("path");
-// @ts-expect-error
 const terser_webpack_plugin_1 = __importDefault(require("terser-webpack-plugin"));
 const webpack_1 = require("webpack");
-// @ts-expect-error
+// @ts-expect-error - Even if @types/webpack-bundle-analyzer, it generates a conflict with Webpack 5. Revisit in the future.
 const webpack_bundle_analyzer_1 = require("webpack-bundle-analyzer");
-// @ts-expect-error
 const workbox_webpack_plugin_1 = require("workbox-webpack-plugin");
 const environment_1 = require("./environment");
-const rules_1 = require("./rules");
 __exportStar(require("./babel-remove-function"), exports);
 exports.serviceWorkerDefaultInclude = [
     /\.(?:html|js|json|mjs|css)$/,
@@ -46,19 +42,17 @@ class ServiceWorkerEnvironment {
     }
     apply(compiler) {
         const dest = this.dest;
-        compiler.hooks.emit.tap('ServiceWorkerEnvironment', (current) => {
-            const content = `self.__version = '${this.version}'; self.__debug = ${this.debug};`;
-            current.assets[dest] = {
-                source() {
-                    return content;
-                },
-                size() {
-                    return content.length;
-                }
-            };
-        });
         compiler.hooks.compilation.tap('ServiceWorkerEnvironment', (current) => {
-            current.cache['service-worker-environment'] = dest;
+            const content = `self.__version = '${this.version}'; self.__debug = ${this.debug};`;
+            current.hooks.processAssets.tap({
+                name: 'ServiceWorkerEnvironment',
+                stage: webpack_1.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL
+            }, () => {
+                current.emitAsset(dest, new webpack_1.sources.RawSource(content));
+            });
+            compiler.hooks.emit.tapPromise('ServiceWorkerEnvironment', (current) => {
+                return current.getCache('cowtech').storePromise('service-worker-environment', null, dest);
+            });
         });
     }
 }
@@ -67,12 +61,14 @@ class HtmlWebpackTrackerPlugin {
         this.files = new Map();
     }
     apply(compiler) {
-        compiler.hooks.compilation.tap('HtmlWebpackTrackerPlugin', (current) => {
+        compiler.hooks.emit.tap('HtmlWebpackTrackerPlugin', (current) => {
             const plugin = html_webpack_plugin_1.default;
             plugin
                 .getHooks(current)
-                .afterEmit.tap('HtmlWebpackTrackerPlugin', ({ outputName, plugin }) => {
-                current.cache[`html-webpack-tracker-plugin:${plugin.options.id}`] = outputName;
+                .afterEmit.tapPromise('HtmlWebpackTrackerPlugin', ({ outputName, plugin }) => {
+                return current
+                    .getCache('cowtech')
+                    .storePromise(`html-webpack-tracker-plugin:${plugin.options.id}`, null, outputName);
             });
         });
     }
@@ -91,7 +87,6 @@ async function setupPlugins(options) {
     const pluginsOptions = (_a = options.plugins) !== null && _a !== void 0 ? _a : {};
     const swOptions = (_b = options.serviceWorker) !== null && _b !== void 0 ? _b : {};
     const rules = (_c = options.rules) !== null && _c !== void 0 ? _c : {};
-    const useTypescript = await rules_1.checkTypescript(rules, options.srcFolder);
     const analyze = (_d = pluginsOptions.analyze) !== null && _d !== void 0 ? _d : true;
     const hmr = (_f = (_e = options.server) === null || _e === void 0 ? void 0 : _e.hot) !== null && _f !== void 0 ? _f : true;
     const indexFile = await resolveFile(options, 'index', './index.html.(js|ts|jsx|tsx)');
@@ -127,14 +122,16 @@ async function setupPlugins(options) {
             inject: false
         }));
     }
-    if (useTypescript) {
-        plugins.push(new fork_ts_checker_webpack_plugin_1.default({
-            async: false,
-            typescript: {
-                enabled: true
-            }
-        }));
-    }
+    // if (useTypescript) {
+    //   plugins.push(
+    //     new ForkTsCheckerWebpackPlugin({
+    //       async: false,
+    //       typescript: {
+    //         enabled: true
+    //       }
+    //     })
+    //   )
+    // }
     if (indexFile) {
         plugins.push(new html_webpack_plugin_1.default({
             template: indexFile,
@@ -160,8 +157,9 @@ async function setupPlugins(options) {
     }
     if (analyze) {
         if (path_1.basename(process.argv[1]) !== 'webpack') {
+            const analyzerMode = typeof analyze === 'string' ? analyze : 'server';
             plugins.push(new webpack_bundle_analyzer_1.BundleAnalyzerPlugin({
-                analyzerMode: typeof analyze === 'string' ? analyze : 'server',
+                analyzerMode: analyzerMode,
                 analyzerHost: (_m = (_l = options.server) === null || _l === void 0 ? void 0 : _l.host) !== null && _m !== void 0 ? _m : 'home.cowtech.it',
                 analyzerPort: ((_p = (_o = options.server) === null || _o === void 0 ? void 0 : _o.port) !== null && _p !== void 0 ? _p : 4200) + 2,
                 generateStatsFile: analyze === 'static',
@@ -195,7 +193,7 @@ async function setupPlugins(options) {
                 swDest,
                 include: exports.serviceWorkerDefaultInclude,
                 exclude: exports.serviceWorkerDefaultExclude,
-                importScripts: [`/${envFile}`],
+                chunks: [`/${envFile}`],
                 ...((_s = swOptions.options) !== null && _s !== void 0 ? _s : {})
             }));
         }

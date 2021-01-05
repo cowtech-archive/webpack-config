@@ -1,5 +1,3 @@
-import { parse } from '@babel/parser'
-import { Identifier, NumericLiteral, Statement, StringLiteral, VariableDeclaration } from '@babel/types'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import { Icons } from './types'
@@ -12,17 +10,6 @@ export interface Icon {
 
 export interface Tags {
   [key: string]: string
-}
-
-function findVariable<Type extends NumericLiteral | StringLiteral>(
-  statements: Array<Statement>,
-  id: string
-): number | string {
-  const declaration = statements.find(
-    (t: Statement) => t.type === 'VariableDeclaration' && (t.declarations[0].id as Identifier).name === id
-  )!
-
-  return ((((declaration as unknown) as VariableDeclaration).declarations[1].init as unknown) as Type).value
 }
 
 function camelCase(source: any): string {
@@ -52,11 +39,13 @@ export async function loadFontAwesomeIcons(icons: Icons, toLoad: Array<string>):
     readFileSync(resolve(process.cwd(), './package.json'), 'utf-8')
   ).dependencies
 
-  icons.tags = toLoad.reduce<Tags>((accu: Tags, entry: string, index: number) => {
+  for (let i = 0; i < toLoad.length; i++) {
+    const entry = toLoad[i]
+
     // Manipulate the icon name - Syntax: [alias@]<icon>[:section]
     const [alias, rawName] = entry.includes('@') ? entry.split('@') : [entry.replace(/:.+/, ''), entry]
     const [name, section] = rawName.includes(':') ? rawName.split(':') : [rawName, 'solid']
-    const tag = `i${index}`
+    const tag = `i${i}`
     const iconPackage = `@fortawesome/free-${section}-svg-icons`
 
     // Check font-awesome exists in dependencies
@@ -67,23 +56,11 @@ export async function loadFontAwesomeIcons(icons: Icons, toLoad: Array<string>):
     }
 
     // Load the icon then add to the definitions
-    const iconFile = resolve(
-      process.cwd(),
-      `node_modules/${iconPackage}/fa${camelCase(`${name}`).replace(/\s/g, '')}.js`
-    )
-    const iconData = parse(readFileSync(iconFile, 'utf-8')).program.body
-
-    icons.definitions += generateSVG(
-      {
-        width: findVariable<NumericLiteral>(iconData, 'width') as number,
-        height: findVariable<NumericLiteral>(iconData, 'height') as number,
-        svgPathData: findVariable<StringLiteral>(iconData, 'svgPathData') as string
-      },
-      tag
+    const iconFile: Icon = await import(
+      resolve(process.cwd(), `node_modules/${iconPackage}/fa${camelCase(`${name}`).replace(/\s/g, '')}.js`)
     )
 
-    accu[alias] = tag
-
-    return accu
-  }, {})
+    icons.definitions += generateSVG(iconFile, tag)
+    icons.tags[alias] = tag
+  }
 }

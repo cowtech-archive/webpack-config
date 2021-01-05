@@ -1,4 +1,4 @@
-import { readFile } from 'fs-extra';
+import { readFile } from 'fs/promises';
 import globby from 'globby';
 import { resolve } from 'path';
 import { runHook } from "./environment.mjs";

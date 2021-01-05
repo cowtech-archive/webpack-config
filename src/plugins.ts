@@ -1,17 +1,21 @@
 import { createHash } from 'crypto'
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import globby from 'globby'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { basename, resolve } from 'path'
-// @ts-expect-error
 import TerserPlugin from 'terser-webpack-plugin'
-import { compilation, Compiler, DefinePlugin, EnvironmentPlugin, HotModuleReplacementPlugin, Plugin } from 'webpack'
-// @ts-expect-error
+import {
+  Compilation,
+  Compiler,
+  DefinePlugin,
+  EnvironmentPlugin,
+  HotModuleReplacementPlugin,
+  sources,
+  WebpackPluginInstance
+} from 'webpack'
+// @ts-expect-error - Even if @types/webpack-bundle-analyzer, it generates a conflict with Webpack 5. Revisit in the future.
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
-// @ts-expect-error
 import { InjectManifest } from 'workbox-webpack-plugin'
 import { runHook } from './environment'
-import { checkTypescript } from './rules'
 import { HtmlWebpackTrackerPluginParameters, Options, Plugins, Rules, ServiceWorker } from './types'
 
 export * from './babel-remove-function'
@@ -46,21 +50,22 @@ class ServiceWorkerEnvironment {
   apply(compiler: Compiler): void {
     const dest = this.dest
 
-    compiler.hooks.emit.tap('ServiceWorkerEnvironment', (current: compilation.Compilation) => {
+    compiler.hooks.compilation.tap('ServiceWorkerEnvironment', (current: Compilation) => {
       const content = `self.__version = '${this.version}'; self.__debug = ${this.debug};`
 
-      current.assets[dest] = {
-        source(): string {
-          return content
+      current.hooks.processAssets.tap(
+        {
+          name: 'ServiceWorkerEnvironment',
+          stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL
         },
-        size(): number {
-          return content.length
+        () => {
+          current.emitAsset(dest, new sources.RawSource(content))
         }
-      }
-    })
+      )
 
-    compiler.hooks.compilation.tap('ServiceWorkerEnvironment', (current: compilation.Compilation) => {
-      current.cache['service-worker-environment'] = dest
+      compiler.hooks.emit.tapPromise('ServiceWorkerEnvironment', (current: Compilation) => {
+        return current.getCache('cowtech').storePromise('service-worker-environment', null, dest)
+      })
     })
   }
 }
@@ -73,13 +78,18 @@ class HtmlWebpackTrackerPlugin {
   }
 
   apply(compiler: Compiler): void {
-    compiler.hooks.compilation.tap('HtmlWebpackTrackerPlugin', (current: compilation.Compilation) => {
+    compiler.hooks.emit.tap('HtmlWebpackTrackerPlugin', (current: Compilation) => {
       const plugin = HtmlWebpackPlugin as any
       plugin
         .getHooks(current)
-        .afterEmit.tap('HtmlWebpackTrackerPlugin', ({ outputName, plugin }: HtmlWebpackTrackerPluginParameters) => {
-          current.cache[`html-webpack-tracker-plugin:${plugin.options.id}`] = outputName
-        })
+        .afterEmit.tapPromise(
+          'HtmlWebpackTrackerPlugin',
+          ({ outputName, plugin }: HtmlWebpackTrackerPluginParameters) => {
+            return current
+              .getCache('cowtech')
+              .storePromise(`html-webpack-tracker-plugin:${plugin.options.id}`, null, outputName)
+          }
+        )
     })
   }
 }
@@ -94,11 +104,10 @@ export async function resolveFile(options: Options, key: string, pattern: string
   return typeof file === 'string' ? file : null
 }
 
-export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
+export async function setupPlugins(options: Options): Promise<Array<WebpackPluginInstance>> {
   const pluginsOptions: Plugins = options.plugins ?? {}
   const swOptions: ServiceWorker = options.serviceWorker ?? {}
   const rules: Rules = options.rules ?? {}
-  const useTypescript = await checkTypescript(rules, options.srcFolder!)
   const analyze = pluginsOptions.analyze ?? true
   const hmr = options.server?.hot ?? true
 
@@ -107,7 +116,7 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
   const manifest = (await globby(resolve(options.srcFolder!, './manifest.json.(js|ts)')))[0]
   const robots = (await globby(resolve(options.srcFolder!, './robots.txt.(js|ts)')))[0]
 
-  let plugins: Array<Plugin> = [
+  let plugins: Array<WebpackPluginInstance> = [
     new EnvironmentPlugin({
       NODE_ENV: options.environment
     }),
@@ -143,16 +152,16 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
     )
   }
 
-  if (useTypescript) {
-    plugins.push(
-      new ForkTsCheckerWebpackPlugin({
-        async: false,
-        typescript: {
-          enabled: true
-        }
-      })
-    )
-  }
+  // if (useTypescript) {
+  //   plugins.push(
+  //     new ForkTsCheckerWebpackPlugin({
+  //       async: false,
+  //       typescript: {
+  //         enabled: true
+  //       }
+  //     })
+  //   )
+  // }
 
   if (indexFile) {
     plugins.push(
@@ -185,9 +194,11 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
 
   if (analyze) {
     if (basename(process.argv[1]) !== 'webpack') {
+      const analyzerMode = typeof analyze === 'string' ? analyze : 'server'
+
       plugins.push(
         new BundleAnalyzerPlugin({
-          analyzerMode: typeof analyze === 'string' ? analyze : 'server',
+          analyzerMode: analyzerMode as BundleAnalyzerPlugin.Options['analyzerMode'],
           analyzerHost: options.server?.host ?? 'home.cowtech.it',
           analyzerPort: (options.server?.port ?? 4200) + 2,
           generateStatsFile: analyze === 'static',
@@ -230,7 +241,7 @@ export async function setupPlugins(options: Options): Promise<Array<Plugin>> {
           swDest,
           include: serviceWorkerDefaultInclude,
           exclude: serviceWorkerDefaultExclude,
-          importScripts: [`/${envFile}`],
+          chunks: [`/${envFile}`],
           ...(swOptions.options ?? {})
         })
       )

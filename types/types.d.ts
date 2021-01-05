@@ -1,10 +1,8 @@
 /// <reference types="node" />
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import { compilation, Configuration, Entry, EntryFunc, ExternalsElement, Options as WebpackOptions, Plugin, RuleSetRule } from 'webpack';
+import { Chunk, Configuration, RuleSetRule, Stats, WebpackOptionsNormalized, WebpackPluginInstance } from 'webpack';
 export declare type HookReturn<T> = void | null | T | Promise<void | null | T>;
 export declare type Hook<T> = (input: T) => HookReturn<T>;
-export declare type Entries = string | Array<string> | Entry | EntryFunc;
-export declare type Externals = ExternalsElement | Array<ExternalsElement>;
 export declare type Target = 'web' | 'webworker' | 'node' | 'async-node' | 'node-webkit' | 'atom' | 'electron' | 'electron-renderer' | 'electron-main' | ((compiler?: any) => void);
 export declare type LibraryTarget = 'var' | 'this' | 'commonjs' | 'commonjs2' | 'amd' | 'umd' | 'window' | 'assign' | 'jsonp';
 export declare type FilenameGenerator = (data: OutputData) => string;
@@ -13,7 +11,7 @@ export interface HtmlWebpackTrackerPluginParameters {
     plugin: HtmlWebpackPlugin.Options;
 }
 export interface OutputData {
-    chunk: compilation.Chunk;
+    chunk: Chunk;
     hash: string;
 }
 export interface Output {
@@ -39,13 +37,13 @@ export interface Rules {
     afterHook?: Hook<Array<RuleSetRule>>;
 }
 export interface Plugins {
-    additional?: Array<Plugin>;
+    additional?: Array<WebpackPluginInstance>;
     concatenate?: boolean;
     minify?: boolean;
     hotModuleReload?: boolean;
-    splitChunks?: boolean | WebpackOptions.SplitChunksOptions;
+    splitChunks?: WebpackOptionsNormalized['optimization']['splitChunks'];
     analyze?: boolean | string;
-    afterHook?: Hook<Array<Plugin>>;
+    afterHook?: Hook<Array<WebpackPluginInstance>>;
 }
 export interface IconsToLoad {
     [key: string]: Array<string>;
@@ -96,18 +94,18 @@ export interface Options extends Output {
     additionalEnvironment?: object;
     version?: string;
     env?: Environment;
-    entries?: Entries;
+    entries?: Configuration['entry'];
     index?: boolean | string;
     rules?: Rules;
     plugins?: Plugins;
-    stats?: WebpackOptions.Stats;
-    performance?: WebpackOptions.Performance;
+    stats?: Stats;
+    performance?: Configuration['performance'];
     icons?: IconsToLoad | Icons;
     serviceWorker?: ServiceWorker;
     srcFolder?: string;
     destFolder?: string;
-    sourceMaps?: WebpackOptions.Devtool;
-    externals?: Externals;
+    sourceMaps?: string | false;
+    externals?: Configuration['externals'];
     server?: Server;
     babel?: Babel;
     useESModules?: boolean;

@@ -1,8 +1,8 @@
 import globby from 'globby'
 import { resolve } from 'path'
-import { Entries, Options } from './types'
+import { Options } from './types'
 
-export async function autoDetectEntries(options: Options): Promise<Entries> {
+export async function autoDetectEntries(options: Options): Promise<{ [key: string]: string }> {
   const attempts = {
     bundle: await globby(resolve(options.srcFolder!, 'bundle.(js|ts)')),
     application: await globby(resolve(options.srcFolder!, 'js/(application|app).(js|ts|jsx|tsx)'))

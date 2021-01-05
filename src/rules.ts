@@ -89,7 +89,7 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
 
     if (removeFunctions.length) {
       for (const name of removeFunctions) {
-        babelPlugins.unshift(babelRemoveFunction({ name }))
+        babelPlugins.unshift(babelRemoveFunction(name))
       }
     }
   }
@@ -149,16 +149,12 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
   if (rulesOptions.images ?? true) {
     rules.push({
       test: /\.(?:bmp|png|jpg|jpeg|gif|svg|webp)$/,
-      use: [
-        {
-          loader: 'file-loader',
-          options: {
-            name: '[path][name]-[hash].[ext]',
-            outputPath: normalizeIncludePath,
-            publicPath: normalizeIncludePath
-          }
-        }
-      ]
+      type: 'asset/resource',
+      options: {
+        name: '[path][name]-[contenthash].[ext]',
+        outputPath: normalizeIncludePath,
+        publicPath: normalizeIncludePath
+      }
     })
   }
 

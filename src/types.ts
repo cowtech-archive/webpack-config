@@ -1,22 +1,9 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin'
-import {
-  compilation,
-  Configuration,
-  Entry,
-  EntryFunc,
-  ExternalsElement,
-  Options as WebpackOptions,
-  Plugin,
-  RuleSetRule
-} from 'webpack'
+import { Chunk, Configuration, RuleSetRule, Stats, WebpackOptionsNormalized, WebpackPluginInstance } from 'webpack'
 
 // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
 export type HookReturn<T> = void | null | T | Promise<void | null | T>
 export type Hook<T> = (input: T) => HookReturn<T>
-
-export type Entries = string | Array<string> | Entry | EntryFunc
-
-export type Externals = ExternalsElement | Array<ExternalsElement>
 
 export type Target =
   | 'web'
@@ -40,7 +27,7 @@ export interface HtmlWebpackTrackerPluginParameters {
 }
 
 export interface OutputData {
-  chunk: compilation.Chunk
+  chunk: Chunk
   hash: string
 }
 
@@ -70,13 +57,13 @@ export interface Rules {
 }
 
 export interface Plugins {
-  additional?: Array<Plugin>
+  additional?: Array<WebpackPluginInstance>
   concatenate?: boolean
   minify?: boolean
   hotModuleReload?: boolean
-  splitChunks?: boolean | WebpackOptions.SplitChunksOptions
+  splitChunks?: WebpackOptionsNormalized['optimization']['splitChunks']
   analyze?: boolean | string
-  afterHook?: Hook<Array<Plugin>>
+  afterHook?: Hook<Array<WebpackPluginInstance>>
 }
 
 export interface IconsToLoad {
@@ -128,18 +115,18 @@ export interface Options extends Output {
   additionalEnvironment?: object
   version?: string
   env?: Environment
-  entries?: Entries
+  entries?: Configuration['entry']
   index?: boolean | string
   rules?: Rules
   plugins?: Plugins
-  stats?: WebpackOptions.Stats
-  performance?: WebpackOptions.Performance
+  stats?: Stats
+  performance?: Configuration['performance']
   icons?: IconsToLoad | Icons
   serviceWorker?: ServiceWorker
   srcFolder?: string
   destFolder?: string
-  sourceMaps?: WebpackOptions.Devtool
-  externals?: Externals
+  sourceMaps?: string | false
+  externals?: Configuration['externals']
   server?: Server
   babel?: Babel
   useESModules?: boolean

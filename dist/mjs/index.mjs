@@ -38,8 +38,8 @@ export async function setup(options = {}) {
         mode: options.environment === 'production' ? 'production' : 'development',
         entry: (_e = options.entries) !== null && _e !== void 0 ? _e : (await autoDetectEntries(options)),
         output: {
-            filename: `[name]-[hash].${mainExtension}`,
-            chunkFilename: `[name]-[hash].${mainExtension}`,
+            filename: `[name]-[contenthash].${mainExtension}`,
+            chunkFilename: `[name]-[contenthash].${mainExtension}`,
             path: options.destFolder,
             publicPath: (_f = options.publicPath) !== null && _f !== void 0 ? _f : '/',
             libraryTarget: options.libraryTarget
@@ -57,7 +57,7 @@ export async function setup(options = {}) {
         performance: (_h = options.performance) !== null && _h !== void 0 ? _h : { hints: false },
         stats,
         optimization: {
-            splitChunks: (_k = (_j = options.plugins) === null || _j === void 0 ? void 0 : _j.splitChunks) !== null && _k !== void 0 ? _k : false,
+            splitChunks: (_k = (_j = options.plugins) === null || _j === void 0 ? void 0 : _j.splitChunks) !== null && _k !== void 0 ? _k : { chunks: 'all' },
             concatenateModules: (_m = (_l = options.plugins) === null || _l === void 0 ? void 0 : _l.concatenate) !== null && _m !== void 0 ? _m : true
         }
     };

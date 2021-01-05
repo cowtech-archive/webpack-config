@@ -83,7 +83,7 @@ async function setupRules(options) {
         const removeFunctions = (_h = babelOptions.removeFunctions) !== null && _h !== void 0 ? _h : ['debugClassName'];
         if (removeFunctions.length) {
             for (const name of removeFunctions) {
-                babelPlugins.unshift(babel_remove_function_1.babelRemoveFunction({ name }));
+                babelPlugins.unshift(babel_remove_function_1.babelRemoveFunction(name));
             }
         }
     }
@@ -136,16 +136,12 @@ async function setupRules(options) {
     if ((_k = rulesOptions.images) !== null && _k !== void 0 ? _k : true) {
         rules.push({
             test: /\.(?:bmp|png|jpg|jpeg|gif|svg|webp)$/,
-            use: [
-                {
-                    loader: 'file-loader',
-                    options: {
-                        name: '[path][name]-[hash].[ext]',
-                        outputPath: normalizeIncludePath,
-                        publicPath: normalizeIncludePath
-                    }
-                }
-            ]
+            type: 'asset/resource',
+            options: {
+                name: '[path][name]-[contenthash].[ext]',
+                outputPath: normalizeIncludePath,
+                publicPath: normalizeIncludePath
+            }
         });
     }
     if (rulesOptions.additional) {

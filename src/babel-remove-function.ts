@@ -20,9 +20,9 @@ interface NodePath<C, P = unknown> {
   replaceWith: (node: Node) => void
 }
 
-export function babelRemoveFunction(options?: { name?: string }): (options: { types: Types }) => object {
-  if (!options || typeof options.name !== 'string') {
-    throw new Error('Please provide a function name in the options.')
+export function babelRemoveFunction(functionToRemove: string): (options: { types: Types }) => object {
+  if (typeof functionToRemove !== 'string') {
+    throw new Error('Please provide a function name.')
   }
 
   return function babelRemoveFunctionInstance({ types: t }: { types: Types }): object {
@@ -30,14 +30,14 @@ export function babelRemoveFunction(options?: { name?: string }): (options: { ty
       visitor: {
         // Remove any definition of the function
         Function(path: NodePath<FunctionDeclaration>): void {
-          if (path.node.id && path.node.id.name === 'debugClassName') {
+          if (path.node.id && path.node.id.name === functionToRemove) {
             path.remove()
           }
         },
         // Remove any import of the function
         ImportDeclaration(path: NodePath<ImportDeclaration>): void {
           const hasDebugName = (path.node.specifiers as Array<ImportSpecifier>).findIndex(
-            (s: ImportSpecifier) => (s.imported as Identifier)?.name === 'debugClassName'
+            (s: ImportSpecifier) => (s.imported as Identifier)?.name === functionToRemove
           )
 
           if (hasDebugName >= 0) {
@@ -50,9 +50,10 @@ export function babelRemoveFunction(options?: { name?: string }): (options: { ty
             }
           }
         },
+
         // Remove any call to the function. If used inside style, we drop the call entirely, otherwise we replace with a empty string
         CallExpression(path: NodePath<CallExpression, CallExpression>): void {
-          if ((path.node.callee as Identifier).name === 'debugClassName') {
+          if ((path.node.callee as Identifier).name === functionToRemove) {
             if (t.isCallExpression(path.parent) && (path.parent.callee as Identifier).name === 'style') {
               path.parent.arguments.shift()
             } else {

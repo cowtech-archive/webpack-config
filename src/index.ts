@@ -1,5 +1,4 @@
 import { resolve } from 'path'
-import { Options as WebpackOptions } from 'webpack'
 import { autoDetectEntries } from './entries'
 import { runHook, setupEnvironment } from './environment'
 import { loadIcons } from './icons'
@@ -48,13 +47,13 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
     mode: options.environment === 'production' ? 'production' : 'development',
     entry: options.entries ?? (await autoDetectEntries(options)),
     output: {
-      filename: `[name]-[hash].${mainExtension}`,
-      chunkFilename: `[name]-[hash].${mainExtension}`,
+      filename: `[name]-[contenthash].${mainExtension}`,
+      chunkFilename: `[name]-[contenthash].${mainExtension}`,
       path: options.destFolder,
       publicPath: options.publicPath ?? '/',
       libraryTarget: options.libraryTarget
     },
-    target: options.target,
+    target: options.target as string,
     module: {
       rules: await setupRules(options)
     },
@@ -67,7 +66,7 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
     performance: options.performance ?? { hints: false },
     stats,
     optimization: {
-      splitChunks: (options.plugins?.splitChunks as WebpackOptions.SplitChunksOptions) ?? false,
+      splitChunks: options.plugins?.splitChunks ?? { chunks: 'all' },
       concatenateModules: options.plugins?.concatenate ?? true
     }
   }
