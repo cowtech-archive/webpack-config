@@ -45,6 +45,7 @@
     "@babel/preset-react": "^7.12.10",
     "@babel/preset-typescript": "^7.12.7",
     "@babel/types": "^7.12.12",
+    "@cowtech/webpack-utils": "^0.1.0",
     "babel-loader": "^8.2.2",
     "connect-history-api-fallback": "^1.6.0",
     "globby": "^11.0.1",
@@ -58,7 +59,6 @@
   "devDependencies": {
     "@cowtech/eslint-config": "^7.14.2",
     "@cowtech/esm-package-utils": "^0.2.0",
-    "@cowtech/webpack-utils": "^0.1.0",
     "@types/node": "^14.14.20",
     "@types/terser-webpack-plugin": "^5.0.2",
     "@types/workbox-webpack-plugin": "^5.1.5",
