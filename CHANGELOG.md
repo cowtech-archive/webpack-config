@@ -1,3 +1,7 @@
+### 2021-01-06 / 2.3.2
+
+- fix: Fixed removed leftover functions.
+
 ### 2021-01-06 / 2.3.1
 
 - fix: Fixed dependency.
