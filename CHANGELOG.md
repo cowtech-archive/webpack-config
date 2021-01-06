@@ -1,3 +1,7 @@
+### 2021-01-06 / 2.3.0
+
+- feat: Moved utility functions to @cowtech/webpack-utils.
+
 ### 2021-01-06 / 2.2.2
 
 - fix: Make sure manifest URL is absolute.
