@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setupPlugins = exports.getManifestUrl = exports.resolveFile = exports.serviceWorkerDefaultExclude = exports.serviceWorkerDefaultInclude = void 0;
+exports.setupPlugins = exports.resolveFile = exports.serviceWorkerDefaultExclude = exports.serviceWorkerDefaultInclude = void 0;
 const webpack_utils_1 = require("@cowtech/webpack-utils");
 const crypto_1 = require("crypto");
 const fs_1 = require("fs");
@@ -93,11 +93,6 @@ async function resolveFile(options, key, pattern) {
     return typeof file === 'string' ? file : null;
 }
 exports.resolveFile = resolveFile;
-async function getManifestUrl(compilation) {
-    const url = await compilation.getCache(webpack_utils_1.cacheName).getPromise('html-webpack-tracker-plugin:manifest', null);
-    return `/${url}`;
-}
-exports.getManifestUrl = getManifestUrl;
 async function setupPlugins(options) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
     const pluginsOptions = (_a = options.plugins) !== null && _a !== void 0 ? _a : {};

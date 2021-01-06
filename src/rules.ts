@@ -1,6 +1,6 @@
 import { imagesExtensions } from '@cowtech/webpack-utils'
 import globby from 'globby'
-import { resolve, sep } from 'path'
+import { resolve } from 'path'
 import { RuleSetRule } from 'webpack'
 import { babelRemoveFunction } from './babel-remove-function'
 import { runHook } from './environment'
@@ -46,18 +46,6 @@ export async function checkReact(rulesOptions: Rules, srcFolder: string): Promis
   }
 
   return (await globby(resolve(srcFolder, './**/*.(jsx|tsx)'))).length > 0
-}
-
-export function normalizeAssetPath({ filename }: { filename?: string }): string {
-  const components = filename!.split(sep)
-
-  if (components[0] === 'src') {
-    components.shift()
-  } else if (components[0] === 'node_modules') {
-    components.splice(0, components[1][0] === '@' ? 3 : 2) // Remove the folder, the scope (if present) and the package
-  }
-
-  return components.join(sep).replace(imagesExtensions, '-[contenthash]$&')
 }
 
 export async function setupRules(options: Options): Promise<Array<RuleSetRule>> {

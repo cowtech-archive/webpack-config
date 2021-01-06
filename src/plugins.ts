@@ -120,11 +120,6 @@ export async function resolveFile(options: Options, key: string, pattern: string
   return typeof file === 'string' ? file : null
 }
 
-export async function getManifestUrl(compilation: Compilation): Promise<string> {
-  const url = await compilation.getCache(cacheName).getPromise<string>('html-webpack-tracker-plugin:manifest', null)
-  return `/${url}`
-}
-
 export async function setupPlugins(options: Options): Promise<Array<WebpackPluginInstance>> {
   const pluginsOptions: Plugins = options.plugins ?? {}
   const swOptions: ServiceWorker = options.serviceWorker ?? {}

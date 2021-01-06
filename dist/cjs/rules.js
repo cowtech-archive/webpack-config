@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setupRules = exports.normalizeAssetPath = exports.checkReact = exports.checkTypescript = exports.unneededBabelPlugins = exports.minimumSupportedBrowsers = void 0;
+exports.setupRules = exports.checkReact = exports.checkTypescript = exports.unneededBabelPlugins = exports.minimumSupportedBrowsers = void 0;
 const webpack_utils_1 = require("@cowtech/webpack-utils");
 const globby_1 = __importDefault(require("globby"));
 const path_1 = require("path");
@@ -47,17 +47,6 @@ async function checkReact(rulesOptions, srcFolder) {
     return (await globby_1.default(path_1.resolve(srcFolder, './**/*.(jsx|tsx)'))).length > 0;
 }
 exports.checkReact = checkReact;
-function normalizeAssetPath({ filename }) {
-    const components = filename.split(path_1.sep);
-    if (components[0] === 'src') {
-        components.shift();
-    }
-    else if (components[0] === 'node_modules') {
-        components.splice(0, components[1][0] === '@' ? 3 : 2); // Remove the folder, the scope (if present) and the package
-    }
-    return components.join(path_1.sep).replace(webpack_utils_1.imagesExtensions, '-[contenthash]$&');
-}
-exports.normalizeAssetPath = normalizeAssetPath;
 async function setupRules(options) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
     const rulesOptions = (_a = options.rules) !== null && _a !== void 0 ? _a : {};

@@ -1,6 +1,6 @@
 import { imagesExtensions } from '@cowtech/webpack-utils';
 import globby from 'globby';
-import { resolve, sep } from 'path';
+import { resolve } from 'path';
 import { babelRemoveFunction } from "./babel-remove-function.mjs";
 import { runHook } from "./environment.mjs";
 /*
@@ -38,16 +38,6 @@ export async function checkReact(rulesOptions, srcFolder) {
         return rulesOptions.react;
     }
     return (await globby(resolve(srcFolder, './**/*.(jsx|tsx)'))).length > 0;
-}
-export function normalizeAssetPath({ filename }) {
-    const components = filename.split(sep);
-    if (components[0] === 'src') {
-        components.shift();
-    }
-    else if (components[0] === 'node_modules') {
-        components.splice(0, components[1][0] === '@' ? 3 : 2); // Remove the folder, the scope (if present) and the package
-    }
-    return components.join(sep).replace(imagesExtensions, '-[contenthash]$&');
 }
 export async function setupRules(options) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;

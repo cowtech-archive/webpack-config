@@ -12,7 +12,4 @@ export declare const minimumSupportedBrowsers: {
 export declare const unneededBabelPlugins: string[];
 export declare function checkTypescript(rulesOptions: Rules, srcFolder: string): Promise<boolean>;
 export declare function checkReact(rulesOptions: Rules, srcFolder: string): Promise<boolean>;
-export declare function normalizeAssetPath({ filename }: {
-    filename?: string;
-}): string;
 export declare function setupRules(options: Options): Promise<Array<RuleSetRule>>;

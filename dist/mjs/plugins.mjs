@@ -76,10 +76,6 @@ export async function resolveFile(options, key, pattern) {
     }
     return typeof file === 'string' ? file : null;
 }
-export async function getManifestUrl(compilation) {
-    const url = await compilation.getCache(cacheName).getPromise('html-webpack-tracker-plugin:manifest', null);
-    return `/${url}`;
-}
 export async function setupPlugins(options) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
     const pluginsOptions = (_a = options.plugins) !== null && _a !== void 0 ? _a : {};
