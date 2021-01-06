@@ -1,3 +1,4 @@
+import { cacheName } from '@cowtech/webpack-utils';
 import { createHash } from 'crypto';
 import { readFileSync } from 'fs';
 import globby from 'globby';
@@ -9,7 +10,6 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { InjectManifest } from 'workbox-webpack-plugin';
 import { runHook } from "./environment.mjs";
 export * from "./babel-remove-function.mjs";
-export const cacheName = '@cowtech/webpack-config';
 export const serviceWorkerDefaultInclude = [
     /\.(?:html|js|json|mjs|css)$/,
     /images.+\.(?:bmp|jpg|jpeg|png|svg|webp)$/

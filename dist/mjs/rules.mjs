@@ -1,3 +1,4 @@
+import { imagesExtensions } from '@cowtech/webpack-utils';
 import globby from 'globby';
 import { resolve, sep } from 'path';
 import { babelRemoveFunction } from "./babel-remove-function.mjs";
@@ -26,7 +27,6 @@ export const unneededBabelPlugins = [
     '@babel/proposal-async-generator-functions',
     '@babel/proposal-object-rest-spread'
 ];
-export const imagesExtensions = /\.(?:bmp|png|jpg|jpeg|gif|svg|webp)$/;
 export async function checkTypescript(rulesOptions, srcFolder) {
     if (typeof rulesOptions.typescript === 'boolean') {
         return rulesOptions.typescript;

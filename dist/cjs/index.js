@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setup = void 0;
+const webpack_utils_1 = require("@cowtech/webpack-utils");
 const path_1 = require("path");
 const terser_webpack_plugin_1 = __importDefault(require("terser-webpack-plugin"));
 const entries_1 = require("./entries");
@@ -22,7 +23,6 @@ const icons_1 = require("./icons");
 const plugins_1 = require("./plugins");
 const rules_1 = require("./rules");
 const server_1 = require("./server");
-const utils_1 = require("./utils");
 __exportStar(require("./entries"), exports);
 __exportStar(require("./environment"), exports);
 __exportStar(require("./icons"), exports);
@@ -30,14 +30,13 @@ __exportStar(require("./plugins"), exports);
 __exportStar(require("./rules"), exports);
 __exportStar(require("./server"), exports);
 __exportStar(require("./types"), exports);
-__exportStar(require("./utils"), exports);
 async function setup(options = {}) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
     if (!options.environment || typeof options.environment !== 'string') {
         options.environment = 'development';
     }
     if (!options.version) {
-        options.version = utils_1.generateVersion();
+        options.version = webpack_utils_1.generateVersion();
     }
     options.srcFolder = path_1.resolve(process.cwd(), (_a = options.srcFolder) !== null && _a !== void 0 ? _a : 'src');
     options.destFolder = path_1.resolve(process.cwd(), (_b = options.destFolder) !== null && _b !== void 0 ? _b : 'dist');
@@ -58,7 +57,7 @@ async function setup(options = {}) {
             path: options.destFolder,
             publicPath: (_h = options.publicPath) !== null && _h !== void 0 ? _h : '/',
             libraryTarget: options.libraryTarget,
-            assetModuleFilename: rules_1.normalizeAssetPath
+            assetModuleFilename: webpack_utils_1.normalizeAssetPath
         },
         target: options.target,
         module: {

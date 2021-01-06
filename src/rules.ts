@@ -1,3 +1,4 @@
+import { imagesExtensions } from '@cowtech/webpack-utils'
 import globby from 'globby'
 import { resolve, sep } from 'path'
 import { RuleSetRule } from 'webpack'
@@ -30,8 +31,6 @@ export const unneededBabelPlugins = [
   '@babel/proposal-async-generator-functions',
   '@babel/proposal-object-rest-spread'
 ]
-
-export const imagesExtensions = /\.(?:bmp|png|jpg|jpeg|gif|svg|webp)$/
 
 export async function checkTypescript(rulesOptions: Rules, srcFolder: string): Promise<boolean> {
   if (typeof rulesOptions.typescript === 'boolean') {

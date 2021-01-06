@@ -13,7 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setupPlugins = exports.getManifestUrl = exports.resolveFile = exports.serviceWorkerDefaultExclude = exports.serviceWorkerDefaultInclude = exports.cacheName = void 0;
+exports.setupPlugins = exports.getManifestUrl = exports.resolveFile = exports.serviceWorkerDefaultExclude = exports.serviceWorkerDefaultInclude = void 0;
+const webpack_utils_1 = require("@cowtech/webpack-utils");
 const crypto_1 = require("crypto");
 const fs_1 = require("fs");
 const globby_1 = __importDefault(require("globby"));
@@ -25,7 +26,6 @@ const webpack_bundle_analyzer_1 = require("webpack-bundle-analyzer");
 const workbox_webpack_plugin_1 = require("workbox-webpack-plugin");
 const environment_1 = require("./environment");
 __exportStar(require("./babel-remove-function"), exports);
-exports.cacheName = '@cowtech/webpack-config';
 exports.serviceWorkerDefaultInclude = [
     /\.(?:html|js|json|mjs|css)$/,
     /images.+\.(?:bmp|jpg|jpeg|png|svg|webp)$/
@@ -50,7 +50,7 @@ class ServiceWorkerEnvironment {
                 current.emitAsset(this.dest, new webpack_1.sources.RawSource(this.content));
             });
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            current.getCache(exports.cacheName).storePromise('service-worker-environment', null, this.dest);
+            current.getCache(webpack_utils_1.cacheName).storePromise('service-worker-environment', null, this.dest);
         });
         compiler.hooks.compilation.tap('ServiceWorkerEnvironment', (current) => {
             current.hooks.processAssets.tap({
@@ -78,7 +78,7 @@ class HtmlWebpackTrackerPlugin {
                 .getHooks(current)
                 .afterEmit.tapPromise('HtmlWebpackTrackerPlugin', ({ outputName, plugin }) => {
                 return current
-                    .getCache(exports.cacheName)
+                    .getCache(webpack_utils_1.cacheName)
                     .storePromise(`html-webpack-tracker-plugin:${plugin.options.id}`, null, outputName);
             });
         });
@@ -94,7 +94,7 @@ async function resolveFile(options, key, pattern) {
 }
 exports.resolveFile = resolveFile;
 async function getManifestUrl(compilation) {
-    const url = await compilation.getCache(exports.cacheName).getPromise('html-webpack-tracker-plugin:manifest', null);
+    const url = await compilation.getCache(webpack_utils_1.cacheName).getPromise('html-webpack-tracker-plugin:manifest', null);
     return `/${url}`;
 }
 exports.getManifestUrl = getManifestUrl;

@@ -10,7 +10,6 @@ export declare const minimumSupportedBrowsers: {
     samsung: string;
 };
 export declare const unneededBabelPlugins: string[];
-export declare const imagesExtensions: RegExp;
 export declare function checkTypescript(rulesOptions: Rules, srcFolder: string): Promise<boolean>;
 export declare function checkReact(rulesOptions: Rules, srcFolder: string): Promise<boolean>;
 export declare function normalizeAssetPath({ filename }: {

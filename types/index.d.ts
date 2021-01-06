@@ -6,5 +6,4 @@ export * from './plugins';
 export * from './rules';
 export * from './server';
 export * from './types';
-export * from './utils';
 export declare function setup(options?: Options): Promise<ExtendedConfiguration>;

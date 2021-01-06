@@ -1,12 +1,12 @@
+import { generateVersion, normalizeAssetPath } from '@cowtech/webpack-utils';
 import { resolve } from 'path';
 import TerserPlugin from 'terser-webpack-plugin';
 import { autoDetectEntries } from "./entries.mjs";
 import { runHook, setupEnvironment } from "./environment.mjs";
 import { loadIcons } from "./icons.mjs";
 import { setupPlugins } from "./plugins.mjs";
-import { normalizeAssetPath, setupRules } from "./rules.mjs";
+import { setupRules } from "./rules.mjs";
 import { setupServer } from "./server.mjs";
-import { generateVersion } from "./utils.mjs";
 export * from "./entries.mjs";
 export * from "./environment.mjs";
 export * from "./icons.mjs";
@@ -14,7 +14,6 @@ export * from "./plugins.mjs";
 export * from "./rules.mjs";
 export * from "./server.mjs";
 export * from "./types.mjs";
-export * from "./utils.mjs";
 export async function setup(options = {}) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
     if (!options.environment || typeof options.environment !== 'string') {

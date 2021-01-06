@@ -3,7 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setupRules = exports.normalizeAssetPath = exports.checkReact = exports.checkTypescript = exports.imagesExtensions = exports.unneededBabelPlugins = exports.minimumSupportedBrowsers = void 0;
+exports.setupRules = exports.normalizeAssetPath = exports.checkReact = exports.checkTypescript = exports.unneededBabelPlugins = exports.minimumSupportedBrowsers = void 0;
+const webpack_utils_1 = require("@cowtech/webpack-utils");
 const globby_1 = __importDefault(require("globby"));
 const path_1 = require("path");
 const babel_remove_function_1 = require("./babel-remove-function");
@@ -32,7 +33,6 @@ exports.unneededBabelPlugins = [
     '@babel/proposal-async-generator-functions',
     '@babel/proposal-object-rest-spread'
 ];
-exports.imagesExtensions = /\.(?:bmp|png|jpg|jpeg|gif|svg|webp)$/;
 async function checkTypescript(rulesOptions, srcFolder) {
     if (typeof rulesOptions.typescript === 'boolean') {
         return rulesOptions.typescript;
@@ -55,7 +55,7 @@ function normalizeAssetPath({ filename }) {
     else if (components[0] === 'node_modules') {
         components.splice(0, components[1][0] === '@' ? 3 : 2); // Remove the folder, the scope (if present) and the package
     }
-    return components.join(path_1.sep).replace(exports.imagesExtensions, '-[contenthash]$&');
+    return components.join(path_1.sep).replace(webpack_utils_1.imagesExtensions, '-[contenthash]$&');
 }
 exports.normalizeAssetPath = normalizeAssetPath;
 async function setupRules(options) {
@@ -136,7 +136,7 @@ async function setupRules(options) {
     }
     if ((_k = rulesOptions.images) !== null && _k !== void 0 ? _k : true) {
         rules.push({
-            test: exports.imagesExtensions,
+            test: webpack_utils_1.imagesExtensions,
             type: 'asset/resource'
         });
     }

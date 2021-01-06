@@ -1,3 +1,4 @@
+import { generateVersion, normalizeAssetPath } from '@cowtech/webpack-utils'
 import { resolve } from 'path'
 import TerserPlugin from 'terser-webpack-plugin'
 import { WebpackPluginInstance } from 'webpack'
@@ -5,10 +6,9 @@ import { autoDetectEntries } from './entries'
 import { runHook, setupEnvironment } from './environment'
 import { loadIcons } from './icons'
 import { setupPlugins } from './plugins'
-import { normalizeAssetPath, setupRules } from './rules'
+import { setupRules } from './rules'
 import { setupServer } from './server'
 import { ExtendedConfiguration, Options } from './types'
-import { generateVersion } from './utils'
 
 export * from './entries'
 export * from './environment'
@@ -17,7 +17,6 @@ export * from './plugins'
 export * from './rules'
 export * from './server'
 export * from './types'
-export * from './utils'
 
 export async function setup(options: Options = {}): Promise<ExtendedConfiguration> {
   if (!options.environment || typeof options.environment !== 'string') {
