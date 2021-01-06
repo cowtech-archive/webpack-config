@@ -1,3 +1,7 @@
+### 2021-01-06 / 2.2.1
+
+- fix: Fixed importScripts generation.
+
 ### 2021-01-05 / 2.2.0
 
 - feat: Fixed service worker generation.
