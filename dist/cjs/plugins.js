@@ -61,7 +61,7 @@ class ServiceWorkerEnvironment {
                     return;
                 }
                 const source = serviceWorkerAsset.source.source();
-                current.updateAsset('sw.js', new webpack_1.sources.RawSource(source.replace('importScripts([])', `importScripts(['/${this.dest}', '${this.workboxUrl}'])`)));
+                current.updateAsset('sw.js', new webpack_1.sources.RawSource(source.replace('importScripts([])', `importScripts('/${this.dest}', '${this.workboxUrl}')`)));
             });
         });
     }

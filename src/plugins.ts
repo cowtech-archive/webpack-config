@@ -75,7 +75,7 @@ class ServiceWorkerEnvironment {
           current.updateAsset(
             'sw.js',
             new sources.RawSource(
-              source.replace('importScripts([])', `importScripts(['/${this.dest}', '${this.workboxUrl}'])`)
+              source.replace('importScripts([])', `importScripts('/${this.dest}', '${this.workboxUrl}')`)
             )
           )
         }
