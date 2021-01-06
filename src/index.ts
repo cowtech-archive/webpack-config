@@ -7,7 +7,8 @@ import { loadIcons } from './icons'
 import { setupPlugins } from './plugins'
 import { normalizeAssetPath, setupRules } from './rules'
 import { setupServer } from './server'
-import { ExtendedConfiguration, Options, WebpackCliEnvironment } from './types'
+import { ExtendedConfiguration, Options } from './types'
+import { generateVersion } from './utils'
 
 export * from './entries'
 export * from './environment'
@@ -16,17 +17,7 @@ export * from './plugins'
 export * from './rules'
 export * from './server'
 export * from './types'
-
-export function generateVersion(): string {
-  return new Date()
-    .toISOString()
-    .replace(/([-:])|(\.\d+Z$)/g, '')
-    .replace('T', '.')
-}
-
-export function normalizeWebpackEnvironment(env: WebpackCliEnvironment): 'production' | 'development' {
-  return env.production === true ? 'production' : 'development'
-}
+export * from './utils'
 
 export async function setup(options: Options = {}): Promise<ExtendedConfiguration> {
   if (!options.environment || typeof options.environment !== 'string') {
@@ -76,7 +67,7 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
     performance: options.performance ?? { hints: false },
     stats: options.stats ?? options.environment === 'production' ? 'normal' : 'errors-only',
     optimization: {
-      splitChunks: options.plugins?.splitChunks ?? { chunks: 'all' },
+      splitChunks: options.plugins?.splitChunks ?? false,
       concatenateModules: options.plugins?.concatenate ?? true,
       minimize: true,
       minimizer

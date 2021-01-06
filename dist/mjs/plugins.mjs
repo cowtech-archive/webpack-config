@@ -9,6 +9,7 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { InjectManifest } from 'workbox-webpack-plugin';
 import { runHook } from "./environment.mjs";
 export * from "./babel-remove-function.mjs";
+export const cacheName = '@cowtech/webpack-config';
 export const serviceWorkerDefaultInclude = [
     /\.(?:html|js|json|mjs|css)$/,
     /images.+\.(?:bmp|jpg|jpeg|png|svg|webp)$/
@@ -33,7 +34,7 @@ class ServiceWorkerEnvironment {
                 current.emitAsset(this.dest, new sources.RawSource(this.content));
             });
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            current.getCache('cowtech').storePromise('service-worker-environment', null, this.dest);
+            current.getCache(cacheName).storePromise('service-worker-environment', null, this.dest);
         });
         compiler.hooks.compilation.tap('ServiceWorkerEnvironment', (current) => {
             current.hooks.processAssets.tap({
@@ -61,7 +62,7 @@ class HtmlWebpackTrackerPlugin {
                 .getHooks(current)
                 .afterEmit.tapPromise('HtmlWebpackTrackerPlugin', ({ outputName, plugin }) => {
                 return current
-                    .getCache('cowtech')
+                    .getCache(cacheName)
                     .storePromise(`html-webpack-tracker-plugin:${plugin.options.id}`, null, outputName);
             });
         });
@@ -74,6 +75,9 @@ export async function resolveFile(options, key, pattern) {
         file = (await globby(resolve(options.srcFolder, pattern)))[0];
     }
     return typeof file === 'string' ? file : null;
+}
+export function getManifestUrl(compilation) {
+    return compilation.getCache(cacheName).getPromise('html-webpack-tracker-plugin:manifest', null);
 }
 export async function setupPlugins(options) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;

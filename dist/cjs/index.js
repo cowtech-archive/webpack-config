@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setup = exports.normalizeWebpackEnvironment = exports.generateVersion = void 0;
+exports.setup = void 0;
 const path_1 = require("path");
 const terser_webpack_plugin_1 = __importDefault(require("terser-webpack-plugin"));
 const entries_1 = require("./entries");
@@ -22,6 +22,7 @@ const icons_1 = require("./icons");
 const plugins_1 = require("./plugins");
 const rules_1 = require("./rules");
 const server_1 = require("./server");
+const utils_1 = require("./utils");
 __exportStar(require("./entries"), exports);
 __exportStar(require("./environment"), exports);
 __exportStar(require("./icons"), exports);
@@ -29,24 +30,14 @@ __exportStar(require("./plugins"), exports);
 __exportStar(require("./rules"), exports);
 __exportStar(require("./server"), exports);
 __exportStar(require("./types"), exports);
-function generateVersion() {
-    return new Date()
-        .toISOString()
-        .replace(/([-:])|(\.\d+Z$)/g, '')
-        .replace('T', '.');
-}
-exports.generateVersion = generateVersion;
-function normalizeWebpackEnvironment(env) {
-    return env.production === true ? 'production' : 'development';
-}
-exports.normalizeWebpackEnvironment = normalizeWebpackEnvironment;
+__exportStar(require("./utils"), exports);
 async function setup(options = {}) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
     if (!options.environment || typeof options.environment !== 'string') {
         options.environment = 'development';
     }
     if (!options.version) {
-        options.version = generateVersion();
+        options.version = utils_1.generateVersion();
     }
     options.srcFolder = path_1.resolve(process.cwd(), (_a = options.srcFolder) !== null && _a !== void 0 ? _a : 'src');
     options.destFolder = path_1.resolve(process.cwd(), (_b = options.destFolder) !== null && _b !== void 0 ? _b : 'dist');
@@ -82,7 +73,7 @@ async function setup(options = {}) {
         performance: (_k = options.performance) !== null && _k !== void 0 ? _k : { hints: false },
         stats: ((_l = options.stats) !== null && _l !== void 0 ? _l : options.environment === 'production') ? 'normal' : 'errors-only',
         optimization: {
-            splitChunks: (_o = (_m = options.plugins) === null || _m === void 0 ? void 0 : _m.splitChunks) !== null && _o !== void 0 ? _o : { chunks: 'all' },
+            splitChunks: (_o = (_m = options.plugins) === null || _m === void 0 ? void 0 : _m.splitChunks) !== null && _o !== void 0 ? _o : false,
             concatenateModules: (_q = (_p = options.plugins) === null || _p === void 0 ? void 0 : _p.concatenate) !== null && _q !== void 0 ? _q : true,
             minimize: true,
             minimizer

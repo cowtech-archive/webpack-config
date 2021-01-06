@@ -20,6 +20,8 @@ import { HtmlWebpackTrackerPluginParameters, Options, Plugins, Rules, ServiceWor
 
 export * from './babel-remove-function'
 
+export const cacheName = '@cowtech/webpack-config'
+
 export const serviceWorkerDefaultInclude: Array<string | RegExp> = [
   /\.(?:html|js|json|mjs|css)$/,
   /images.+\.(?:bmp|jpg|jpeg|png|svg|webp)$/
@@ -54,7 +56,7 @@ class ServiceWorkerEnvironment {
       )
 
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      current.getCache('cowtech').storePromise('service-worker-environment', null, this.dest)
+      current.getCache(cacheName).storePromise('service-worker-environment', null, this.dest)
     })
 
     compiler.hooks.compilation.tap('ServiceWorkerEnvironment', (current: Compilation) => {
@@ -101,7 +103,7 @@ class HtmlWebpackTrackerPlugin {
           'HtmlWebpackTrackerPlugin',
           ({ outputName, plugin }: HtmlWebpackTrackerPluginParameters) => {
             return current
-              .getCache('cowtech')
+              .getCache(cacheName)
               .storePromise(`html-webpack-tracker-plugin:${plugin.options.id}`, null, outputName)
           }
         )
@@ -117,6 +119,10 @@ export async function resolveFile(options: Options, key: string, pattern: string
   }
 
   return typeof file === 'string' ? file : null
+}
+
+export function getManifestUrl(compilation: Compilation): Promise<string | undefined> {
+  return compilation.getCache(cacheName).getPromise<string>('html-webpack-tracker-plugin:manifest', null)
 }
 
 export async function setupPlugins(options: Options): Promise<Array<WebpackPluginInstance>> {

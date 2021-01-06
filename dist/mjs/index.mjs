@@ -6,6 +6,7 @@ import { loadIcons } from "./icons.mjs";
 import { setupPlugins } from "./plugins.mjs";
 import { normalizeAssetPath, setupRules } from "./rules.mjs";
 import { setupServer } from "./server.mjs";
+import { generateVersion } from "./utils.mjs";
 export * from "./entries.mjs";
 export * from "./environment.mjs";
 export * from "./icons.mjs";
@@ -13,15 +14,7 @@ export * from "./plugins.mjs";
 export * from "./rules.mjs";
 export * from "./server.mjs";
 export * from "./types.mjs";
-export function generateVersion() {
-    return new Date()
-        .toISOString()
-        .replace(/([-:])|(\.\d+Z$)/g, '')
-        .replace('T', '.');
-}
-export function normalizeWebpackEnvironment(env) {
-    return env.production === true ? 'production' : 'development';
-}
+export * from "./utils.mjs";
 export async function setup(options = {}) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
     if (!options.environment || typeof options.environment !== 'string') {
@@ -64,7 +57,7 @@ export async function setup(options = {}) {
         performance: (_k = options.performance) !== null && _k !== void 0 ? _k : { hints: false },
         stats: ((_l = options.stats) !== null && _l !== void 0 ? _l : options.environment === 'production') ? 'normal' : 'errors-only',
         optimization: {
-            splitChunks: (_o = (_m = options.plugins) === null || _m === void 0 ? void 0 : _m.splitChunks) !== null && _o !== void 0 ? _o : { chunks: 'all' },
+            splitChunks: (_o = (_m = options.plugins) === null || _m === void 0 ? void 0 : _m.splitChunks) !== null && _o !== void 0 ? _o : false,
             concatenateModules: (_q = (_p = options.plugins) === null || _p === void 0 ? void 0 : _p.concatenate) !== null && _q !== void 0 ? _q : true,
             minimize: true,
             minimizer
