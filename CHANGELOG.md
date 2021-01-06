@@ -1,3 +1,7 @@
+### 2021-01-06 / 2.3.1
+
+- fix: Fixed dependency.
+
 ### 2021-01-06 / 2.3.0
 
 - feat: Moved utility functions to @cowtech/webpack-utils.
