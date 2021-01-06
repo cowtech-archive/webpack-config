@@ -121,8 +121,9 @@ export async function resolveFile(options: Options, key: string, pattern: string
   return typeof file === 'string' ? file : null
 }
 
-export function getManifestUrl(compilation: Compilation): Promise<string | undefined> {
-  return compilation.getCache(cacheName).getPromise<string>('html-webpack-tracker-plugin:manifest', null)
+export async function getManifestUrl(compilation: Compilation): Promise<string> {
+  const url = await compilation.getCache(cacheName).getPromise<string>('html-webpack-tracker-plugin:manifest', null)
+  return `/${url}`
 }
 
 export async function setupPlugins(options: Options): Promise<Array<WebpackPluginInstance>> {
