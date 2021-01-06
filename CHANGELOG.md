@@ -1,3 +1,8 @@
+### 2021-01-06 / 2.2.2
+
+- fix: Make sure manifest URL is absolute.
+- fix: Added findScriptUrl and getManifestUrl functions.
+
 ### 2021-01-06 / 2.2.1
 
 - fix: Fixed importScripts generation.
