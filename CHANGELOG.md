@@ -1,3 +1,7 @@
+### 2021-01-10 / 2.4.0
+
+- feat: Use YAML for configuration files.
+
 ### 2021-01-06 / 2.3.2
 
 - fix: Fixed removed leftover functions.
