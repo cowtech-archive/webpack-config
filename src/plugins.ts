@@ -3,7 +3,7 @@ import { createHash } from 'crypto'
 import { readFileSync } from 'fs'
 import globby from 'globby'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
-import { basename, resolve } from 'path'
+import { resolve } from 'path'
 import {
   Compilation,
   Compiler,
@@ -194,7 +194,7 @@ export async function setupPlugins(options: Options): Promise<Array<WebpackPlugi
   }
 
   if (analyze) {
-    if (basename(process.argv[1]) !== 'webpack') {
+    if (options.environment !== 'production') {
       const analyzerMode = typeof analyze === 'string' ? analyze : 'server'
 
       plugins.push(

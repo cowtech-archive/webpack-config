@@ -152,7 +152,7 @@ async function setupPlugins(options) {
         plugins.push(new webpack_1.HotModuleReplacementPlugin());
     }
     if (analyze) {
-        if (path_1.basename(process.argv[1]) !== 'webpack') {
+        if (options.environment !== 'production') {
             const analyzerMode = typeof analyze === 'string' ? analyze : 'server';
             plugins.push(new webpack_bundle_analyzer_1.BundleAnalyzerPlugin({
                 analyzerMode: analyzerMode,

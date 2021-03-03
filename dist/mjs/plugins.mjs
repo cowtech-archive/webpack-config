@@ -3,7 +3,7 @@ import { createHash } from 'crypto';
 import { readFileSync } from 'fs';
 import globby from 'globby';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import { basename, resolve } from 'path';
+import { resolve } from 'path';
 import { Compilation, DefinePlugin, EnvironmentPlugin, HotModuleReplacementPlugin, sources } from 'webpack';
 // @ts-expect-error - Even if @types/webpack-bundle-analyzer, it generates a conflict with Webpack 5. Revisit in the future.
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
@@ -135,7 +135,7 @@ export async function setupPlugins(options) {
         plugins.push(new HotModuleReplacementPlugin());
     }
     if (analyze) {
-        if (basename(process.argv[1]) !== 'webpack') {
+        if (options.environment !== 'production') {
             const analyzerMode = typeof analyze === 'string' ? analyze : 'server';
             plugins.push(new BundleAnalyzerPlugin({
                 analyzerMode: analyzerMode,
