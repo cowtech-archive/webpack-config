@@ -1,6 +1,6 @@
 {
   "name": "@cowtech/webpack-config",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "CowTech WebPack configuration without any CSS handling.",
   "homepage": "https://sw.cowtech.it/webpack-config",
   "repository": "github:cowtech/webpack-config",
