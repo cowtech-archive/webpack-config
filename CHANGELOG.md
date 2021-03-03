@@ -1,3 +1,7 @@
+### 2021-03-03 / 2.4.2
+
+- fix: Do not start analyzer server in production mode.
+
 ### 2021-03-03 / 2.4.1
 
 - chore: Updated dependencies.
