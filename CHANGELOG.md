@@ -1,3 +1,7 @@
+### 2021-03-03 / 2.4.1
+
+- chore: Updated dependencies.
+
 ### 2021-01-10 / 2.4.0
 
 - feat: Use YAML for configuration files.
