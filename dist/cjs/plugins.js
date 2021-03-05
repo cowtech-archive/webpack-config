@@ -159,7 +159,8 @@ async function setupPlugins(options) {
                 analyzerHost: (_k = (_j = options.server) === null || _j === void 0 ? void 0 : _j.host) !== null && _k !== void 0 ? _k : 'home.cowtech.it',
                 analyzerPort: ((_m = (_l = options.server) === null || _l === void 0 ? void 0 : _l.port) !== null && _m !== void 0 ? _m : 4200) + 2,
                 generateStatsFile: analyze === 'static',
-                openAnalyzer: false
+                openAnalyzer: false,
+                logLevel: 'error'
             }));
         }
         else {

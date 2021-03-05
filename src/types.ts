@@ -57,6 +57,7 @@ export interface Rules {
 }
 
 export interface Plugins {
+  checkTypescript?: boolean
   additional?: Array<WebpackPluginInstance>
   concatenate?: boolean
   minify?: boolean

@@ -37,6 +37,7 @@ export interface Rules {
     afterHook?: Hook<Array<RuleSetRule>>;
 }
 export interface Plugins {
+    checkTypescript?: boolean;
     additional?: Array<WebpackPluginInstance>;
     concatenate?: boolean;
     minify?: boolean;

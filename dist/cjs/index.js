@@ -70,7 +70,7 @@ async function setup(options = {}) {
         cache: true,
         devServer: server,
         performance: (_k = options.performance) !== null && _k !== void 0 ? _k : { hints: false },
-        stats: ((_l = options.stats) !== null && _l !== void 0 ? _l : options.environment === 'production') ? 'normal' : 'errors-only',
+        stats: ((_l = options.stats) !== null && _l !== void 0 ? _l : options.environment === 'production') ? 'errors-only' : 'normal',
         optimization: {
             splitChunks: (_o = (_m = options.plugins) === null || _m === void 0 ? void 0 : _m.splitChunks) !== null && _o !== void 0 ? _o : false,
             concatenateModules: (_q = (_p = options.plugins) === null || _p === void 0 ? void 0 : _p.concatenate) !== null && _q !== void 0 ? _q : true,

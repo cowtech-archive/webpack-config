@@ -203,7 +203,8 @@ export async function setupPlugins(options: Options): Promise<Array<WebpackPlugi
           analyzerHost: options.server?.host ?? 'home.cowtech.it',
           analyzerPort: (options.server?.port ?? 4200) + 2,
           generateStatsFile: analyze === 'static',
-          openAnalyzer: false
+          openAnalyzer: false,
+          logLevel: 'error'
         })
       )
     } else {

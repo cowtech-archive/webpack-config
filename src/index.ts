@@ -64,7 +64,7 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
     cache: true,
     devServer: server,
     performance: options.performance ?? { hints: false },
-    stats: options.stats ?? options.environment === 'production' ? 'normal' : 'errors-only',
+    stats: options.stats ?? options.environment === 'production' ? 'errors-only' : 'normal',
     optimization: {
       splitChunks: options.plugins?.splitChunks ?? false,
       concatenateModules: options.plugins?.concatenate ?? true,
