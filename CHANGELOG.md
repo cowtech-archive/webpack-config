@@ -1,3 +1,7 @@
+### 2021-03-05 / 2.4.4
+
+- fix: Show build information by default.
+
 ### 2021-03-05 / 2.4.3
 
 - fix: Disable useless logging.
