@@ -1,7 +1,7 @@
 import { generateVersion, normalizeAssetPath } from '@cowtech/webpack-utils'
 import { resolve } from 'path'
 import TerserPlugin from 'terser-webpack-plugin'
-import { WebpackPluginInstance } from 'webpack'
+import { WebpackOptionsNormalized, WebpackPluginInstance } from 'webpack'
 import { autoDetectEntries } from './entries'
 import { runHook, setupEnvironment } from './environment'
 import { loadIcons } from './icons'
@@ -64,7 +64,7 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
     cache: true,
     devServer: server,
     performance: options.performance ?? { hints: false },
-    stats: options.stats ?? options.environment === 'production' ? 'errors-only' : 'normal',
+    stats: (options.stats ?? 'normal') as WebpackOptionsNormalized['stats'],
     optimization: {
       splitChunks: options.plugins?.splitChunks ?? false,
       concatenateModules: options.plugins?.concatenate ?? true,
