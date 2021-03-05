@@ -1,3 +1,7 @@
+### 2021-03-05 / 2.4.3
+
+- fix: Disable useless logging.
+
 ### 2021-03-03 / 2.4.2
 
 - fix: Do not start analyzer server in production mode.
