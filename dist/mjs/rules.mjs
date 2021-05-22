@@ -1,8 +1,8 @@
 import { imagesExtensions } from '@cowtech/webpack-utils';
 import globby from 'globby';
 import { resolve } from 'path';
-import { babelRemoveFunction } from "./babel-remove-function.mjs";
-import { runHook } from "./environment.mjs";
+import { babelRemoveFunction } from "./babel-remove-function.js";
+import { runHook } from "./environment.js";
 /*
 Refresh the following two constants periodically by running with 'last 2 versions' and debug=true
 Modifications:

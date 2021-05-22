@@ -1,19 +1,19 @@
 import { generateVersion, normalizeAssetPath } from '@cowtech/webpack-utils';
 import { resolve } from 'path';
 import TerserPlugin from 'terser-webpack-plugin';
-import { autoDetectEntries } from "./entries.mjs";
-import { runHook, setupEnvironment } from "./environment.mjs";
-import { loadIcons } from "./icons.mjs";
-import { setupPlugins } from "./plugins.mjs";
-import { setupRules } from "./rules.mjs";
-import { setupServer } from "./server.mjs";
-export * from "./entries.mjs";
-export * from "./environment.mjs";
-export * from "./icons.mjs";
-export * from "./plugins.mjs";
-export * from "./rules.mjs";
-export * from "./server.mjs";
-export * from "./types.mjs";
+import { autoDetectEntries } from "./entries.js";
+import { runHook, setupEnvironment } from "./environment.js";
+import { loadIcons } from "./icons.js";
+import { setupPlugins } from "./plugins.js";
+import { setupRules } from "./rules.js";
+import { setupServer } from "./server.js";
+export * from "./entries.js";
+export * from "./environment.js";
+export * from "./icons.js";
+export * from "./plugins.js";
+export * from "./rules.js";
+export * from "./server.js";
+export * from "./types.js";
 export async function setup(options = {}) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
     if (!options.environment || typeof options.environment !== 'string') {
