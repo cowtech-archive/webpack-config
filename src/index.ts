@@ -44,7 +44,7 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
 
   const resolveOptions: ExtendedConfiguration['resolve'] = { extensions: ['.json', '.js', '.jsx', '.ts', '.tsx'] }
 
-  if (await checkReact(options.rules ?? {}, options.srcFolder!)) {
+  if (await checkReact(options.rules ?? {}, options.srcFolder)) {
     resolveOptions.alias = {
       'react/jsx-dev-runtime': 'react/jsx-dev-runtime.js',
       'react/jsx-runtime': 'react/jsx-runtime.js'
