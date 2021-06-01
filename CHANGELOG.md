@@ -1,3 +1,7 @@
+### 2021-06-01 / 2.4.7
+
+- chore: Updated dependencies.
+
 ### 2021-06-01 / 2.4.6
 
 - fix: Use automatic runtime for React.
