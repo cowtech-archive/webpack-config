@@ -105,7 +105,11 @@ async function setupRules(options) {
             exclude: /node_modules/,
             use: {
                 loader: 'babel-loader',
-                options: { presets: babelPresets.concat('@babel/react'), plugins: babelPlugins, ...babelConfiguration }
+                options: {
+                    presets: babelPresets.concat(['@babel/react', { runtime: 'automatic' }]),
+                    plugins: babelPlugins,
+                    ...babelConfiguration
+                }
             }
         });
         if (useTypescript) {
@@ -115,7 +119,7 @@ async function setupRules(options) {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: babelPresets.concat('@babel/react', '@babel/typescript'),
+                        presets: babelPresets.concat(['@babel/react', { runtime: 'automatic' }], '@babel/typescript'),
                         plugins: babelPlugins,
                         ...babelConfiguration
                     }

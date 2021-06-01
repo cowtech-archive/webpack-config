@@ -1,8 +1,8 @@
 import { imagesExtensions } from '@cowtech/webpack-utils';
 import globby from 'globby';
 import { resolve } from 'path';
-import { babelRemoveFunction } from "./babel-remove-function.js";
-import { runHook } from "./environment.js";
+import { babelRemoveFunction } from "./babel-remove-function.mjs";
+import { runHook } from "./environment.mjs";
 /*
 Refresh the following two constants periodically by running with 'last 2 versions' and debug=true
 Modifications:
@@ -97,7 +97,11 @@ export async function setupRules(options) {
             exclude: /node_modules/,
             use: {
                 loader: 'babel-loader',
-                options: { presets: babelPresets.concat('@babel/react'), plugins: babelPlugins, ...babelConfiguration }
+                options: {
+                    presets: babelPresets.concat(['@babel/react', { runtime: 'automatic' }]),
+                    plugins: babelPlugins,
+                    ...babelConfiguration
+                }
             }
         });
         if (useTypescript) {
@@ -107,7 +111,7 @@ export async function setupRules(options) {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: babelPresets.concat('@babel/react', '@babel/typescript'),
+                        presets: babelPresets.concat(['@babel/react', { runtime: 'automatic' }], '@babel/typescript'),
                         plugins: babelPlugins,
                         ...babelConfiguration
                     }

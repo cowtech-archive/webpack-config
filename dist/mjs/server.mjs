@@ -1,7 +1,7 @@
 import { readFile } from 'fs/promises';
 import globby from 'globby';
 import { resolve } from 'path';
-import { runHook } from "./environment.js";
+import { runHook } from "./environment.mjs";
 export async function setupServer(options) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
     const serverOptions = (_a = options.server) !== null && _a !== void 0 ? _a : {};

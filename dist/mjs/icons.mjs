@@ -1,5 +1,5 @@
-import { loadFontAwesomeIcons } from "./fontAwesome.js";
-export { generateSVG as generateFontAwesomeSVG, loadFontAwesomeIcons } from "./fontAwesome.js";
+import { loadFontAwesomeIcons } from "./fontAwesome.mjs";
+export { generateSVG as generateFontAwesomeSVG, loadFontAwesomeIcons } from "./fontAwesome.mjs";
 export async function loadIcons(options) {
     var _a;
     const toLoad = ((_a = options.icons) !== null && _a !== void 0 ? _a : {});

@@ -8,8 +8,8 @@ import { Compilation, DefinePlugin, EnvironmentPlugin, HotModuleReplacementPlugi
 // @ts-expect-error - Even if @types/webpack-bundle-analyzer, it generates a conflict with Webpack 5. Revisit in the future.
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { InjectManifest } from 'workbox-webpack-plugin';
-import { runHook } from "./environment.js";
-export * from "./babel-remove-function.js";
+import { runHook } from "./environment.mjs";
+export * from "./babel-remove-function.mjs";
 export const serviceWorkerDefaultInclude = [
     /\.(?:html|js|json|mjs|css)$/,
     /images.+\.(?:bmp|jpg|jpeg|png|svg|webp)$/
