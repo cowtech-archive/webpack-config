@@ -116,7 +116,7 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
       use: {
         loader: 'babel-loader',
         options: {
-          presets: babelPresets.concat(['@babel/react', { runtime: 'automatic' }]),
+          presets: babelPresets.concat([['@babel/react', { runtime: 'automatic' }]]),
           plugins: babelPlugins,
           ...babelConfiguration
         }
@@ -130,7 +130,7 @@ export async function setupRules(options: Options): Promise<Array<RuleSetRule>> 
         use: {
           loader: 'babel-loader',
           options: {
-            presets: babelPresets.concat(['@babel/react', { runtime: 'automatic' }], '@babel/typescript'),
+            presets: babelPresets.concat([['@babel/react', { runtime: 'automatic' }]], '@babel/typescript'),
             plugins: babelPlugins,
             ...babelConfiguration
           }
