@@ -1,3 +1,7 @@
+### 2021-06-01 / 2.4.6
+
+- fix: Use automatic runtime for React.
+
 ### 2021-05-22 / 2.4.5
 
 - chore: Updated dependencies.
