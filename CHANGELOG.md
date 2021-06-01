@@ -1,3 +1,8 @@
+### 2021-06-01 / 2.4.8
+
+- chore: Fixed React transform.
+- chore: Fixed React transform.
+
 ### 2021-06-01 / 2.4.7
 
 - chore: Updated dependencies.
