@@ -1,5 +1,5 @@
 import { readFile } from 'fs/promises'
-import globby from 'globby'
+import { globby } from 'globby'
 import { resolve } from 'path'
 import { runHook } from './environment'
 import { Options, Server } from './types'
@@ -26,7 +26,6 @@ export async function setupServer(options: Options): Promise<any> {
     https,
     compress: serverOptions.compress ?? true,
     historyApiFallback: serverOptions.history ?? true,
-    firewall: serverOptions.firewall ?? true,
     ...(serverOptions.options ?? {})
   }
 

@@ -47,7 +47,7 @@ export interface Environment {
 
 export interface Rules {
   additional?: Array<RuleSetRule>
-  babel?: boolean
+  target?: string
   typescript?: boolean
   react?: boolean
   images?: boolean
@@ -91,18 +91,8 @@ export interface Server {
   compress?: boolean
   hot?: boolean | object
   history?: boolean | object
-  firewall?: boolean | Array<string>
   options?: object
   afterHook?: Hook<Server>
-}
-
-export interface Babel {
-  browsersWhiteList?: string | Array<string> | { [key: string]: string }
-  removeFunctions?: Array<string>
-  exclude?: Array<string>
-  modules?: boolean
-  configuration?: any
-  envDebug?: boolean
 }
 
 export type ExtendedConfiguration = Configuration & {
@@ -128,7 +118,7 @@ export interface Options extends Output {
   sourceMaps?: string | false
   externals?: Configuration['externals']
   server?: Server
-  babel?: Babel
+  useESBuild?: boolean
   useESModules?: boolean
   uglify?: object
   afterHook?: Hook<ExtendedConfiguration>

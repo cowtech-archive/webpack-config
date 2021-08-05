@@ -1,10 +1,9 @@
 import { imagesExtensions } from '@cowtech/webpack-utils'
-import globby from 'globby'
+import { globby } from 'globby'
 import { resolve } from 'path'
 import { RuleSetRule } from 'webpack'
-import { babelRemoveFunction } from './babel-remove-function'
 import { runHook } from './environment'
-import { Babel, Options, Rules } from './types'
+import { Options, Rules } from './types'
 
 /*
 Refresh the following two constants periodically by running with 'last 2 versions' and debug=true
@@ -24,14 +23,6 @@ export const minimumSupportedBrowsers = {
   samsung: '10.1'
 }
 
-export const unneededBabelPlugins = [
-  '@babel/plugin-transform-regenerator',
-  '@babel/transform-template-literals',
-  '@babel/plugin-transform-function-name',
-  '@babel/proposal-async-generator-functions',
-  '@babel/proposal-object-rest-spread'
-]
-
 export async function checkTypescript(rulesOptions: Rules, srcFolder: string): Promise<boolean> {
   if (typeof rulesOptions.typescript === 'boolean') {
     return rulesOptions.typescript
@@ -50,92 +41,53 @@ export async function checkReact(rulesOptions: Rules, srcFolder: string): Promis
 
 export async function setupRules(options: Options): Promise<Array<RuleSetRule>> {
   const rulesOptions: Rules = options.rules ?? {}
-  const babelOptions: Babel = options.babel ?? {}
 
-  const useBabel = rulesOptions.babel ?? true
+  const useESBuild = options.useESBuild ?? true
   const useTypescript = await checkTypescript(rulesOptions, options.srcFolder!)
   const useReact = await checkReact(rulesOptions, options.srcFolder!)
-
-  const babelPresets: Array<Array<string | object> | string> = [
-    [
-      '@babel/preset-env',
-      {
-        targets: babelOptions.browsersWhiteList ?? minimumSupportedBrowsers,
-        exclude: babelOptions.exclude ?? unneededBabelPlugins,
-        modules: babelOptions.modules ?? false,
-        debug: babelOptions.envDebug ?? false
-      }
-    ]
-  ]
-
-  const babelPlugins: Array<Function | string | [string, object]> = [
-    ['@babel/plugin-proposal-class-properties', { loose: false }],
-    '@babel/plugin-proposal-optional-catch-binding'
-  ]
-
-  if (options.environment === 'production') {
-    const removeFunctions: Array<string> = babelOptions.removeFunctions ?? ['debugClassName']
-
-    if (removeFunctions.length) {
-      for (const name of removeFunctions) {
-        babelPlugins.unshift(babelRemoveFunction(name))
-      }
-    }
-  }
-
-  const babelConfiguration = babelOptions.configuration ?? {}
-
+  const target = rulesOptions.target ?? 'es2020'
   let rules: Array<RuleSetRule> = []
 
-  if (useBabel) {
+  if (useESBuild) {
     rules.push({
       test: /\.js$/,
-      exclude: /node_modules/,
-      use: {
-        loader: 'babel-loader',
-        options: { presets: babelPresets, plugins: babelPlugins, ...babelConfiguration }
+      loader: 'esbuild-loader',
+      options: {
+        target
       }
     })
-  }
 
-  if (useTypescript) {
-    rules.push({
-      test: /\.ts$/,
-      exclude: /node_modules/,
-      use: {
-        loader: 'babel-loader',
-        options: { presets: babelPresets.concat('@babel/typescript'), plugins: babelPlugins, ...babelConfiguration }
-      }
-    })
-  }
-
-  if (useReact) {
-    rules.push({
-      test: /\.jsx$/,
-      exclude: /node_modules/,
-      use: {
-        loader: 'babel-loader',
+    if (useReact) {
+      rules.push({
+        test: /\.jsx$/,
+        loader: 'esbuild-loader',
         options: {
-          presets: babelPresets.concat([['@babel/react', { runtime: 'automatic' }]]),
-          plugins: babelPlugins,
-          ...babelConfiguration
+          loader: 'jsx',
+          target
         }
-      }
-    })
+      })
+    }
 
     if (useTypescript) {
       rules.push({
-        test: /\.tsx$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: babelPresets.concat([['@babel/react', { runtime: 'automatic' }]], '@babel/typescript'),
-            plugins: babelPlugins,
-            ...babelConfiguration
-          }
+        test: /\.ts$/,
+        loader: 'esbuild-loader',
+        options: {
+          loader: 'ts',
+          target
         }
       })
+
+      if (useReact) {
+        rules.push({
+          test: /\.tsx$/,
+          loader: 'esbuild-loader',
+          options: {
+            loader: 'tsx',
+            target
+          }
+        })
+      }
     }
   }
 

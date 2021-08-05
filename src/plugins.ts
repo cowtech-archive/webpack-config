@@ -1,7 +1,7 @@
 import { cacheName } from '@cowtech/webpack-utils'
 import { createHash } from 'crypto'
 import { readFileSync } from 'fs'
-import globby from 'globby'
+import { globby } from 'globby'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { resolve } from 'path'
 import {
@@ -18,8 +18,6 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import { InjectManifest } from 'workbox-webpack-plugin'
 import { runHook } from './environment'
 import { HtmlWebpackTrackerPluginParameters, Options, Plugins, Rules, ServiceWorker } from './types'
-
-export * from './babel-remove-function'
 
 export const serviceWorkerDefaultInclude: Array<string | RegExp> = [
   /\.(?:html|js|json|mjs|css)$/,
