@@ -1,3 +1,7 @@
+### 2021-08-05 / 3.0.0-alpha.1
+
+- feat: Replace Babel with ESBuild.
+
 ### 2021-06-01 / 2.4.8
 
 - chore: Fixed React transform.
