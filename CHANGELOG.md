@@ -1,3 +1,8 @@
+### 2021-08-05 / 3.0.0-alpha.4
+
+- fix: Added missing types dependency.
+- fix: Limit webpack to avoid TypeScript bugs.
+
 ### 2021-08-05 / 3.0.0-alpha.3
 
 - feat: Added missing dependency.
