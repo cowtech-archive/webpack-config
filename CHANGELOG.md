@@ -1,3 +1,7 @@
+### 2021-08-05 / 3.0.0-alpha.2
+
+- feat: Added missing dependency.
+
 ### 2021-08-05 / 3.0.0-alpha.1
 
 - feat: Replace Babel with ESBuild.
