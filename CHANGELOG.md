@@ -1,3 +1,9 @@
+### 2021-08-06 / 3.0.0-alpha.5
+
+- chore: Added missing file.
+- feat: Only export as ESM.
+- fix: Reverted useless restriction.
+
 ### 2021-08-05 / 3.0.0-alpha.4
 
 - fix: Added missing types dependency.
