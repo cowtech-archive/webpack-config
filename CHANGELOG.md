@@ -1,3 +1,7 @@
+### 2021-08-23 / 3.0.0-alpha.6
+
+- chore: Updated dependencies.
+
 ### 2021-08-06 / 3.0.0-alpha.5
 
 - chore: Added missing file.
