@@ -23,10 +23,9 @@
     "README.md"
   ],
   "type": "module",
-  "main": "./dist/index.js",
   "exports": "./dist/index.js",
-  "typings": "types/index.d.ts",
-  "types": "types/index.d.ts",
+  "typings": "./types/index.d.ts",
+  "types": "./types/index.d.ts",
   "scripts": {
     "predev": "rm -rf dist",
     "dev": "tsc-watch --onSuccess 'esm-pkg-add-imports-extensions dist'",
