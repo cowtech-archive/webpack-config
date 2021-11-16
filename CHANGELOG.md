@@ -1,3 +1,9 @@
+### 2021-11-16 / 3.0.0
+
+- fix: Added ESM note in the README.md
+- chore: Updated badges.
+- fix: Fixed Typescript configuration.
+
 ### 2021-08-23 / 3.0.0-alpha.6
 
 - chore: Updated dependencies.
