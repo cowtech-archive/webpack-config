@@ -1,3 +1,6 @@
+### 2021-11-17 / 3.0.1
+
+
 ### 2021-11-16 / 3.0.0
 
 - fix: Added ESM note in the README.md
