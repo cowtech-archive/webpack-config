@@ -1,3 +1,7 @@
+### 2022-01-14 / 4.0.0-beta.1
+
+- feat: Replace ESBuild with SWC.
+
 ### 2022-01-14 / 3.1.0-beta.1
 
 - feat: Updated dependencies.
