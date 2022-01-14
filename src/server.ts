@@ -5,34 +5,34 @@ import { runHook } from './environment'
 import { Options, Server } from './types'
 
 export async function setupServer(options: Options): Promise<any> {
-  const serverOptions: Server = options.server ?? {}
+  let { https, ...serverOptions }: Server = options.server ?? {}
 
-  let https: boolean
   let cert: string | undefined
-  let privkey: string | undefined
+  let key: string | undefined
 
-  if (!('https' in serverOptions)) {
-    // Autodetect HTTPS
+  // Autodetect HTTPS
+  if (typeof https === 'undefined') {
     cert = (await globby(resolve(process.cwd(), './config/ssl/(certificate|cert).pem'))).pop()
-    privkey = (await globby(resolve(process.cwd(), './config/ssl/(private-key|privkey).pem'))).pop()
-    https = !!(cert && privkey)
-  } else {
-    https = (serverOptions.https as boolean) ?? false
+    key = (await globby(resolve(process.cwd(), './config/ssl/(private-key|privkey).pem'))).pop()
+    https = !!(cert && key)
   }
 
   const config: any = {
     host: serverOptions.host ?? 'home.cowtech.it',
     port: serverOptions.port ?? 4200,
-    https,
+    server: 'http',
     compress: serverOptions.compress ?? true,
     historyApiFallback: serverOptions.history ?? true,
     ...(serverOptions.options ?? {})
   }
 
-  if (config.https) {
-    config.https = {
-      key: await readFile(config.https?.key ?? privkey),
-      cert: await readFile(config.https?.cert ?? cert)
+  if (https) {
+    config.server = {
+      type: 'https',
+      options: {
+        key: await readFile(config.https?.key ?? key),
+        cert: await readFile(config.https?.cert ?? cert)
+      }
     }
   }
 

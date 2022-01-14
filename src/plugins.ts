@@ -115,7 +115,6 @@ export async function setupPlugins(options: Options): Promise<Array<webpack.Webp
   const swOptions: ServiceWorker = options.serviceWorker ?? {}
   const rules: Rules = options.rules ?? {}
   const analyze = pluginsOptions.analyze ?? true
-  const hmr = options.server?.hot ?? true
 
   const indexFile = await resolveFile(options, 'index', './index.html.(js|ts|jsx|tsx)')
   const error404 = await resolveFile(options, 'error404', './404.html.(js|ts|jsx|tsx)')
@@ -177,10 +176,6 @@ export async function setupPlugins(options: Options): Promise<Array<webpack.Webp
         inject: false
       })
     )
-  }
-
-  if (options.environment !== 'production' && hmr) {
-    plugins.push(new webpack.HotModuleReplacementPlugin())
   }
 
   if (analyze) {
