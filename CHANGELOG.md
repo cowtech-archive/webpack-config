@@ -4,6 +4,12 @@
 - chore: Updated dependencies.
 - chore: Removed useless file.
 
+### 2022-01-14 / 3.1.0-beta.1
+
+- feat: Updated dependencies.
+- chore: Updated dependencies.
+- chore: Removed useless file.
+
 ### 2021-11-17 / 3.0.1
 
 
