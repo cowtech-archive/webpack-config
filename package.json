@@ -39,9 +39,10 @@
   },
   "dependencies": {
     "@cowtech/webpack-utils": "^1.0.2",
+    "@swc/core": "^1.2.129",
     "@types/node": "^17.0.8",
     "@types/webpack": "^5.28.0",
-    "esbuild-loader": "^2.18.0",
+    "swc-loader": "^0.1.15",
     "globby": "^12.0.2",
     "html-webpack-plugin": "^5.5.0",
     "js-yaml": "^4.1.0",

@@ -42,28 +42,39 @@ export async function checkReact(rulesOptions: Rules, srcFolder: string): Promis
 export async function setupRules(options: Options): Promise<Array<webpack.RuleSetRule>> {
   const rulesOptions: Rules = options.rules ?? {}
 
-  const useESBuild = options.useESBuild ?? true
+  const useSwc = options.useSwc ?? true
   const useTypescript = await checkTypescript(rulesOptions, options.srcFolder!)
   const useReact = await checkReact(rulesOptions, options.srcFolder!)
   const target = rulesOptions.target ?? 'es2020'
   let rules: Array<webpack.RuleSetRule> = []
 
-  if (useESBuild) {
+  if (useSwc) {
     rules.push({
       test: /\.js$/,
-      loader: 'esbuild-loader',
+      loader: 'swc-loader',
       options: {
-        target
+        jsc: {
+          target
+        }
       }
     })
 
     if (useReact) {
       rules.push({
         test: /\.jsx$/,
-        loader: 'esbuild-loader',
+        loader: 'swc-loader',
         options: {
-          loader: 'jsx',
-          target
+          jsc: {
+            parser: {
+              jsx: true
+            },
+            target,
+            transform: {
+              react: {
+                runtime: 'automatic'
+              }
+            }
+          }
         }
       })
     }
@@ -71,20 +82,34 @@ export async function setupRules(options: Options): Promise<Array<webpack.RuleSe
     if (useTypescript) {
       rules.push({
         test: /\.ts$/,
-        loader: 'esbuild-loader',
+        loader: 'swc-loader',
         options: {
-          loader: 'ts',
-          target
+          jsc: {
+            parser: {
+              syntax: 'typescript'
+            },
+            target
+          }
         }
       })
 
       if (useReact) {
         rules.push({
           test: /\.tsx$/,
-          loader: 'esbuild-loader',
+          loader: 'swc-loader',
           options: {
-            loader: 'tsx',
-            target
+            jsc: {
+              parser: {
+                syntax: 'typescript',
+                tsx: true
+              },
+              target,
+              transform: {
+                react: {
+                  runtime: 'automatic'
+                }
+              }
+            }
           }
         })
       }

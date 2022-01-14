@@ -118,7 +118,7 @@ export interface Options extends Output {
   sourceMaps?: string | false
   externals?: webpack.Configuration['externals']
   server?: Server
-  useESBuild?: boolean
+  useSwc?: boolean
   useESModules?: boolean
   uglify?: object
   afterHook?: Hook<ExtendedConfiguration>
