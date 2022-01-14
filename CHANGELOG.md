@@ -1,3 +1,6 @@
+### 2022-01-14 / 4.0.0
+
+
 ### 2022-01-14 / 4.0.0-beta.3
 
 - feat: Introduce Typescript checking.
