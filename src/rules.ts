@@ -1,7 +1,7 @@
 import { imagesExtensions } from '@cowtech/webpack-utils'
 import { globby } from 'globby'
 import { resolve } from 'path'
-import { RuleSetRule } from 'webpack'
+import webpack from 'webpack'
 import { runHook } from './environment'
 import { Options, Rules } from './types'
 
@@ -39,14 +39,14 @@ export async function checkReact(rulesOptions: Rules, srcFolder: string): Promis
   return (await globby(resolve(srcFolder, './**/*.(jsx|tsx)'))).length > 0
 }
 
-export async function setupRules(options: Options): Promise<Array<RuleSetRule>> {
+export async function setupRules(options: Options): Promise<Array<webpack.RuleSetRule>> {
   const rulesOptions: Rules = options.rules ?? {}
 
   const useESBuild = options.useESBuild ?? true
   const useTypescript = await checkTypescript(rulesOptions, options.srcFolder!)
   const useReact = await checkReact(rulesOptions, options.srcFolder!)
   const target = rulesOptions.target ?? 'es2020'
-  let rules: Array<RuleSetRule> = []
+  let rules: Array<webpack.RuleSetRule> = []
 
   if (useESBuild) {
     rules.push({

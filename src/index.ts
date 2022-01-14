@@ -1,7 +1,7 @@
 import { generateVersion, normalizeAssetPath } from '@cowtech/webpack-utils'
 import { resolve } from 'path'
 import TerserPlugin from 'terser-webpack-plugin'
-import { WebpackOptionsNormalized, WebpackPluginInstance } from 'webpack'
+import webpack from 'webpack'
 import { autoDetectEntries } from './entries'
 import { runHook, setupEnvironment } from './environment'
 import { loadIcons } from './icons'
@@ -36,7 +36,7 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
 
   const mainExtension = options.useESModules ?? true ? 'mjs' : 'js'
 
-  const minimizer: Array<WebpackPluginInstance> = []
+  const minimizer: Array<webpack.WebpackPluginInstance> = []
 
   if (options.environment === 'production' && (options.plugins?.minify ?? true)) {
     minimizer.push(new TerserPlugin(options.uglify ?? {}))
@@ -73,7 +73,7 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
     cache: true,
     devServer: server,
     performance: options.performance ?? { hints: false },
-    stats: (options.stats ?? 'normal') as WebpackOptionsNormalized['stats'],
+    stats: (options.stats ?? 'normal') as webpack.WebpackOptionsNormalized['stats'],
     optimization: {
       splitChunks: options.plugins?.splitChunks ?? false,
       concatenateModules: options.plugins?.concatenate ?? true,

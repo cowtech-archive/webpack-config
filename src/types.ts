@@ -1,5 +1,5 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin'
-import { Chunk, Configuration, RuleSetRule, Stats, WebpackOptionsNormalized, WebpackPluginInstance } from 'webpack'
+import webpack from 'webpack'
 
 // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
 export type HookReturn<T> = void | null | T | Promise<void | null | T>
@@ -27,7 +27,7 @@ export interface HtmlWebpackTrackerPluginParameters {
 }
 
 export interface OutputData {
-  chunk: Chunk
+  chunk: webpack.Chunk
   hash: string
 }
 
@@ -46,25 +46,25 @@ export interface Environment {
 }
 
 export interface Rules {
-  additional?: Array<RuleSetRule>
+  additional?: Array<webpack.RuleSetRule>
   target?: string
   typescript?: boolean
   react?: boolean
   images?: boolean
   manifest?: boolean
   robots?: boolean
-  afterHook?: Hook<Array<RuleSetRule>>
+  afterHook?: Hook<Array<webpack.RuleSetRule>>
 }
 
 export interface Plugins {
   checkTypescript?: boolean
-  additional?: Array<WebpackPluginInstance>
+  additional?: Array<webpack.WebpackPluginInstance>
   concatenate?: boolean
   minify?: boolean
   hotModuleReload?: boolean
-  splitChunks?: WebpackOptionsNormalized['optimization']['splitChunks']
+  splitChunks?: webpack.WebpackOptionsNormalized['optimization']['splitChunks']
   analyze?: boolean | string
-  afterHook?: Hook<Array<WebpackPluginInstance>>
+  afterHook?: Hook<Array<webpack.WebpackPluginInstance>>
 }
 
 export interface IconsToLoad {
@@ -95,7 +95,7 @@ export interface Server {
   afterHook?: Hook<Server>
 }
 
-export type ExtendedConfiguration = Configuration & {
+export type ExtendedConfiguration = webpack.Configuration & {
   output: any
   devServer: any
 }
@@ -105,18 +105,18 @@ export interface Options extends Output {
   additionalEnvironment?: object
   version?: string
   env?: Environment
-  entries?: Configuration['entry']
+  entries?: webpack.Configuration['entry']
   index?: boolean | string
   rules?: Rules
   plugins?: Plugins
-  stats?: Stats
-  performance?: Configuration['performance']
+  stats?: webpack.Stats
+  performance?: webpack.Configuration['performance']
   icons?: IconsToLoad | Icons
   serviceWorker?: ServiceWorker
   srcFolder?: string
   destFolder?: string
   sourceMaps?: string | false
-  externals?: Configuration['externals']
+  externals?: webpack.Configuration['externals']
   server?: Server
   useESBuild?: boolean
   useESModules?: boolean

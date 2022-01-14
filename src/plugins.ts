@@ -4,15 +4,7 @@ import { readFileSync } from 'fs'
 import { globby } from 'globby'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { resolve } from 'path'
-import {
-  Compilation,
-  Compiler,
-  DefinePlugin,
-  EnvironmentPlugin,
-  HotModuleReplacementPlugin,
-  sources,
-  WebpackPluginInstance
-} from 'webpack'
+import webpack from 'webpack'
 // @ts-expect-error - Even if @types/webpack-bundle-analyzer, it generates a conflict with Webpack 5. Revisit in the future.
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import { InjectManifest } from 'workbox-webpack-plugin'
@@ -40,15 +32,15 @@ class ServiceWorkerEnvironment {
     this.workboxUrl = `https://storage.googleapis.com/workbox-cdn/releases/${workboxVersion}/workbox-sw.js`
   }
 
-  apply(compiler: Compiler): void {
-    compiler.hooks.thisCompilation.tap('ServiceWorkerEnvironment', (current: Compilation) => {
+  apply(compiler: webpack.Compiler): void {
+    compiler.hooks.thisCompilation.tap('ServiceWorkerEnvironment', (current: webpack.Compilation) => {
       current.hooks.processAssets.tap(
         {
           name: 'ServiceWorkerEnvironment',
-          stage: Compilation.PROCESS_ASSETS_STAGE_PRE_PROCESS
+          stage: webpack.Compilation.PROCESS_ASSETS_STAGE_PRE_PROCESS
         },
         () => {
-          current.emitAsset(this.dest, new sources.RawSource(this.content))
+          current.emitAsset(this.dest, new webpack.sources.RawSource(this.content))
         }
       )
 
@@ -56,11 +48,11 @@ class ServiceWorkerEnvironment {
       current.getCache(cacheName).storePromise('service-worker-environment', null, this.dest)
     })
 
-    compiler.hooks.compilation.tap('ServiceWorkerEnvironment', (current: Compilation) => {
+    compiler.hooks.compilation.tap('ServiceWorkerEnvironment', (current: webpack.Compilation) => {
       current.hooks.processAssets.tap(
         {
           name: 'ServiceWorkerEnvironment',
-          stage: Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE
+          stage: webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE
         },
         () => {
           const serviceWorkerAsset = current.getAsset('sw.js')
@@ -73,7 +65,7 @@ class ServiceWorkerEnvironment {
 
           current.updateAsset(
             'sw.js',
-            new sources.RawSource(
+            new webpack.sources.RawSource(
               source.replace('importScripts([])', `importScripts('/${this.dest}', '${this.workboxUrl}')`)
             )
           )
@@ -90,8 +82,8 @@ class HtmlWebpackTrackerPlugin {
     this.files = new Map<string, string>()
   }
 
-  apply(compiler: Compiler): void {
-    compiler.hooks.thisCompilation.tap('HtmlWebpackTrackerPlugin', (current: Compilation) => {
+  apply(compiler: webpack.Compiler): void {
+    compiler.hooks.thisCompilation.tap('HtmlWebpackTrackerPlugin', (current: webpack.Compilation) => {
       const plugin = HtmlWebpackPlugin as any
 
       plugin
@@ -118,7 +110,7 @@ export async function resolveFile(options: Options, key: string, pattern: string
   return typeof file === 'string' ? file : null
 }
 
-export async function setupPlugins(options: Options): Promise<Array<WebpackPluginInstance>> {
+export async function setupPlugins(options: Options): Promise<Array<webpack.WebpackPluginInstance>> {
   const pluginsOptions: Plugins = options.plugins ?? {}
   const swOptions: ServiceWorker = options.serviceWorker ?? {}
   const rules: Rules = options.rules ?? {}
@@ -130,11 +122,11 @@ export async function setupPlugins(options: Options): Promise<Array<WebpackPlugi
   const manifest = (await globby(resolve(options.srcFolder!, './manifest.json.(js|ts)')))[0]
   const robots = (await globby(resolve(options.srcFolder!, './robots.txt.(js|ts)')))[0]
 
-  let plugins: Array<WebpackPluginInstance> = [
-    new EnvironmentPlugin({
+  let plugins: Array<webpack.WebpackPluginInstance> = [
+    new webpack.EnvironmentPlugin({
       NODE_ENV: options.environment
     }),
-    new DefinePlugin({
+    new webpack.DefinePlugin({
       ENV: JSON.stringify(options.env),
       VERSION: JSON.stringify(options.version),
       ICONS: JSON.stringify(options.icons)
@@ -188,7 +180,7 @@ export async function setupPlugins(options: Options): Promise<Array<WebpackPlugi
   }
 
   if (options.environment !== 'production' && hmr) {
-    plugins.push(new HotModuleReplacementPlugin())
+    plugins.push(new webpack.HotModuleReplacementPlugin())
   }
 
   if (analyze) {
