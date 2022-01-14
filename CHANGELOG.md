@@ -1,3 +1,7 @@
+### 2022-01-14 / 4.0.0-beta.3
+
+- feat: Introduce Typescript checking.
+
 ### 2022-01-14 / 4.0.0-beta.2
 
 - fix: Removed deprecated options.
