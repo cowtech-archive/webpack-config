@@ -35,7 +35,7 @@ class ServiceWorkerEnvironment {
   }
 
   apply(compiler: webpack.Compiler): void {
-    compiler.hooks.thisCompilation.tap('ServiceWorkerEnvironment', (current: webpack.Compilation) => {
+    compiler.hooks.thisCompilation.tap('ServiceWorkerEnvironment', current => {
       current.hooks.processAssets.tap(
         {
           name: 'ServiceWorkerEnvironment',
@@ -50,7 +50,7 @@ class ServiceWorkerEnvironment {
       current.getCache(cacheName).storePromise('service-worker-environment', null, this.dest)
     })
 
-    compiler.hooks.compilation.tap('ServiceWorkerEnvironment', (current: webpack.Compilation) => {
+    compiler.hooks.compilation.tap('ServiceWorkerEnvironment', current => {
       current.hooks.processAssets.tap(
         {
           name: 'ServiceWorkerEnvironment',
@@ -85,7 +85,7 @@ class HtmlWebpackTrackerPlugin {
   }
 
   apply(compiler: webpack.Compiler): void {
-    compiler.hooks.thisCompilation.tap('HtmlWebpackTrackerPlugin', (current: webpack.Compilation) => {
+    compiler.hooks.thisCompilation.tap('HtmlWebpackTrackerPlugin', current => {
       const plugin = HtmlWebpackPlugin as any
 
       plugin

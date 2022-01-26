@@ -20,7 +20,7 @@ function camelCase(source: any): string {
   return source
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, ' ')
-    .replace(/(^.|\s.)/g, (...t: Array<string>) => t[1].toUpperCase())
+    .replace(/(^.|\s.)/g, (...t) => t[1].toUpperCase())
 }
 
 export function generateSVG(icon: Icon, tag: string): string {
