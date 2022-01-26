@@ -1,3 +1,7 @@
+### 2022-01-26 / 4.0.1
+
+- chore: Updated dependencies and linted code.
+
 ### 2022-01-14 / 4.0.0
 
 
