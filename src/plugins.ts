@@ -223,7 +223,7 @@ export async function setupPlugins(options: Options): Promise<Array<webpack.Webp
 
       const swDest = swOptions.dest ?? 'sw.js'
       const envFile = swDest.replace(/\.js$/, `-env-${hash}.js`)
-      const wbInfo = JSON.parse(readFileSync(resolve(process.cwd(), './node_modules/workbox-sw/package.json'), 'utf-8'))
+      const wbInfo = JSON.parse(readFileSync(resolve(process.cwd(), './node_modules/workbox-sw/package.json'), 'utf8'))
 
       serviceWorkerDefaultExclude.push(envFile)
 

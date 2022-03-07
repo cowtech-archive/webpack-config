@@ -56,7 +56,7 @@
     "workbox-webpack-plugin": "^6.5.1"
   },
   "devDependencies": {
-    "@cowtech/eslint-config": "^8.4.0",
+    "@cowtech/eslint-config": "^8.6.1",
     "@swc/cli": "^0.1.55",
     "@swc/core": "^1.2.150",
     "@types/js-yaml": "^4.0.5",

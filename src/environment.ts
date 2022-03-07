@@ -14,12 +14,12 @@ export function setupEnvironment(options: Options): Environment {
 
   // Load from YAML file
   if (existsSync(yamlPath)) {
-    const configuration = load(readFileSync(yamlPath, 'utf-8')) as { [key: string]: object | undefined }
+    const configuration = load(readFileSync(yamlPath, 'utf8')) as { [key: string]: object | undefined }
     commonSettings = configuration.common ?? {}
     environmentSettings = configuration[environment] ?? {}
     // Legacy package.json based configuration
   } else {
-    const packageInfo = JSON.parse(readFileSync(resolve(process.cwd(), './package.json'), 'utf-8'))
+    const packageInfo = JSON.parse(readFileSync(resolve(process.cwd(), './package.json'), 'utf8'))
     commonSettings = packageInfo.site?.common ?? {}
     environmentSettings = packageInfo.site?.[environment] ?? {}
   }

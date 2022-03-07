@@ -35,7 +35,7 @@ export function generateSVG(icon: Icon, tag: string): string {
 
 export async function loadFontAwesomeIcons(icons: Icons, toLoad: Array<string>): Promise<void> {
   const dependencies: { [key: string]: string } = JSON.parse(
-    readFileSync(resolve(process.cwd(), './package.json'), 'utf-8')
+    readFileSync(resolve(process.cwd(), './package.json'), 'utf8')
   ).dependencies
 
   for (let i = 0; i < toLoad.length; i++) {
