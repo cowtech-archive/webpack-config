@@ -1,3 +1,7 @@
+### 2022-03-07 / 4.0.3
+
+- chore: Updated dependencies.
+
 ### 2022-03-07 / 4.0.2
 
 - chore: Updated build system.
