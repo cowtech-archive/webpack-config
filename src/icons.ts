@@ -1,12 +1,12 @@
-import { loadFontAwesomeIcons } from './fontAwesome'
-import { Icons, IconsToLoad, Options } from './types'
+import { loadFontAwesomeIcons } from './fontAwesome.js'
+import { Icons, IconsToLoad, Options } from './types.js'
 
 export {
   generateSVG as generateFontAwesomeSVG,
   Icon as FontAwesomeIcon,
   loadFontAwesomeIcons,
   Tags as FontAwesomeTags
-} from './fontAwesome'
+} from './fontAwesome.js'
 
 export async function loadIcons(options: Options): Promise<Icons> {
   const toLoad = (options.icons ?? {}) as IconsToLoad

@@ -1,7 +1,7 @@
-import { existsSync, readFileSync } from 'fs'
 import { load } from 'js-yaml'
-import { resolve } from 'path'
-import { Environment, Hook, Options } from './types'
+import { existsSync, readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { Environment, Hook, Options } from './types.js'
 
 export function setupEnvironment(options: Options): Environment {
   const environment = options.environment as string
@@ -30,7 +30,7 @@ export function setupEnvironment(options: Options): Environment {
     serviceWorkerEnabled: options?.serviceWorker?.enabled ?? options.environment === 'production',
     ...commonSettings,
     ...environmentSettings,
-    ...(options.additionalEnvironment ?? {})
+    ...options.additionalEnvironment
   }
 }
 

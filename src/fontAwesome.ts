@@ -1,6 +1,6 @@
-import { readFileSync } from 'fs'
-import { resolve } from 'path'
-import { Icons } from './types'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { Icons } from './types.js'
 
 export interface Icon {
   width: number
@@ -19,7 +19,7 @@ function camelCase(source: any): string {
 
   return source
     .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/[^\d\sa-z]/g, ' ')
     .replace(/(^.|\s.)/g, (...t) => t[1].toUpperCase())
 }
 

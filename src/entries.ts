@@ -1,6 +1,6 @@
 import { globby } from 'globby'
-import { resolve } from 'path'
-import { Options } from './types'
+import { resolve } from 'node:path'
+import { Options } from './types.js'
 
 export async function autoDetectEntries(options: Options): Promise<{ [key: string]: string }> {
   const attempts = {

@@ -1,8 +1,8 @@
-import { readFile } from 'fs/promises'
 import { globby } from 'globby'
-import { resolve } from 'path'
-import { runHook } from './environment'
-import { Options, Server } from './types'
+import { readFile } from 'node:fs/promises'
+import { resolve } from 'node:path'
+import { runHook } from './environment.js'
+import { Options, Server } from './types.js'
 
 export async function setupServer(options: Options): Promise<any> {
   let { https, ...serverOptions }: Server = options.server ?? {}
@@ -12,8 +12,11 @@ export async function setupServer(options: Options): Promise<any> {
 
   // Autodetect HTTPS
   if (typeof https === 'undefined') {
-    cert = (await globby(resolve(process.cwd(), './config/ssl/(certificate|cert).pem'))).pop()
-    key = (await globby(resolve(process.cwd(), './config/ssl/(private-key|privkey).pem'))).pop()
+    const certFile = await globby(resolve(process.cwd(), './config/ssl/(certificate|cert).pem'))
+    const keyFile = await globby(resolve(process.cwd(), './config/ssl/(private-key|privkey).pem'))
+
+    cert = certFile.pop()
+    key = keyFile.pop()
     https = !!(cert && key)
   }
 
@@ -23,7 +26,7 @@ export async function setupServer(options: Options): Promise<any> {
     server: 'http',
     compress: serverOptions.compress ?? true,
     historyApiFallback: serverOptions.history ?? true,
-    ...(serverOptions.options ?? {})
+    ...serverOptions.options
   }
 
   if (https) {

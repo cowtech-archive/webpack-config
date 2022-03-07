@@ -1,17 +1,17 @@
 import { cacheName } from '@cowtech/webpack-utils'
-import { createHash } from 'crypto'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
-import { readFileSync } from 'fs'
 import { globby } from 'globby'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
-import { resolve } from 'path'
+import { createHash } from 'node:crypto'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import webpack from 'webpack'
 // @ts-expect-error - Even if @types/webpack-bundle-analyzer, it generates a conflict with Webpack 5. Revisit in the future.
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import { InjectManifest } from 'workbox-webpack-plugin'
-import { runHook } from './environment'
-import { checkTypescript } from './rules'
-import { HtmlWebpackTrackerPluginParameters, Options, Plugins, Rules, ServiceWorker } from './types'
+import { runHook } from './environment.js'
+import { checkTypescript } from './rules.js'
+import { HtmlWebpackTrackerPluginParameters, Options, Plugins, Rules, ServiceWorker } from './types.js'
 
 export const serviceWorkerDefaultInclude: Array<string | RegExp> = [
   /\.(?:html|js|json|mjs|css)$/,
@@ -106,7 +106,8 @@ export async function resolveFile(options: Options, key: string, pattern: string
   let file = options[key as keyof Options] ?? true
 
   if (file === true) {
-    file = (await globby(resolve(options.srcFolder!, pattern)))[0]
+    const files = await globby(resolve(options.srcFolder!, pattern))
+    file = files[0]
   }
 
   return typeof file === 'string' ? file : null
@@ -121,8 +122,8 @@ export async function setupPlugins(options: Options): Promise<Array<webpack.Webp
 
   const indexFile = await resolveFile(options, 'index', './index.html.(js|ts|jsx|tsx)')
   const error404 = await resolveFile(options, 'error404', './404.html.(js|ts|jsx|tsx)')
-  const manifest = (await globby(resolve(options.srcFolder!, './manifest.json.(js|ts)')))[0]
-  const robots = (await globby(resolve(options.srcFolder!, './robots.txt.(js|ts)')))[0]
+  const [manifest] = await globby(resolve(options.srcFolder!, './manifest.json.(js|ts)'))
+  const [robots] = await globby(resolve(options.srcFolder!, './robots.txt.(js|ts)'))
 
   let plugins: Array<webpack.WebpackPluginInstance> = [
     new webpack.EnvironmentPlugin({
@@ -240,14 +241,14 @@ export async function setupPlugins(options: Options): Promise<Array<webpack.Webp
               swOptions.debug ?? options.environment !== 'production'
             )
           ],
-          ...(swOptions.options ?? {})
+          ...swOptions.options
         })
       )
     }
   }
 
   if (pluginsOptions.additional) {
-    plugins = plugins.concat(pluginsOptions.additional)
+    plugins = [...plugins, ...pluginsOptions.additional]
   }
 
   return runHook(plugins, pluginsOptions.afterHook)

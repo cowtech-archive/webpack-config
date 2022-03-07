@@ -1,9 +1,9 @@
 import { imagesExtensions } from '@cowtech/webpack-utils'
 import { globby } from 'globby'
-import { resolve } from 'path'
+import { resolve } from 'node:path'
 import webpack from 'webpack'
-import { runHook } from './environment'
-import { Options, Rules } from './types'
+import { runHook } from './environment.js'
+import { Options, Rules } from './types.js'
 
 /*
 Refresh the following two constants periodically by running with 'last 2 versions' and debug=true
@@ -28,7 +28,8 @@ export async function checkTypescript(rulesOptions: Rules, srcFolder: string): P
     return rulesOptions.typescript
   }
 
-  return (await globby(resolve(srcFolder, './**/*.ts'))).length > 0
+  const typescriptFiles = await globby(resolve(srcFolder, './**/*.ts'))
+  return typescriptFiles.length > 0
 }
 
 export async function checkReact(rulesOptions: Rules, srcFolder: string): Promise<boolean> {
@@ -36,7 +37,8 @@ export async function checkReact(rulesOptions: Rules, srcFolder: string): Promis
     return rulesOptions.react
   }
 
-  return (await globby(resolve(srcFolder, './**/*.(jsx|tsx)'))).length > 0
+  const reactFiles = await globby(resolve(srcFolder, './**/*.(jsx|tsx)'))
+  return reactFiles.length > 0
 }
 
 export async function setupRules(options: Options): Promise<Array<webpack.RuleSetRule>> {
@@ -124,7 +126,7 @@ export async function setupRules(options: Options): Promise<Array<webpack.RuleSe
   }
 
   if (rulesOptions.additional) {
-    rules = rules.concat(rulesOptions.additional)
+    rules = [...rules, ...rulesOptions.additional]
   }
 
   return runHook(rules, rulesOptions.afterHook)
