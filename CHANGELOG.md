@@ -1,3 +1,7 @@
+### 2022-03-13 / 4.0.6
+
+- fix: Fixed export.
+
 ### 2022-03-13 / 4.0.5
 
 - fix: Do not use export alias.
