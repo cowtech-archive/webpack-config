@@ -2,13 +2,13 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { Icons } from './types.js'
 
-export interface Icon {
+export interface FontAwesomeIcon {
   width: number
   height: number
   svgPathData: string
 }
 
-export interface Tags {
+export interface FontAwesomeTags {
   [key: string]: string
 }
 
@@ -23,7 +23,7 @@ function camelCase(source: any): string {
     .replace(/(^.|\s.)/g, (...t) => t[1].toUpperCase())
 }
 
-export function generateSVG(icon: Icon, tag: string): string {
+export function generateFontAwesomeSVG(icon: FontAwesomeIcon, tag: string): string {
   const { width, height, svgPathData } = icon
 
   return `
@@ -55,11 +55,11 @@ export async function loadFontAwesomeIcons(icons: Icons, toLoad: Array<string>):
     }
 
     // Load the icon then add to the definitions
-    const iconFile: Icon = await import(
+    const iconFile: FontAwesomeIcon = await import(
       resolve(process.cwd(), `node_modules/${iconPackage}/fa${camelCase(`${name}`).replace(/\s/g, '')}.js`)
     )
 
-    icons.definitions += generateSVG(iconFile, tag)
+    icons.definitions += generateFontAwesomeSVG(iconFile, tag)
     icons.tags[alias] = tag
   }
 }
