@@ -1,3 +1,7 @@
+### 2022-03-13 / 4.0.5
+
+- fix: Do not use export alias.
+
 ### 2022-03-07 / 4.0.4
 
 - chore: Updated dependencies.
