@@ -67,6 +67,16 @@ export interface Plugins {
   afterHook?: Hook<Array<webpack.WebpackPluginInstance>>
 }
 
+export interface FontAwesomeIcon {
+  width: number
+  height: number
+  svgPathData: string
+}
+
+export interface FontAwesomeTags {
+  [key: string]: string
+}
+
 export interface IconsToLoad {
   [key: string]: Array<string>
 }

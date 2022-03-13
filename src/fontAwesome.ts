@@ -1,16 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { Icons } from './types.js'
-
-export interface FontAwesomeIcon {
-  width: number
-  height: number
-  svgPathData: string
-}
-
-export interface FontAwesomeTags {
-  [key: string]: string
-}
+import { FontAwesomeIcon, Icons } from './types.js'
 
 function camelCase(source: any): string {
   if (typeof source !== 'string' || !source.length) {
