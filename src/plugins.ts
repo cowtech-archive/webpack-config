@@ -1,5 +1,4 @@
 import { cacheName } from '@cowtech/webpack-utils'
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import { globby } from 'globby'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { createHash } from 'node:crypto'
@@ -10,7 +9,6 @@ import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import { InjectManifest } from 'workbox-webpack-plugin'
 import { runHook } from './environment.js'
-import { checkTypescript } from './rules.js'
 import { HtmlWebpackTrackerPluginParameters, Options, Plugins, Rules, ServiceWorker } from './types.js'
 
 export const serviceWorkerDefaultInclude: Array<string | RegExp> = [
@@ -118,7 +116,6 @@ export async function setupPlugins(options: Options): Promise<Array<webpack.Webp
   const swOptions: ServiceWorker = options.serviceWorker ?? {}
   const rules: Rules = options.rules ?? {}
   const analyze = pluginsOptions.analyze ?? true
-  const useTypescript = await checkTypescript(rules, options.srcFolder!)
 
   const indexFile = await resolveFile(options, 'index', './index.html.(js|ts|jsx|tsx)')
   const error404 = await resolveFile(options, 'error404', './404.html.(js|ts|jsx|tsx)')
@@ -136,10 +133,6 @@ export async function setupPlugins(options: Options): Promise<Array<webpack.Webp
     }),
     new HtmlWebpackTrackerPlugin()
   ]
-
-  if (useTypescript) {
-    plugins.push(new ForkTsCheckerWebpackPlugin({ async: true }))
-  }
 
   if (manifest && (rules.manifest ?? true)) {
     plugins.push(
