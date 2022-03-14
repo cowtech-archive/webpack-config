@@ -1,3 +1,7 @@
+### 2022-03-14 / 4.1.0
+
+- fix: Removed faulty plugin.
+
 ### 2022-03-13 / 4.0.6
 
 - fix: Fixed export.
