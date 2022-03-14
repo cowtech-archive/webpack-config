@@ -1,6 +1,6 @@
 {
   "name": "@cowtech/webpack-config",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "CowTech WebPack configuration without any CSS handling.",
   "homepage": "https://sw.cowtech.it/webpack-config",
   "repository": "github:cowtech/webpack-config",
@@ -57,7 +57,7 @@
   },
   "devDependencies": {
     "@cowtech/eslint-config": "^8.6.1",
-    "@swc/cli": "^0.1.55",    
+    "@swc/cli": "^0.1.55",
     "@types/js-yaml": "^4.0.5",
     "@types/workbox-webpack-plugin": "^5.1.8",
     "chokidar": "^3.5.3",
