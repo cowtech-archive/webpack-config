@@ -1,3 +1,7 @@
+### 2022-03-14 / 4.1.1
+
+- chore: Updated dependencies.
+
 ### 2022-03-14 / 4.1.0
 
 - fix: Removed faulty plugin.
