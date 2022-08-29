@@ -1,3 +1,8 @@
+### 2022-08-29 / 4.1.2
+
+- chore: Updated dependencies.
+- chore: Use sourcemaps with swc
+
 ### 2022-03-14 / 4.1.1
 
 - chore: Updated dependencies.
