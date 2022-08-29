@@ -16,7 +16,7 @@
     "noUnusedParameters": true,
     "strictNullChecks": true,
     "useUnknownInCatchVariables": false,
-    "lib": ["webworker"]
+    "skipLibCheck": true
   },
   "include": ["src/*.ts"]
 }
