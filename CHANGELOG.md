@@ -1,3 +1,7 @@
+### 2022-10-12 / 4.1.5
+
+- chore: Updated dependencies.
+
 ### 2022-10-12 / 4.1.4
 
 - fix: Updated types layout.
