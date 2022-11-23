@@ -46,25 +46,25 @@ export interface Environment {
 }
 
 export interface Rules {
-  additional?: Array<webpack.RuleSetRule>
+  additional?: webpack.RuleSetRule[]
   target?: string
   typescript?: boolean
   react?: boolean
   images?: boolean
   manifest?: boolean
   robots?: boolean
-  afterHook?: Hook<Array<webpack.RuleSetRule>>
+  afterHook?: Hook<webpack.RuleSetRule[]>
 }
 
 export interface Plugins {
   checkTypescript?: boolean
-  additional?: Array<webpack.WebpackPluginInstance>
+  additional?: webpack.WebpackPluginInstance[]
   concatenate?: boolean
   minify?: boolean
   hotModuleReload?: boolean
   splitChunks?: webpack.WebpackOptionsNormalized['optimization']['splitChunks']
   analyze?: boolean | string
-  afterHook?: Hook<Array<webpack.WebpackPluginInstance>>
+  afterHook?: Hook<webpack.WebpackPluginInstance[]>
 }
 
 export interface FontAwesomeIcon {
@@ -78,7 +78,7 @@ export interface FontAwesomeTags {
 }
 
 export interface IconsToLoad {
-  [key: string]: Array<string>
+  [key: string]: string[]
 }
 
 export interface Icons {

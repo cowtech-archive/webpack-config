@@ -41,14 +41,14 @@ export async function checkReact(rulesOptions: Rules, srcFolder: string): Promis
   return reactFiles.length > 0
 }
 
-export async function setupRules(options: Options): Promise<Array<webpack.RuleSetRule>> {
+export async function setupRules(options: Options): Promise<webpack.RuleSetRule[]> {
   const rulesOptions: Rules = options.rules ?? {}
 
   const useSwc = options.useSwc ?? true
   const useTypescript = await checkTypescript(rulesOptions, options.srcFolder!)
   const useReact = await checkReact(rulesOptions, options.srcFolder!)
   const target = rulesOptions.target ?? 'es2020'
-  let rules: Array<webpack.RuleSetRule> = []
+  let rules: webpack.RuleSetRule[] = []
 
   if (useSwc) {
     rules.push({

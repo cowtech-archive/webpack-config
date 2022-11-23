@@ -11,11 +11,11 @@ import { InjectManifest } from 'workbox-webpack-plugin'
 import { runHook } from './environment.js'
 import { HtmlWebpackTrackerPluginParameters, Options, Plugins, Rules, ServiceWorker } from './types.js'
 
-export const serviceWorkerDefaultInclude: Array<string | RegExp> = [
+export const serviceWorkerDefaultInclude: (string | RegExp)[] = [
   /\.(?:html|js|json|mjs|css)$/,
   /images.+\.(?:bmp|jpg|jpeg|png|svg|webp)$/
 ]
-export const serviceWorkerDefaultExclude: Array<string | RegExp> = [
+export const serviceWorkerDefaultExclude: (string | RegExp)[] = [
   /\.map$/,
   /bundle(?:-.+)?\.(?:mjs|js)$/,
   /404\.html/
@@ -111,7 +111,7 @@ export async function resolveFile(options: Options, key: string, pattern: string
   return typeof file === 'string' ? file : null
 }
 
-export async function setupPlugins(options: Options): Promise<Array<webpack.WebpackPluginInstance>> {
+export async function setupPlugins(options: Options): Promise<webpack.WebpackPluginInstance[]> {
   const pluginsOptions: Plugins = options.plugins ?? {}
   const swOptions: ServiceWorker = options.serviceWorker ?? {}
   const rules: Rules = options.rules ?? {}
@@ -122,7 +122,7 @@ export async function setupPlugins(options: Options): Promise<Array<webpack.Webp
   const [manifest] = await globby(resolve(options.srcFolder!, './manifest.json.(js|ts)'))
   const [robots] = await globby(resolve(options.srcFolder!, './robots.txt.(js|ts)'))
 
-  let plugins: Array<webpack.WebpackPluginInstance> = [
+  let plugins: webpack.WebpackPluginInstance[] = [
     new webpack.EnvironmentPlugin({
       NODE_ENV: options.environment
     }),

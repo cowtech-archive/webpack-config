@@ -9,8 +9,8 @@ function camelCase(source: any): string {
 
   return source
     .toLowerCase()
-    .replace(/[^\d\sa-z]/g, ' ')
-    .replace(/(^.|\s.)/g, (...t) => t[1].toUpperCase())
+    .replaceAll(/[^\d\sa-z]/g, ' ')
+    .replaceAll(/(^.|\s.)/g, (...t) => t[1].toUpperCase())
 }
 
 export function generateFontAwesomeSVG(icon: FontAwesomeIcon, tag: string): string {
@@ -23,7 +23,7 @@ export function generateFontAwesomeSVG(icon: FontAwesomeIcon, tag: string): stri
   `
 }
 
-export async function loadFontAwesomeIcons(icons: Icons, toLoad: Array<string>): Promise<void> {
+export async function loadFontAwesomeIcons(icons: Icons, toLoad: string[]): Promise<void> {
   const dependencies: { [key: string]: string } = JSON.parse(
     readFileSync(resolve(process.cwd(), './package.json'), 'utf8')
   ).dependencies
@@ -46,7 +46,7 @@ export async function loadFontAwesomeIcons(icons: Icons, toLoad: Array<string>):
 
     // Load the icon then add to the definitions
     const iconFile: FontAwesomeIcon = await import(
-      resolve(process.cwd(), `node_modules/${iconPackage}/fa${camelCase(`${name}`).replace(/\s/g, '')}.js`)
+      resolve(process.cwd(), `node_modules/${iconPackage}/fa${camelCase(`${name}`).replaceAll(/\s/g, '')}.js`)
     )
 
     icons.definitions += generateFontAwesomeSVG(iconFile, tag)

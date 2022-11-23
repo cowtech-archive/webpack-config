@@ -36,7 +36,7 @@ export async function setup(options: Options = {}): Promise<ExtendedConfiguratio
 
   const mainExtension = options.useESModules ?? true ? 'mjs' : 'js'
 
-  const minimizer: Array<webpack.WebpackPluginInstance> = []
+  const minimizer: webpack.WebpackPluginInstance[] = []
 
   if (options.environment === 'production' && (options.plugins?.minify ?? true)) {
     minimizer.push(new TerserPlugin(options.uglify ?? {}))
