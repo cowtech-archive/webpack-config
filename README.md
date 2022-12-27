@@ -1,5 +1,7 @@
 # @cowtech/webpack-config
 
+## END OF DEVELOPMENT NOTICE - This package has been discontinued
+
 [![Version](https://img.shields.io/npm/v/@cowtech/webpack-config.svg)](https://npm.im/@cowtech/webpack-config)
 [![Dependencies](https://img.shields.io/librariesio/release/npm/@cowtech/webpack-config)](https://libraries.io/npm/@cowtech%2Fwebpack-config)
 
