@@ -1,3 +1,7 @@
+### 2022-12-28 / 4.1.7
+
+- chore: Added end of development notice.
+
 ### 2022-11-23 / 4.1.6
 
 - chore: Updated dependencies.
